@@ -46,7 +46,7 @@ OptionMenu "VisorOptions"
 	SafeCommand "$UVISOR_RESET_ALL_SETTINGS", uvisor_restore_defaults, "$UVISOR_RESET_ALL_SETTINGS_PROMPT"
 	StaticText " "
 	StaticText " ________________________ ", DarkGray
-	StaticText "           v1.2           ", DarkGray
+	StaticText "           v1.3           ", DarkGray
 }
 
 // Main Toggles
@@ -320,7 +320,6 @@ OptionMenu "UV_BLOOD_SPLASHES" {
 	StaticText "$UVISOR_BLOOD_DETECTION_MODE_TIP_1", DarkGray
 	StaticText "$UVISOR_BLOOD_DETECTION_MODE_TIP_2", DarkGray
 	StaticText "$UVISOR_BLOOD_DETECTION_MODE_TIP_3", DarkGray
-	StaticText "$UVISOR_BLOOD_DETECTION_MODE_TIP_4", DarkGray
 	StaticText " "
 	StaticText "-------------------------", LightBlue
 	SafeCommand "$UVISOR_RESET_SUBMENU", uvisor_reset_blood_menu, "$UVISOR_RESET_SUBMENU_PROMPT"

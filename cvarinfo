@@ -113,7 +113,7 @@ user bool uvisor_hide_helmet_in_third_person = true;
 // Blood On Visor
 user int uvisor_blood_freq = 80;
 user int uvisor_blood_max_init_distance = 90;
-user float uvisor_blood_size = 1.1;
+user float uvisor_blood_size = 1.0;
 user int uvisor_blood_max_count = 20;
 user float uvisor_blood_lifetime = 3;
 user bool uvisor_blood_vanishes = true;
