@@ -732,7 +732,10 @@ class UV_HudVisorDraw : EventHandler
 		
 		uiSwayOffX = InterpolateValue(OldSwayOffX, SwayOffX, e.FracTic);
 		uiSwayOffY = InterpolateValue(OldSwayOffY, SwayOffY, e.FracTic);
-
+		
+		uiSwayOffX_ArmorGrid = uiSwayOffX * 0.6;
+		uiSwayOffY_ArmorGrid = uiSwayOffY * 0.6;
+		
 		if (screenWiperAnimTicker > 0) {
 			DrawScreenWiper(); // does Screen.SetClipRect()
 		}
@@ -1604,8 +1607,8 @@ class UV_HudVisorDraw : EventHandler
 		}
 		Screen.DrawTexture(
 			texture, false, 
-			coords.x + uiSwayOffX + ShakeOffsetX - scaledMaxSwayX, // move texture (and increase size in DestWidth/DestHeight) not to draw beyond its edges
-			coords.y + uiSwayOffY + ShakeOffsetY - scaledMaxSwayY,
+			coords.x + uiSwayOffX_ArmorGrid + ShakeOffsetX - scaledMaxSwayX, // move texture (and increase size in DestWidth/DestHeight) not to draw beyond its edges
+			coords.y + uiSwayOffY_ArmorGrid + ShakeOffsetY - scaledMaxSwayY,
 			DTA_DestWidthF, size.x + scaledMaxSwayX * 2, 
 			DTA_DestHeightF, size.y + scaledMaxSwayY * 2, 
 			DTA_Alpha, 	texAlpha,
@@ -2302,7 +2305,8 @@ class UV_HudVisorDraw : EventHandler
 			totalArmor = storedArmorInsideVehicle;
 			return;
 		}
-		totalArmor = playerinf.mo.CountInv("BasicArmor");
+		let armor = playerinf.mo.FindInventory("BasicArmor", true);
+		totalArmor = armor ? armor.Amount : 0;
 	}
 	
 	// Update vars based on inventory items
