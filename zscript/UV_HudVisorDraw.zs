@@ -27,6 +27,20 @@ class UV_HudVisorDraw : EventHandler
 	bool hideHelmetInThirdPerson;
 	bool isThirdPerson;
 	
+	bool invisEffectOn;
+	bool radSuitOn;
+	bool nightVisionOn;
+	bool PB_NightVisionOn;
+	bool NV_PackInverseMapOn;
+	bool invulnerabilityOn;
+	bool isVanillaInvulernabilityOn;
+	bool isVanillaInvulernabilityBlinking;
+	String lastColormappedPowerup;
+	bool isLastColormappedPowerupBlinking;
+	bool isLastPowerupColomapped;
+	Color combPlayerBlendAndPowerupBlendColor;
+	double effectiveBlendAlpha;
+	
 	
 	///// UI CONTEXT VARS /////
 	
@@ -110,13 +124,14 @@ class UV_HudVisorDraw : EventHandler
 		BOTTOM_RIGHT
 	};
 	
-	enum TextureTypes
+	enum UV_TextureTypes
 	{
 		PART_TOP,
 		PART_BOTTOM,
 		PART_CORNER,
 		GLOW,
-		GLASS
+		GLASS,
+		ARMOR_GRID
 	};
 	
 	ui bool initialUIInitDone;
@@ -232,6 +247,7 @@ class UV_HudVisorDraw : EventHandler
 	const RADSUIT_GRID_COLOR = Color(255, 125, 255, 0);  // lime
 	const INVULN_GRID_COLOR = Color(255, 0, 255, 0); 	 // green
 	const GODMODE_GRID_COLOR = Color(255, 255, 143, 59); // gold
+	const FULL_WHITE_COLOR = Color(255, 255, 255, 255);
 	
 	ui string cracksBasePath;
 	ui string CommonGraphicsPath;
@@ -269,8 +285,11 @@ class UV_HudVisorDraw : EventHandler
 	
 	ui double uiSwayOffX; // Gets interpolated from SwayOffX
 	ui double uiSwayOffY; // Gets interpolated from SwayOffY
+	ui double uiSwayOffX_ArmorGrid;
+	ui double uiSwayOffY_ArmorGrid;
 	
 	ui int warningSoundBasisUIContext;
+	ui bool isGL_EnhancedNV;
 	
 	
 	///// PLAY CONTEXT VARS /////
@@ -283,13 +302,15 @@ class UV_HudVisorDraw : EventHandler
 	bool baseShowGlassPlayContext;
 	bool hideGlassIfEmptyArmorPlayContext;
 	bool transparencyEffectWhenInvis;
-	bool invisEffectOn;
-	bool radSuitOn;
-	bool nightVisionOn;
-	bool invulnerabilityOn;
-	
 	bool isDemonPlayer;
-	string isDemonPlayerStr;
+	String PB_NightVisionStr;
+	String NVNightVisionInverseMapStr;
+	Array<Color> powerupBlendColors;
+	static const string isDemonPlayerFlags[] = {
+		"isDemonPlayer", // using only this one isn't reliable cause it's not set if two nearby demon powerups picked up very quickly
+		"powerTransformBaron",
+		"powerTransformRevenant"
+	};
 	bool wasInVehicle;
 	bool inVehicle;
 	bool wasInMachineGun;
@@ -546,10 +567,7 @@ class UV_HudVisorDraw : EventHandler
 	int newBloodSplashNumber;
 	UV_BloodSplash currentBloodSplashes[BLOOD_MAX_SPLASHES];
 	const UNSET_COLOR = Color(0, 0, 0, 0);
-	int bloodDefaultSaturationShift;
-	const BRIGHTER_RED_BLOOD_COLOR = "bd 00 00";
-	const DEFAULT_RED_BLOOD_COLOR = "e5 00 00";
-	const DARKER_RED_BLOOD_COLOR = "ed 00 00";
+	int bloodDefaultSaturationShiftCvar;
 	int bloodDetectionMode;
 	LookExParams paramsForIsVisible;
 	string BD_BLOOD;
@@ -601,7 +619,7 @@ class UV_HudVisorDraw : EventHandler
 	int lowAmmo2Ticker;
 	bool lowAmmo2Active;
 	UV_AmmoReaderFactory Factory;
-	
+		
 	
 	
 	//////////////////// UI CONTEXT - handles helmet HUD drawing, FracTic interpolation and few calculations for responsive menu ////////////////////
@@ -640,12 +658,14 @@ class UV_HudVisorDraw : EventHandler
 			// (e.g. gameplay color steps)
 			// But for performance do them only each gametic (not FracTic) like in WorldTick
 			
-			colorHealth = CalculateColor(playerinf.health);
-			colorArmor = CalculateColor(totalArmor);
+			colorHealth = GetIndicatorColor(playerinf.health);
+			colorArmor = GetIndicatorColor(totalArmor);
 			
 			if (ammoData) {
 				SetAmmoColors();
 			}
+			
+			colorGlow = baseColorGlow;
 									
 			if (gameplayColorBasisGlow == 1) {
 				colorGlow = colorHealth;
@@ -712,7 +732,7 @@ class UV_HudVisorDraw : EventHandler
 		
 		uiSwayOffX = InterpolateValue(OldSwayOffX, SwayOffX, e.FracTic);
 		uiSwayOffY = InterpolateValue(OldSwayOffY, SwayOffY, e.FracTic);
-		
+
 		if (screenWiperAnimTicker > 0) {
 			DrawScreenWiper(); // does Screen.SetClipRect()
 		}
@@ -985,6 +1005,8 @@ class UV_HudVisorDraw : EventHandler
 		
 		warningSoundBasisUIContext = Cvar.GetCvar("uvisor_warning_sound_mode", playerinf).GetInt();
 		
+		isGL_EnhancedNV = Cvar.GetCvar("gl_enhanced_nightvision", playerinf).GetBool();
+		
 		texScreenWiper = TexMan.CheckForTexture(commonGraphicsPath .. "screen_wiper.png");
 	}
 	
@@ -1000,7 +1022,7 @@ class UV_HudVisorDraw : EventHandler
 				- double(level.time - STARTUP_BLACK_SOLID_TICKS) / (STARTUP_BLACK_TICKS - STARTUP_BLACK_SOLID_TICKS);
 			alphaBlackInter = InterpolateValue(alphaBlackPrev, alphaBlack, FracTicGlobal);
 		}
-		DrawFullScreenTexture(texBlack, alphaBlackInter, Color(255, 255, 255, 255));
+		DrawFullScreenTexture(texBlack, alphaBlackInter, FULL_WHITE_COLOR);
 	}
 	
 	ui void DrawArmorGrid() {	
@@ -1019,7 +1041,7 @@ class UV_HudVisorDraw : EventHandler
 			gridImage_1_AlphaInter *= alphaArmorGridMult;
 			gridImage_2_AlphaInter *= alphaArmorGridMult;
 		}
-		Color texColor = CalculateColorWithBrightness(colorArmorGrid);
+		Color texColor = CalculateColorWithBrightnessAndPowerup(colorArmorGrid, UV_HudVisorDraw.ARMOR_GRID);
 		if (armorGridDamageAnimTicker > 0) {
 			// Calc alpha ratio for usual grid (may be a combo of two idle textures) and damage grid 
 			double usualGridAlphaInterpolated 
@@ -1030,15 +1052,15 @@ class UV_HudVisorDraw : EventHandler
 			gridImage_2_AlphaInter *= usualGridAlphaInterpolated;
 			// Draw damage grid
 			TextureID finalGridDamageTexture = armorGridHeavyDamageTicker > 0 ? texArmorGridDamageHeavy : texArmorGridDamage;
-			DrawSimpleTextureCustom(finalGridDamageTexture, (x,y), (w,h), 
-				damageGridAlphaInterpolated, texColor, renderStyleArmorGrid); // if damage ticker is active, calc alpha ratio of two idle grid textures (as one) AND damage texture
+			DrawSimpleTextureCustom(finalGridDamageTexture, (x,y), (w,h), damageGridAlphaInterpolated, 
+				texColor, renderStyleArmorGrid, UV_HudVisorDraw.ARMOR_GRID); // if damage ticker is active, calc alpha ratio of two idle grid textures (as one) AND damage texture
 		}
 		// Draw idle grid (two textures if anim enabled)
 		DrawSimpleTextureCustom(texArmorGrid, (x,y), (w,h), 
 			gridImage_1_AlphaInter, texColor, renderStyleArmorGrid);
 		if (gridIdleAnimEnabled) {
-			DrawSimpleTextureCustom(texArmorGridIdleAnim, (x,y), (w,h), 
-				gridImage_2_AlphaInter, texColor, renderStyleArmorGrid);
+			DrawSimpleTextureCustom(texArmorGridIdleAnim, (x,y), (w,h), gridImage_2_AlphaInter, 
+				texColor, renderStyleArmorGrid, UV_HudVisorDraw.ARMOR_GRID);
 		}
 	}
 	
@@ -1047,7 +1069,7 @@ class UV_HudVisorDraw : EventHandler
 	}
 	
 	ui void DrawGlass() {
-		Color texColor = CalculateColorWithBrightness(colorGlass);
+		Color texColor = CalculateColorWithBrightnessAndPowerup(colorGlass, UV_HudVisorDraw.GLASS);
 		double texAlpha = alphaGlass;
 		double texAlphaBottom = overrideAlphaBottom ? alphaGlassBottom : alphaGlass;
 		if (showGlassSides && styleSideGlass != 0) {
@@ -1116,7 +1138,7 @@ class UV_HudVisorDraw : EventHandler
 	}
 	
 	ui void DrawGlow() {
-		Color texColor = CalculateColorWithBrightness(colorGlow);
+		Color texColor = CalculateColorWithBrightnessAndPowerup(colorGlow, UV_HudVisorDraw.GLOW);
 		double texAlpha = alphaGlow;
 		if (pulseActive) {
 			targetPulseAlpha = alphaGlow * (sin(pulseTime) * 0.5 + 0.5);
@@ -1209,7 +1231,7 @@ class UV_HudVisorDraw : EventHandler
 	}
 	
 	ui void DrawPieces() {
-		Color texColorTop = CalculateColorWithBrightness(colorPartTop);
+		Color texColorTop = CalculateColorWithBrightnessAndPowerup(colorPartTop, UV_HudVisorDraw.PART_TOP);
 		if (showTacticalMarks) {
 			int w, h;
 			[w, h] = TexMan.getSize(texPartTacticalMarkLeft);
@@ -1245,7 +1267,7 @@ class UV_HudVisorDraw : EventHandler
 			);
 		}
 		if (showPartBottom && styleBottom != 7 && styleBottom != 0) { // if not Plain_Glass or None
-			Color texColorBottom = CalculateColorWithBrightness(colorPartBottom);
+			Color texColorBottom = CalculateColorWithBrightnessAndPowerup(colorPartBottom, UV_HudVisorDraw.PART_BOTTOM);
 			DrawHelmetTextureCustom(
 				UV_HudVisorDraw.PART_BOTTOM,
 				texPartBottom, 
@@ -1257,7 +1279,7 @@ class UV_HudVisorDraw : EventHandler
 			);
 		}
 		if (showPartCorners && styleCorners != 0) {
-			Color texColorCorners = CalculateColorWithBrightness(colorPartCorners);
+			Color texColorCorners = CalculateColorWithBrightnessAndPowerup(colorPartCorners, UV_HudVisorDraw.PART_CORNER);
 			DrawHelmetTextureCustom(
 				UV_HudVisorDraw.PART_CORNER,
 				texPartCornerLeft, 
@@ -1279,8 +1301,95 @@ class UV_HudVisorDraw : EventHandler
 		}
 	}
 	
+	ui void DrawGlassCracks() {
+		double f_InCracksAlphaInter = alphaCracks;
+		// smaller size and coords for Space Marine helmet
+		double sizeMult = styleTop == 5 ? 0.8 : 1.0; 
+		double offsetX = styleTop == 5 ? Screen.GetWidth() / 7.0 : 0;
+		double offsetY = styleTop == 5 ? Screen.GetHeight() / 7.0 : 0;
+		// adjust size and offsets to draw texture a bit outside of screen edges 
+		// so that more cracks "start" from visor edges for a bit more realism and to compensate the random rotation
+		sizeMult *= 1.2; 
+		offsetX -= Screen.GetWidth() * 0.1;
+		offsetY -= Screen.GetHeight() * 0.1;
+		if (cracksFadeTicker > 0) {
+			TextureID oldCracksTex = TexMan.CheckForTexture(
+				cracksBasePath .. "Pattern_" .. cracksTexturePatternId .. "/glass_cracks_" .. fOutCracksTexId .. ".png"
+			);
+			double f_OutCracksAlphaInter = alphaCracks * InterpolateValue(prevF_OutCracksAlpha, f_OutCracksAlpha, FracTicGlobal);
+			DrawFullScreenTexture(oldCracksTex, f_OutCracksAlphaInter, colorGlassCracks, 
+				sizeMult: sizeMult, offsetX: offsetX, offsetY: offsetY, degree: cracksTextureRotationDegree
+			);
+			f_InCracksAlphaInter *= InterpolateValue(prevF_InCracksAlpha, f_InCracksAlpha, FracTicGlobal);
+		}
+		if (cracksLevel > 0) {
+			TextureID newCracksTex = TexMan.CheckForTexture(
+				cracksBasePath .. "Pattern_" .. cracksTexturePatternId .. "/glass_cracks_" .. fInCracksTexId .. ".png"
+			);
+			DrawFullScreenTexture(newCracksTex, f_InCracksAlphaInter, colorGlassCracks, 
+				sizeMult: sizeMult, offsetX: offsetX, offsetY: offsetY, degree: cracksTextureRotationDegree
+			);
+		}
+	}
+	
+	ui void DrawScreenWiper() {
+		double w, h; 
+		[w,h] = TexMan.GetSize(texScreenWiper);
+		w *= scaleFactorWidth;
+		h *= scaleFactorHeight;
+		double ratioInterpolated = InterpolateValue(prevClipRatioInverted, clipRatioInverted, FracTicGlobal);
+		double x = Screen.GetWidth() - (Screen.GetWidth() + w) * ratioInterpolated;
+		double y = 0;
+		Color wiperColor = FULL_WHITE_COLOR;
+		wiperColor = CalculateColorWithBrightnessAndPowerup(wiperColor);
+		Screen.DrawTexture(
+			texScreenWiper, false,
+			x + uiSwayOffX + ShakeOffsetX,
+			y + uiSwayOffY + ShakeOffsetY,
+			DTA_DestWidthF, w,
+			DTA_DestHeightF, h,
+			DTA_Color, wiperColor
+		);
+		Screen.SetClipRect(0, 0, Screen.GetWidth() - Screen.GetWidth() * ratioInterpolated, Screen.GetHeight());
+	}
+	
+	ui void DrawBloodTextures() {		
+		for (int i = 0; i < bloodMaxCount; i++) {
+			UV_BloodSplash bs = currentBloodSplashes[i];
+			if (bs == null || bs.fadeOutTicker < 1) continue;
+			double texAlpha = InterpolateValue(bs.prevAlpha, bs.alpha, FracTicGlobal);
+			texAlpha *= alphaBlood;
+			int texRenderStyle = Style_Translucent;
+			if (invisEffectOn) {
+				[texAlpha, texRenderStyle] = GetPartialInvisibilityDrawParams(texAlpha);
+			}
+			if (ShouldUseStencilStyle()) {
+				texRenderStyle = STYLE_TranslucentStencil;
+			}
+			Color texColor = CalculateColorWithBrightnessAndPowerup(bs.bColor);			
+
+			double x = InterpolateValue(bs.prevCoordinates.x, bs.coordinates.x, FracTicGlobal);
+			double y = InterpolateValue(bs.prevCoordinates.y, bs.coordinates.y, FracTicGlobal);
+			double w = InterpolateValue(bs.prevSize.x, bs.size.x, FracTicGlobal);
+			double h = InterpolateValue(bs.prevSize.y, bs.size.y, FracTicGlobal);
+			
+			TextureID bloodTexture = TexMan.CheckForTexture(CommonGraphicsPath .. "Blood/blood_" .. bs.texIndex .. ".png");
+			
+			Screen.DrawTexture(
+				bloodTexture, false, 
+				x + uiSwayOffX + ShakeOffsetX,
+				y + uiSwayOffY + ShakeOffsetY,
+				DTA_DestWidthF, w,
+				DTA_DestHeightF, h,
+				DTA_Alpha, texAlpha,
+				DTA_Color, texColor,
+				DTA_LegacyRenderStyle, texRenderStyle
+			);
+		}
+    }
+	
 	ui void DrawHelmetTextureCustom(
-				TextureTypes texType, // part, glow, glass - affects color, alpha, render style
+				UV_TextureTypes texType, // part, glow, glass - affects color, alpha, render style
 				TextureID texture, 
 				ScreenAnchors anchor,
 				Color texColor,
@@ -1342,7 +1451,10 @@ class UV_HudVisorDraw : EventHandler
 		}
 		
 		if (invisEffectOn) {
-			texAlpha *= 0.4;
+			[texAlpha, texRenderStyle] = GetPartialInvisibilityDrawParams(texAlpha, texType);
+		}
+		if (ShouldUseStencilStyle(texType)) {
+			texRenderStyle = STYLE_TranslucentStencil;
 		}
 		
 		Screen.DrawTexture(
@@ -1355,6 +1467,23 @@ class UV_HudVisorDraw : EventHandler
 			DTA_Color, texColor,
 			DTA_LegacyRenderStyle, texRenderStyle
 		);
+	}
+	
+	ui Color BlendColors(Color base, Color blend, double factor) {
+		int r = int(base.r * (1.0 - factor) + blend.r * factor);
+		int g = int(base.g * (1.0 - factor) + blend.g * factor); 
+		int b = int(base.b * (1.0 - factor) + blend.b * factor); 
+		return Color(255, r, g, b);
+	}
+	
+	ui double, int GetPartialInvisibilityDrawParams(double baseAlpha, UV_TextureTypes texType = -1) {
+		if (texType == UV_HudVisorDraw.GLOW || texType == UV_HudVisorDraw.ARMOR_GRID) {
+			baseAlpha *= 0.15;
+		} else {
+			baseAlpha *= 0.4;
+		}
+		int texRenderStyle = globals.isPB_Loaded ? STYLE_Subtract : STYLE_Translucent;
+		return baseAlpha, texRenderStyle;
 	}
 	
 	ui double, double CalcTextureCoordinates(
@@ -1443,12 +1572,15 @@ class UV_HudVisorDraw : EventHandler
 									double sizeMult = 1.0,
 									double offsetX = 0,
 									double offsetY = 0,
-									int style = STYLE_Translucent,
+									int texRenderStyle = STYLE_Translucent,
 									double degree = 0) {
 		if (invisEffectOn) {
-			texAlpha *= 0.4;
+			[texAlpha, texRenderStyle] = GetPartialInvisibilityDrawParams(texAlpha);
 		}
-		texColor = CalculateColorWithBrightness(texColor);
+		if (ShouldUseStencilStyle()) {
+			texRenderStyle = Style_TranslucentStencil;
+		}
+		texColor = CalculateColorWithBrightnessAndPowerup(texColor);
 		Screen.DrawTexture(
 			texture, false, 
 			offsetX + uiSwayOffX + ShakeOffsetX - scaledMaxSwayX, // move texture (and increase size in DestWidth/DestHeight) not to draw beyond its edges
@@ -1457,14 +1589,18 @@ class UV_HudVisorDraw : EventHandler
 			DTA_DestHeightF, (Screen.GetHeight() + scaledMaxSwayY * 2) * sizeMult, 
 			DTA_Alpha, 	texAlpha,
 			DTA_Color, texColor,
-			DTA_LegacyRenderStyle, style,
+			DTA_LegacyRenderStyle, texRenderStyle,
 			DTA_Rotate, degree
 		);
 	}
 	
-	ui void DrawSimpleTextureCustom(TextureID texture, vector2 coords, vector2 size, double texAlpha, Color texColor, int style) {
+	ui void DrawSimpleTextureCustom(TextureID texture, vector2 coords, vector2 size, 
+									double texAlpha, Color texColor, int texRenderStyle, UV_TextureTypes texType = -1) {
 		if (invisEffectOn) {
-			texAlpha *= 0.4;
+			[texAlpha, texRenderStyle] = GetPartialInvisibilityDrawParams(texAlpha, texType);
+		}
+		if (ShouldUseStencilStyle(texType)) {
+			texRenderStyle = Style_TranslucentStencil;
 		}
 		Screen.DrawTexture(
 			texture, false, 
@@ -1474,12 +1610,21 @@ class UV_HudVisorDraw : EventHandler
 			DTA_DestHeightF, size.y + scaledMaxSwayY * 2, 
 			DTA_Alpha, 	texAlpha,
 			DTA_Color, texColor,
-			DTA_LegacyRenderStyle, style
+			DTA_LegacyRenderStyle, texRenderStyle
 		);
+	}
+	
+	ui bool ShouldUseStencilStyle(UV_TextureTypes texType = -1) {
+		return (isVanillaInvulernabilityOn && !isVanillaInvulernabilityBlinking)
+			|| 
+			(NV_PackInverseMapOn 
+				&& !isLastPowerupColomapped 
+				&& (texType == -1 || texType == UV_HudVisorDraw.ARMOR_GRID) // grid, blood, wiper
+			);
 	}
 
 	// Calculate color for health or armor indication based on their value
-	ui Color CalculateColor(int value) {
+	ui Color GetIndicatorColor(int value) {
 		double minValue;
 		int startR, startG, startB, endR, endG, endB;
 		double interpolation;
@@ -1529,104 +1674,153 @@ class UV_HudVisorDraw : EventHandler
 		return interpolatedColor;
 	}
 	
-	ui Color CalculateColorWithBrightness(Color originalColor) {
-			double brightness = double(playerinf.mo.cursector.lightlevel) / double(255.0); // lightlevel is 0-255
-			brightness *= 1.3;
-			brightness = Clamp(brightness, 0.4, 1.0);
-			int r, g, b;
-			r = int(originalColor.r * brightness);
-			g = int(originalColor.g * brightness);
-			b = int(originalColor.b * brightness);
-			return Color(255, r, g, b);
-	}
-	
-	ui void DrawGlassCracks() {
-		double f_InCracksAlphaInter = alphaCracks;
-		// smaller size and coords for Space Marine helmet
-		double sizeMult = styleTop == 5 ? 0.8 : 1.0; 
-		double offsetX = styleTop == 5 ? Screen.GetWidth() / 7.0 : 0;
-		double offsetY = styleTop == 5 ? Screen.GetHeight() / 7.0 : 0;
-		// adjust size and offsets to draw texture a bit outside of screen edges 
-		// so that more cracks "start" from visor edges for a bit more realism and to compensate the random rotation
-		sizeMult *= 1.2; 
-		offsetX -= Screen.GetWidth() * 0.1;
-		offsetY -= Screen.GetHeight() * 0.1;
-		if (cracksFadeTicker > 0) {
-			TextureID oldCracksTex = TexMan.CheckForTexture(
-				cracksBasePath .. "Pattern_" .. cracksTexturePatternId .. "/glass_cracks_" .. fOutCracksTexId .. ".png"
-			);
-			double f_OutCracksAlphaInter = alphaCracks * InterpolateValue(prevF_OutCracksAlpha, f_OutCracksAlpha, FracTicGlobal);
-			DrawFullScreenTexture(oldCracksTex, f_OutCracksAlphaInter, colorGlassCracks, 
-				sizeMult: sizeMult, offsetX: offsetX, offsetY: offsetY, degree: cracksTextureRotationDegree
-			);
-			f_InCracksAlphaInter *= InterpolateValue(prevF_InCracksAlpha, f_InCracksAlpha, FracTicGlobal);
+	ui Color CalculateColorWithBrightnessAndPowerup(Color originalColor, UV_TextureTypes texType = -1) {
+		Color newColor = Color(255, originalColor.r, originalColor.g, originalColor.b); // 
+		bool isAffectedByBrightness = true;
+		
+		if (ShouldUseStencilStyle(texType)) {
+			// default invulnerability, to use with Stencil style. No PB, cause no white effect there
+			return GetColorForStencilStyle(originalColor);
 		}
-		if (cracksLevel > 0) {
-			TextureID newCracksTex = TexMan.CheckForTexture(
-				cracksBasePath .. "Pattern_" .. cracksTexturePatternId .. "/glass_cracks_" .. fInCracksTexId .. ".png"
-			);
-			DrawFullScreenTexture(newCracksTex, f_InCracksAlphaInter, colorGlassCracks, 
-				sizeMult: sizeMult, offsetX: offsetX, offsetY: offsetY, degree: cracksTextureRotationDegree
-			);
-		}
-	}
-	
-	ui void DrawScreenWiper() {
-		double w, h; 
-		[w,h] = TexMan.GetSize(texScreenWiper);
-		w *= scaleFactorWidth;
-		h *= scaleFactorHeight;
-		double ratioInterpolated = InterpolateValue(prevClipRatioInverted, clipRatioInverted, FracTicGlobal);
-		double x = Screen.GetWidth() - (Screen.GetWidth() + w) * ratioInterpolated;
-		double y = 0;
-		Screen.DrawTexture(
-			texScreenWiper, false,
-			x + uiSwayOffX + ShakeOffsetX,
-			y + uiSwayOffY + ShakeOffsetY,
-			DTA_DestWidthF, w,
-			DTA_DestHeightF, h
-		);
-		Screen.SetClipRect(0, 0, Screen.GetWidth() - Screen.GetWidth() * ratioInterpolated, Screen.GetHeight());
-	}
-	
-	ui void DrawBloodTextures() {		
-		for (int i = 0; i < bloodMaxCount; i++) {
-			UV_BloodSplash bs = currentBloodSplashes[i];
-			if (bs == null || bs.fadeOutTicker < 1) continue;
-			double texAlpha = InterpolateValue(bs.prevAlpha, bs.alpha, FracTicGlobal);
-			texAlpha *= alphaBlood;
-			if (invisEffectOn) {
-				texAlpha *= 0.4;
+		
+		if (nightVisionOn && !isLastPowerupColomapped) {
+			if (isGL_EnhancedNV) { // Idk why vanilla Enhanced Night Vision doesn't color blood
+				int grayscaleAmount = CalculateGrayscaleAmount(originalColor);
+				newColor = Color(255, grayscaleAmount - 40, grayscaleAmount + 30, 0);
+				if (texType > -1 && texType != UV_HudVisorDraw.ARMOR_GRID) { // Helmet parts except armor grid
+					newColor = BlendColors(originalColor, newColor, 0.35);
+				}
+			} else {
+				// Light Amplification mode (vanilla / NV Pack default mode / other mods)
+				newColor = BrightenColor(originalColor, 1.1);
 			}
-			Color texColor = CalculateColorWithBrightness(bs.bColor);
-
-			double x = InterpolateValue(bs.prevCoordinates.x, bs.coordinates.x, FracTicGlobal);
-			double y = InterpolateValue(bs.prevCoordinates.y, bs.coordinates.y, FracTicGlobal);
-			double w = InterpolateValue(bs.prevSize.x, bs.size.x, FracTicGlobal);
-			double h = InterpolateValue(bs.prevSize.y, bs.size.y, FracTicGlobal);
-			
-			TextureID bloodTexture = TexMan.CheckForTexture(CommonGraphicsPath .. "Blood/blood_" .. bs.texIndex .. ".png");
-			
-			Screen.DrawTexture(
-				bloodTexture, false, 
-				x + uiSwayOffX + ShakeOffsetX,
-				y + uiSwayOffY + ShakeOffsetY,
-				DTA_DestWidthF, w,
-				DTA_DestHeightF, h,
-				DTA_Alpha, texAlpha,
-				DTA_Color, texColor       
-			);
+			isAffectedByBrightness = false;
 		}
-    }
+		
+		if (lastColormappedPowerup && !isLastColormappedPowerupBlinking) { // last name of a powerup with Powerup.Colormap (false if empty string, i.e. no such powerup)
+			newColor = CalcColorWithColormappedPowerup(newColor, lastColormappedPowerup, texType);
+			isAffectedByBrightness = false;
+		}
+		if (combPlayerBlendAndPowerupBlendColor && effectiveBlendAlpha) { // if Powerup.Color or A_SetBlend()
+			newColor = BlendColors(newColor, combPlayerBlendAndPowerupBlendColor, effectiveBlendAlpha);
+		}
+		
+		if (!isAffectedByBrightness) {
+			return newColor;
+		}
+		double brightness = double(playerinf.mo.cursector.lightlevel) / double(255.0); // lightlevel is 0-255
+		brightness *= 1.3;
+		brightness = Clamp(brightness, 0.4, 1.0); // So it's never too dark
+		double influence = 1.0;
+		if (texType == UV_HudVisorDraw.GLOW) { // Reduce brightness influence
+			influence = 0.35;
+		} else if (texType == UV_HudVisorDraw.ARMOR_GRID) {
+			influence = 0.5;
+		} else if (texType > -1) { // Reduce for helmet pieces and glass too, but not so much
+			influence = 0.85;
+		}
+		brightness = 1.0 + (brightness - 1.0) * influence;
+		int r, g, b;
+		r = int(newColor.r * brightness);
+		g = int(newColor.g * brightness);
+		b = int(newColor.b * brightness);
+		
+		return Color(255, r, g, b);
+	}
+	
+	ui Color CalcColorWithColormappedPowerup(Color originalColor, String powerupName, UV_TextureTypes texType = -1) {
+		// Can't read actual Colormap colors, so hardcode for names
+	
+		if (powerupName == "PowerInvulnerable") {
+			if (globals.isBD_Loaded) {
+				int grayscaleAmount = CalculateGrayscaleAmount(originalColor);
+				return Color(255, grayscaleAmount, grayscaleAmount, grayscaleAmount);
+			} else if (globals.isHellrider_Loaded) {
+				int grayscaleAmount = CalculateGrayscaleAmount(originalColor) * 3.5;
+				int r = int(grayscaleAmount * 0.35);
+				int g = int(grayscaleAmount * 0.25);
+				return Color(255, r, g, grayscaleAmount);
+			} else if (globals.isHellriderVengeful_Loaded) {
+				int grayscaleAmount = CalculateGrayscaleAmount(originalColor);
+				return Color(255, 10, grayscaleAmount + 65, grayscaleAmount + 10);
+			}
+		}
+		
+		// Night vision mods
+		
+		if (texType == UV_HudVisorDraw.GLOW) {
+			return originalColor;
+		}
+		bool _nightVisionOn = false;
+		Color newColor = originalColor;
+		if (globals.isNightVisionPack_Loaded) { 
+			// Night Vision Pack
+			int grayscaleAmount = CalculateGrayscaleAmount(originalColor);
+			
+			// Inverse Map mode is handled separately using NV_PackInverseMapOn cause we change render style for it
+			
+			if (powerupName == "NVNightVision") { // Night Vision (green)
+				_nightVisionOn = true;
+				newColor = Color(255, 0, grayscaleAmount + 35, 0);
+			}
+			if (powerupName == "NVNightVisionProto") { // Prototype (blue-green)
+				_nightVisionOn = true;
+				newColor = Color(255, 0, grayscaleAmount + 20, grayscaleAmount + 20);
+			}
+			if (powerupName == "NVNightVisionGoldMap") { // GoldMap
+				_nightVisionOn = true;
+				newColor = Color(255, grayscaleAmount + 55, grayscaleAmount + 10, 0);
+			}
+			if (powerupName == "NVNightVisionGreenMap") { // GreenMap (yellow-green)
+				_nightVisionOn = true;
+				newColor = Color(255, grayscaleAmount + 30, grayscaleAmount + 40, grayscaleAmount + 10);
+			}
+			if (powerupName == "NVNightVisionRedMap") { // RedMap
+				_nightVisionOn = true;
+				newColor = Color(255, grayscaleAmount + 50, int(grayscaleAmount * 0.3), int(grayscaleAmount * 0.3));
+			}
+			if (powerupName == "NVNightVisionWhite") { // White (bright grayscale)
+				_nightVisionOn = true;
+				newColor = Color(255, grayscaleAmount + 20, grayscaleAmount + 20, grayscaleAmount + 20);
+			}
+		}
+
+		if (globals.isDD_Loaded && powerupName == "PowerNightVisionMode") { // DD goggles (green)
+			_nightVisionOn = true;
+			newColor = Color(255, 0, CalculateGrayscaleAmount(originalColor), 0);
+		}
+		if (_nightVisionOn && texType > -1 && texType != UV_HudVisorDraw.ARMOR_GRID) {
+			newColor = BlendColors(originalColor, newColor, 0.2); // Simulate light reflection for helmet parts except armor grid
+		}
+		return newColor;
+	}
+	
+	ui int CalculateGrayscaleAmount(Color originalColor) {
+		// luminosity method
+		return int(0.2126 * originalColor.r + 0.7152 * originalColor.g + 0.0722 * originalColor.b);
+	}
+	
+	ui Color GetColorForStencilStyle(Color originalColor) {
+		int grayscale = CalculateGrayscaleAmount(originalColor) + 110;
+		return Color(255, grayscale, grayscale, grayscale);
+	}
+	
+	ui Color BrightenColor(Color originalColor, double multiplier) {
+		return Color(255, 
+			int(originalColor.r * multiplier), 
+			int(originalColor.g * multiplier), 
+			int(originalColor.b * multiplier)
+		);
+	}
 	
 	// Set ammo colors if glow/glass are ammo-based and notify about low ammo if warning sound or glow pulse are ammo-based
 	ui void SetAmmoColors() {
 		if (ammoData.am1max > 0) {
-			colorAmmo1 = CalculateColor(mappedCurrentAmmo1);
+			colorAmmo1 = GetIndicatorColor(mappedCurrentAmmo1);
 		}
 		
 		if (ammoData.am2max > 0) {
-			colorAmmo2 = CalculateColor(mappedCurrentAmmo2);
+			colorAmmo2 = GetIndicatorColor(mappedCurrentAmmo2);
 		}
 		
 		if (ammoData.ammo1_ClassName && !ammoData.ammo2_ClassName) {
@@ -1683,7 +1877,8 @@ class UV_HudVisorDraw : EventHandler
 		PM_BLOOD = "PM_NormalBloodBase";
 		MD_BLOOD = "MDBlood";
 		heavyMachinegunStr = "PowerHeavyMachinegunSwitch";
-		isDemonPlayerStr = "isDemonPlayer";
+		PB_NightVisionStr = "PB_PowerLightAmp";
+		NVNightVisionInverseMapStr = "NVNightVisionInverseMap";
 		startupTicker = STARTUP_TICKS;
 		paramsForIsVisible.minDist = 1; // prevent false positives (for our case), which apparently happen when minDist is 0
 		globals = UV_HudVisorStaticGlobals.Get();
@@ -1719,6 +1914,7 @@ class UV_HudVisorDraw : EventHandler
 		}
 		
 		CheckPowersAndVehicles();
+		SetBlendColorAndAlpha();
 		SetStoredHealthArmor();
 		
 		if (showBloodSplashesPlayContext) {
@@ -1883,7 +2079,7 @@ class UV_HudVisorDraw : EventHandler
 		bloodRandomColors = Cvar.GetCvar("uvisor_blood_family_friendly_colors", playerinf).GetBool();
 		bloodMaxCount = min(Cvar.GetCVar("uvisor_blood_max_count", playerinf).GetInt(), BLOOD_MAX_SPLASHES);
 		bloodDetectionMode = Cvar.GetCVar("uvisor_blood_detection_mode", playerinf).GetInt();
-		bloodDefaultSaturationShift = Cvar.GetCVar("uvisor_blood_default_saturation_shift", playerinf).GetInt();
+		bloodDefaultSaturationShiftCvar = Cvar.GetCVar("uvisor_blood_default_saturation_shift", playerinf).GetInt();
 		screenWiperMode = Cvar.GetCvar("uvisor_screen_wiper_mode", playerinf).GetInt();
 		paramsForIsVisible.Fov = Cvar.GetCvar("fov", playerinf).GetFloat() + 40; // increased to consider enemies near screen edges
 		paramsForIsVisible.maxDist = bloodMaxInitDistance + playerinf.mo.Radius;
@@ -1969,49 +2165,13 @@ class UV_HudVisorDraw : EventHandler
 			}
 			
 			Color newBloodColor;
-			if (e.thing.bloodColor != UNSET_COLOR) {
-				// Good case: enemy has a specified blood color
-				newBloodColor = e.thing.bloodColor;
-			} else {
-				// Not so good: vanilla Doom or mod enemies where color is empty (0, 0, 0, 0) (usually it's not the same as set black)
-				// Try to find color name in the 3 blood types
-				array<string> enemyBloodTypes;
-				string enemyBloodType0 = "";
-				if (e.thing.GetBloodType(0) != null) {
-					enemyBloodType0 = e.thing.GetBloodType(0).getClassName();
-					enemyBloodType0 = enemyBloodType0.MakeLower();
-					enemyBloodTypes.Push(enemyBloodType0);
-				} 
-				string enemyBloodType1 = "";
-				if (e.thing.GetBloodType(1) != null) {
-					enemyBloodType1 = e.thing.GetBloodType(1).getClassName();
-					enemyBloodType1 = enemyBloodType1.MakeLower();
-				} 
-				string enemyBloodType2 = "";
-				if (e.thing.GetBloodType(2) != null) {
-					enemyBloodType2 = e.thing.GetBloodType(2).getClassName();
-					enemyBloodType2 = enemyBloodType2.MakeLower();
-				}
-				if (enemyBloodTypes.Size() == 0) {
-					return; // Rare case when enemy doesn't have noblood flags, but has no actual blood and all 3 types are null (because has BloodType "None"?)
-							// Example: Blot in Dragon Sector Remake
-				}
-				// Get color from type names or use gameinfo default color
-				newBloodColor = DetectBloodColorFromTypesOrDefault(enemyBloodTypes);
-				
-				if (globals.isDD_Loaded) {
-					if (enemyBloodType2.IndexOf("blue") != -1) {
-						newBloodColor = Color("3399BF"); // light blue
-					}
-				} else if (globals.isBD64_Loaded) {
-					if (enemyBloodType1.IndexOf("blue") != -1) {
-						newBloodColor = Color("1A166B"); // blue-purple, not just blue
-					}
-				}
-			}
+			bool isValidColor;
 			if (bloodRandomColors) {
 				newBloodColor = GetRandomBloodColor();
+			} else {
+				[newBloodColor, isValidColor] = GetBloodColorFromEnemy(e.thing);
 			}
+			if (!isValidColor) return;
 
 			if (random(1, 100) > (100 - bloodFreq)) {
 				InitBloodSplash(newBloodColor);
@@ -2025,8 +2185,61 @@ class UV_HudVisorDraw : EventHandler
 		}
 	}
 	
-	Color DetectBloodColorFromTypesOrDefault(array<string> enemyBloodTypes) {
-		for (int i = 0; i < enemyBloodTypes.Size(); i++) {
+	Color, bool GetBloodColorFromEnemy(Actor enemyActor) {
+		Color newBloodColor;
+		if (enemyActor.bloodColor != UNSET_COLOR) {
+			// Good case: enemy has a specified blood color
+			newBloodColor = enemyActor.bloodColor;
+			if (globals.isPB_Loaded) { // PB blood decals seem to be darker than in most mods (but actually more in line with the defaultbloodcolor)
+				newBloodColor = Color(255, 
+					int(newBloodColor.r * 0.6), 
+					int(newBloodColor.g * 0.6), 
+					int(newBloodColor.b * 0.6)
+				);
+			}
+		} else {
+			// Not so good: vanilla Doom or mod enemies where color is empty (0, 0, 0, 0) (usually it's not the same as set black)
+			// Try to find color name in the 3 blood types
+			array<string> enemyBloodTypes;
+			string enemyBloodType0 = "";
+			if (enemyActor.GetBloodType(0) != null) {
+				enemyBloodType0 = enemyActor.GetBloodType(0).getClassName();
+				enemyBloodType0 = enemyBloodType0.MakeLower();
+				enemyBloodTypes.Push(enemyBloodType0);
+			} 
+			string enemyBloodType1 = "";
+			if (enemyActor.GetBloodType(1) != null) {
+				enemyBloodType1 = enemyActor.GetBloodType(1).getClassName();
+				enemyBloodType1 = enemyBloodType1.MakeLower();
+			} 
+			string enemyBloodType2 = "";
+			if (enemyActor.GetBloodType(2) != null) {
+				enemyBloodType2 = enemyActor.GetBloodType(2).getClassName();
+				enemyBloodType2 = enemyBloodType2.MakeLower();
+			}
+			if (enemyBloodTypes.Size() == 0) {
+				return Color(0,0,0,0), false; // Rare case when enemy doesn't have noblood flags, but has no actual blood and all 3 types are null (because has BloodType "None"?)
+						// Example: Blot in Dragon Sector Remake
+			}
+			// Special cases
+			if (globals.isDD_Loaded) {
+				if (enemyBloodType2.IndexOf("blue") != -1) {
+					return Color("3399BF"), true; // light blue
+				}
+			} else if (globals.isBD64_Loaded) {
+				if (enemyBloodType1.IndexOf("blue") != -1) {
+					return Color("1A166B"), true; // blue-purple, not just blue
+				}
+			}
+			// Try to find color name in type names or use gameinfo default color
+			newBloodColor = GetBloodColorFromTypesOrDefault(enemyBloodTypes);
+		}
+		return newBloodColor, true;
+	}
+	
+	Color GetBloodColorFromTypesOrDefault(array<string> enemyBloodTypes) {
+		int size = enemyBloodTypes.Size();
+		for (int i = 0; i < size; i++) {
 			if (enemyBloodTypes[i].IndexOf("green") != -1) {
 				return Color("006400");
 			} else if (enemyBloodTypes[i].IndexOf("blue") != -1) {
@@ -2045,16 +2258,20 @@ class UV_HudVisorDraw : EventHandler
 	Color GetDefaultBloodColor() {
 		// If color is unset and we didn't find one of the common colors, use gameinfo default color
 		Color defaultColor = gameinfo.defaultbloodcolor;
-		// However it's usually quite dark comparing to actual enemies blood, so by default increase it by 80 in RGB
-		int red = (defaultColor.r > 0) ? defaultColor.r * 1.75 : 0;
-		int green = (defaultColor.g > 0) ? defaultColor.g * 1.75 : 0;
-		int blue = (defaultColor.b > 0) ? defaultColor.b * 1.75 : 0;
-		if (bloodDefaultSaturationShift != 0) {
-			int shiftMapped = MapRange(bloodDefaultSaturationShift, -100, 100, -255, 255);
-			red = (red > 0) ? (red + shiftMapped) : red;
-			green = (green > 0) ? (green + shiftMapped) : green;
-			blue = (blue > 0) ? (blue + shiftMapped) : blue;
+		// However it's usually quite dark comparing to actual enemies blood 
+		// Because UV blood textures aren't completely white and because blood decals/sprites may differ in color
+		// So increase brightness
+		int red = int(defaultColor.r * globals.bloodDefaultSaturationMultiplier);
+		int green = int(defaultColor.g * globals.bloodDefaultSaturationMultiplier);
+		int blue = int(defaultColor.b * globals.bloodDefaultSaturationMultiplier);
+		// Finally, adjust using cvar if it's set
+		if (bloodDefaultSaturationShiftCvar != 0) {
+			int shiftMapped = MapRange(bloodDefaultSaturationShiftCvar, -100, 100, -255, 255);
+			red = (red > 0) ? (red + shiftMapped) : 0;
+			green = (green > 0) ? (green + shiftMapped) : 0;
+			blue = (blue > 0) ? (blue + shiftMapped) : 0;
 		}
+// 		console.printf("Adjusted default blood color: " .. Color(255, red, green, blue));
 		return Color(255, red, green, blue);
 	}
 	
@@ -2094,30 +2311,79 @@ class UV_HudVisorDraw : EventHandler
 		invisEffectOn = false;
 		radSuitOn = false;
 		nightVisionOn = false;
+		PB_NightVisionOn = false;
+		NV_PackInverseMapOn = false;
 		invulnerabilityOn = false;
+		isVanillaInvulernabilityOn = false;
+		isVanillaInvulernabilityBlinking = false;
 		isDemonPlayer = false;
 		inMachineGun = false;
 		inVehicle = false;
+		isLastPowerupColomapped = false;
+		lastColormappedPowerup = "";
+		powerupBlendColors.Clear();
+		combPlayerBlendAndPowerupBlendColor = UNSET_COLOR;
+		effectiveBlendAlpha = 0.0;
 		string invulnerableStr;
+		string nightVisionStr;
 		if (globals.isPB_Loaded) {
 			invulnerableStr = "PB_PowerInvul"; // check specifically this one to avoid grid highlight when doing melee groly kills
-		} else {
+		} 
+		else {
 			invulnerableStr = "PowerInvulnerable";
 		}
+		if (globals.isDD_Loaded) {
+			nightVisionStr = "NightVision";
+		} else {
+			nightVisionStr = "PowerLightamp";
+		}
 		while (invItem != null) {
+			if (invItem is "Powerup" && !(invItem is "PowerIronfeet")) { // not radsuit
+				isLastPowerupColomapped = false;
+				isLastColormappedPowerupBlinking = false;
+				Powerup pow = Powerup(invItem);
+				if (pow.GetBlend()) { // Powerup.Color actor property
+					powerupBlendColors.Push(pow.GetBlend());
+				}
+				if (pow.Colormap && pow.Colormap != -1) { 
+					// Based on Powerup.Colormap actor property, but we can get only its dynamic id here (unreliable if multiple mods loaded)
+					// So store powerup class name instead
+					lastColormappedPowerup = pow.GetClassName();
+					if (pow.isBlinking()) {
+						isLastColormappedPowerupBlinking = true;
+					}
+// 					console.printf("===== pow.Colormap: " .. pow.Colormap);
+// 					console.printf("lastColormappedPowerup: " .. lastColormappedPowerup);
+					isLastPowerupColomapped = true; // gets reset if not last
+				}
+				if (globals.isNightVisionPack_Loaded && invItem is NVNightVisionInverseMapStr) {
+					NV_PackInverseMapOn = true; 
+				}
+				if (invItem is invulnerableStr) {
+					if (!pow.Colormap && !pow.GetBlend() && !globals.isPB_Loaded) {
+						isVanillaInvulernabilityOn = true;
+						if (pow.isBlinking()) {
+							isVanillaInvulernabilityBlinking = true;
+						}
+					}
+				}
+			}
 			if (invItem is "PowerInvisibility") { // "is" means items extending this power, so mods are compatible
 				invisEffectOn = true;
 			} else if (invItem is "PowerIronfeet") { 	// Radsuits
 				radSuitOn = true;
-			} else if (invItem is "PowerLightamp") { 	// Night vision
+			} else if (invItem is nightVisionStr) { 	// Night vision
 				nightVisionOn = true;
+				if (invItem is PB_NightVisionStr) {
+					PB_NightVisionOn = true;
+				} 
 			} else if (invItem is invulnerableStr) {
 				invulnerabilityOn = true;
-			} else if (invItem is isDemonPlayerStr) { 	// BD demon morphs
+			} else if (IsDemonPlayerFlag(invItem)) { 	// BD demon morphs
 				isDemonPlayer = true;
 			} else if (invItem is heavyMachinegunStr) { // BD and UMES machine gun
 				inMachineGun = true;
-			}  else if (!inVehicle) {  					// BD and UMES vehicles except machine gun
+			} else if (!inVehicle) {  					// BD and UMES vehicles except machine gun
 				for (int i = 0; i < vehicleInvNames.Size(); i++) {
 					if (invItem is vehicleInvNames[i]) {
 						inVehicle = true;
@@ -2135,8 +2401,77 @@ class UV_HudVisorDraw : EventHandler
 		if (machineGunEnterLeaveTicker > 0) {
 			machineGunEnterLeaveTicker--;
 		}
+		
+// 		console.printf("invulnerabilityOn: " .. invulnerabilityOn);
+// 		console.printf("nightVisionOn: " .. nightVisionOn);
+// 		console.printf("^isLastColormappedPowerupBlinking: " .. isLastColormappedPowerupBlinking);
+// 		console.printf(" isVanillaInvulernabilityBlinking: " .. isVanillaInvulernabilityBlinking);
 	}
 	
+	Color GetColorFromColormap(int subTableIndex, int originalPaletteIndex)
+	{
+		int colormapLump = Wads.CheckNumForName("COLORMAP", Wads.GLOBALNAMESPACE);
+		int palLump = Wads.CheckNumForName("PLAYPAL", Wads.GLOBALNAMESPACE);
+		
+		if (colormapLump == -1 || palLump == -1)
+			return Color(255, 0, 255);
+		
+		String colormapData = Wads.ReadLump(colormapLump);
+		String palData = Wads.ReadLump(palLump);
+		
+		// Use ByteAt() instead of getCharAt()
+		int startOffset = subTableIndex * 256;
+		int remappedIndex = colormapData.ByteAt(startOffset + originalPaletteIndex);
+		
+		int colorOffset = remappedIndex * 3;
+		int r = palData.ByteAt(colorOffset);
+		int g = palData.ByteAt(colorOffset + 1);
+		int b = palData.ByteAt(colorOffset + 2);
+		
+		return Color(r, g, b);
+	}
+	
+	void SetBlendColorAndAlpha() {
+		double combinedA;
+		double combinedR;
+		double combinedG;
+		double combinedB;
+		if (playerinf.BlendA) { // When actor has A_SetBlend() and its alpha is > 0
+			combinedA += playerinf.BlendA;
+			combinedR += playerinf.BlendR * playerinf.BlendA;
+			combinedG += playerinf.BlendG * playerinf.BlendA;
+			combinedB += playerinf.BlendB * playerinf.BlendA;
+			Console.Printf("playerinf.Blend: R=%f, G=%f, B=%f, A=%f", playerinf.BlendR, playerinf.BlendG, playerinf.BlendB, playerinf.BlendA);
+		}
+		for (int i = 0; i < powerupBlendColors.Size(); i++) {
+			Color pColor = powerupBlendColors[i];
+			double blendColorAlpha = pColor.a / 255.0;
+			if (blendColorAlpha <= 0.0) continue;
+			combinedA += blendColorAlpha;
+			combinedR += (pColor.r / 255.0) * blendColorAlpha;
+			combinedG += (pColor.g / 255.0) * blendColorAlpha;
+			combinedB += (pColor.b / 255.0) * blendColorAlpha;
+			Console.Printf("powerupBlendColors[%d]: R=%f, G=%f, B=%f, A=%f",
+						   i, pColor.r/255.0, pColor.g/255.0, pColor.b/255.0, blendColorAlpha);
+		}
+		if (combinedA > 0.0) {
+			double normR = clamp(combinedR / combinedA, 0.0, 1.0);
+			double normG = clamp(combinedG / combinedA, 0.0, 1.0);
+			double normB = clamp(combinedB / combinedA, 0.0, 1.0);
+			effectiveBlendAlpha = min(combinedA, 1.0);
+			combPlayerBlendAndPowerupBlendColor = Color(255, int(normR * 255.0), int(normG * 255.0), int(normB * 255.0));
+		}
+	}
+	
+	bool IsDemonPlayerFlag(Inventory invItem) {
+		for (int i = 0; i < isDemonPlayerFlags.Size(); i++) {
+			if (invItem is isDemonPlayerFlags[i]) {
+				return true;
+			}
+		}
+		return false;
+	}
+		
 	// Used to prevent some cracks/grid bugs when entering or leaving vehicles or machinegun
 	void SetStoredHealthArmor() {
 		if (inVehicle || (!inVehicle && wasInVehicle) || isEnteringOrLeavingMachineGun()) {
@@ -2220,7 +2555,7 @@ class UV_HudVisorDraw : EventHandler
 						|| (armorGridDisplayModePlay == 2 && (totalArmor > 0 || radSuitOn))	// "When Armor > 0 or Radiation Suit Is On"
 				)
 				// disable when "Disable Armor Grid When Radsuit or Nightvision On" and they are on indeed
-				&& !(armorGridDisableWhenOtherOverlay && (radSuitOn || nightVisionOn))
+				&& !(armorGridDisableWhenOtherOverlay && (radSuitOn || PB_NightVisionOn))
 		;
 		if (!isArmorGridShownVar && (inVehicle || wasInVehicle || machineGunEnterLeaveTicker > 0) && wasArmorGridShown) {
 			isArmorGridShownVar = true;
@@ -2364,7 +2699,7 @@ class UV_HudVisorDraw : EventHandler
 		if (e.thing.Distance3D(playerinf.mo) <= (bloodMaxInitDistance + playerinf.mo.Radius)) {  // playerinf.mo.Radius is usually 16
 			Color newBloodColor;
 			if (random(1, 100) > (100 - bloodFreq)) {
-				newBloodColor = bloodRandomColors ? GetRandomBloodColor() : DetectBloodColorFromBlood(e.thing);
+				newBloodColor = bloodRandomColors ? GetRandomBloodColor() : GetBloodColorFromBlood(e.thing);
 				InitBloodSplash(newBloodColor);
 			}
 			if (bloodFreq > 100 && random(1, 100) > (200 - bloodFreq)) { // if frequency > 100 there's a chance for second splash at the same moment
@@ -2374,10 +2709,9 @@ class UV_HudVisorDraw : EventHandler
 				InitBloodSplash(newBloodColor);
 			}
 		}
-
 	}
 	
-	Color DetectBloodColorFromBlood(Actor thing) {
+	Color GetBloodColorFromBlood(Actor thing) {
 		Color newBloodColor;
 		if (thing.target && thing.target.bISMONSTER) {
 			newBloodColor = thing.target.bloodcolor;
