@@ -1,0 +1,161 @@
+//// Top Menu Part
+
+user bool uvisor_mod_enabled = true;
+user int uvisor_tex_res = 0;
+
+
+//// Submenus
+
+// Main Toggles
+user bool uvisor_show_pieces = true;
+user bool uvisor_show_glow = true;
+user bool uvisor_show_glass = true;
+user bool uvisor_show_tactical_overlay = true;
+user bool uvisor_show_tactical_marks = true;
+user bool uvisor_show_armor_grid = true;
+user bool uvisor_show_glass_cracks = true;
+user bool uvisor_show_blood_splashes = true;
+user bool uvisor_startup_anim_enabled = true;
+
+
+// Presets and Backup
+nosave 			 string __uvisor_user_presets_json = "{}";
+nosave noarchive string __uvisor_save_preset_name = "";
+
+
+// Style Options
+user int uvisor_style_helmet_top = 1;
+user int uvisor_style_helmet_bottom = 1;
+user int uvisor_style_helmet_corners = 1;
+user int uvisor_style_side_glass = 1;
+user int uvisor_style_tactical_overlay_1 = 1;
+user int uvisor_style_tactical_overlay_2 = 0;
+
+
+// Colors and Transparency
+user color uvisor_color_part_top = "8b 8b 8b";
+user bool uvisor_sync_part_colors = true;
+user color uvisor_color_part_bottom = "FF FF FF";
+user color uvisor_color_part_corners = "FF FF FF";
+user color uvisor_color_glow = "FF FF FF";
+user bool uvisor_translucent_glow_style = false;
+user bool uvisor_sync_glow_glass = false;
+user color uvisor_color_glass = "00 d2 aa";	
+user bool uvisor_sync_glass_tactical_overlay = false;
+user color uvisor_color_tactical_overlay_1 = "FF FF FF";
+user color uvisor_color_tactical_overlay_2 = "BB BB BB";
+user color uvisor_color_armor_grid = "03 16 2f";
+user color uvisor_color_glass_cracks = "e1 e1 e1";
+
+user float uvisor_alpha_parts = 1.0;
+user float uvisor_alpha_glow = 1.0;
+user float uvisor_alpha_glass = 0.6;
+user float uvisor_alpha_tactical_1 = 0.7;
+user float uvisor_alpha_tactical_2 = 0.7;
+user float uvisor_alpha_armor_grid = 0.7;
+user float uvisor_alpha_cracks = 0.8;
+user float uvisor_alpha_blood = 1.0;
+user bool uvisor_override_alpha_bottom = false;
+user float uvisor_alpha_part_bottom = 0.5;
+user float uvisor_alpha_glow_bottom = 1.0;
+user float uvisor_alpha_glass_bottom = 0.7;
+
+
+// Offsets, Scaling
+user int uvisor_offset_top = 8;
+user int uvisor_offset_bottom = 45;
+user int uvisor_offset_corners_x = 18;
+user int uvisor_offset_corners_y = 18;
+user int uvisor_offset_sides_glass = 30;
+user int uvisor_offset_tactical_marks = 250;
+user float uvisor_width_scale_bottom = 1.0;
+user float uvisor_width_scale_corners = 1.0;
+
+
+// Separate Toggles
+user bool uvisor_show_part_top = true;
+user bool uvisor_show_glow_top = true;
+user bool uvisor_show_glass_top = true;
+user bool uvisor_show_part_bottom = true;
+user bool uvisor_show_glow_bottom = true;
+user bool uvisor_show_glass_bottom = true;
+user bool uvisor_show_glass_sides = true;
+user bool uvisor_show_part_corners = true;
+user bool uvisor_show_glow_corners = true;
+user bool uvisor_show_glass_corners = true;
+user int uvisor_auto_hide_corners_mode = 0;
+user int uvisor_auto_hide_corners_screensize = 11;
+user bool uvisor_grid_idle_anim_enabled = true;
+
+
+// Gameplay
+user int uvisor_gameplay_color_basis_glow = 0;
+user int uvisor_gameplay_color_basis_glass = 0;
+user int uvisor_gameplay_color_basis_armor_grid = 0;
+user color uvisor_gameplay_color_step_1 = "E6 00 00"; // red, rgb(230, 0, 0)
+user color uvisor_gameplay_color_step_2 = "FF FF FF"; // white, rgb(255, 255, 255)
+user color uvisor_gameplay_color_step_3 = "00 C8 00"; // green, rgb(0, 200, 0)
+user color uvisor_gameplay_color_step_4 = "00 78 FF"; // bright blue, rgb(0, 120, 255)
+user int uvisor_cracks_basis = 0;
+user bool uvisor_hide_glow_if_empty_armor = false;
+user bool uvisor_hide_glass_if_empty_armor = false;
+user bool uvisor_hitfeedback_if_empty_armor = true;
+user int uvisor_glow_pulse_mode = 0;
+user float uvisor_glow_pulse_speed = 2.0;
+user int uvisor_armor_grid_display_mode = 2;
+user int uvisor_gameplay_alpha_basis_armor_grid = 0;
+user int uvisor_powers_overrides_grid_color_mode = 3;
+user bool uvisor_grid_disable_when_radsuit_nightvis = false;
+user bool uvisor_transparency_on_invis = true;
+user bool uvisor_hide_helmet_in_third_person = true;
+
+
+// Blood On Visor
+user int uvisor_blood_freq = 80;
+user int uvisor_blood_max_init_distance = 90;
+user float uvisor_blood_size = 1.1;
+user int uvisor_blood_max_count = 20;
+user float uvisor_blood_lifetime = 3;
+user bool uvisor_blood_vanishes = true;
+user int uvisor_screen_wiper_mode = 1;
+user int uvisor_blood_default_saturation_shift = 0;
+user bool uvisor_blood_family_friendly_colors = false;
+user int uvisor_blood_detection_mode = 0;
+
+
+// Swaying and Shaking
+user bool uvisor_swaying = true;
+user float uvisor_maxsway_x = 15.0;
+user float uvisor_maxsway_y = 10.0;
+
+user float uvisor_sway_sensitivity = 1.5;
+user float uvisor_camera_sway_mult_x = 1.0;
+user float uvisor_camera_sway_mult_y = 1.0;
+user bool uvisor_movement_sway = true;
+user float uvisor_movement_sway_mult_x = 0.4;
+user float uvisor_movement_sway_mult_y = 0.25;
+user float uvisor_movement_sway_mult_bob = 0.30;
+user int uvisor_bob_sway_mode = 0;
+user float uvisor_bob_sway_freq = 0.70;
+user bool uvisor_crouch_sway = true;
+user float uvisor_crouch_sway_intensity = 0.5;
+user bool uvisor_jump_sway = true;
+user float uvisor_jump_sway_intensity = 0.6;
+
+user bool uvisor_shaking = true;
+user float uvisor_shaking_sensitivity = 0.2;
+
+
+// Sounds
+user int uvisor_warning_sound_mode = 3;
+user float uvisor_warning_volume = 1.0;
+user int uvisor_warning_sound_channel = 105;
+user float uvisor_cracks_sounds_volume = 1.0;
+user float uvisor_hit_sounds_volume = 1.0;
+user float uvisor_depleted_sound_volume = 1.0;
+user bool uvisor_breath_disable_if_no_glass = true;
+user float uvisor_breath_volume = 0.9;
+user int uvisor_breath_voice = 0;
+user int uvisor_breath_sound_channel = 106;
+user float uvisor_startup_volume = 1.0;
+user float uvisor_screen_wiper_volume = 1.0;

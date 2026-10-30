@@ -1,0 +1,30 @@
+default,identifier,remarks,ru,pt,de,esm,fr
+Presets,JGPHUD_Presets_Title,Title for the Presets submenu,Пресеты,Predefinições,Voreinstellungen,Predefinidos,Préréglages
+Load,JGPHUD_Presets_Verb_Load,"Element in the user presets menu
+This will no longer be used in string concatenation, this is a standalone element",Загрузить,Carregar,Laden,Cargar,Charger
+Overwrite,JGPHUD_Presets_Verb_Overwrite,"Element in the user presets menu
+This will no longer be used in string concatenation, this is a standalone element",Перезаписать,Sobrescrever,Überschreiben,Sobreescribir,Écraser
+Delete,JGPHUD_Presets_Verb_Delete,"Element in the user presets menu
+This will no longer be used in string concatenation, this is a standalone element",Удалить,Excluir,Löschen,Borrar,Supprimer
+Cancel,JGPHUD_Presets_Menu_Cancel,"Element in the user presets menu
+This will no longer be used in string concatenation, this is a standalone element",Назад,Cancelar,Abbrechen,Cancelar,Annuler
+"Are you sure you want to %1s preset \""%2s\""?",JGPHUD_Presets_ConfirmAction,"NO LONGER USED
+
+(This has been replaced with separate strings below.)","Вы точно хотите %1s пресет \""%2s\""?","Deseja mesmo %1s a predefinição \""%2s\""?","Bist du sicher, dass du die Voreinstellung \""%2s\"" %1s möchtest?","Quieres %1s la configuración \""%2s\""?","Êtes-vous sûr de vouloir %1s préréglage \""%2s\"" ?"
+"Are you sure you want to load preset \""%s\""?",JGPHUD_Presets_ConfirmAction_Load,"Option for the user preset menu.
+%s is the name of the preset, keep it intact. Please don't forget that quotation marks need escaping: \"" is valid but just "" is not.","Вы точно хотите загрузить пресет \""%s\""?","Deseja mesmo carregar a predefinição \""%s\""?",,,
+"Are you sure you want to overwrite preset \""%s\""?",JGPHUD_Presets_ConfirmAction_Overwrite,"Option for the user preset menu.
+%s is the name of the preset, keep it intact. Please don't forget that quotation marks need escaping: \"" is valid but just "" is not.","Вы точно хотите перезаписать пресет \""%s\""?","Deseja mesmo sobrescrever a predefinição \""%s\""?",,,
+"Are you sure you want to delete preset \""%s\""?",JGPHUD_Presets_ConfirmAction_Delete,"Option for the user preset menu.
+%s is the name of the preset, keep it intact. Please don't forget that quotation marks need escaping: \"" is valid but just "" is not.","Вы точно хотите удалить пресет \""%s\""?","Deseja mesmo excluir a predefinição \""%s\""?",,,
+"Overwrite existing preset \""%s\""?",JGPHUD_Preset_Warning_Overwrite,"Option for the user preset menu.
+%s is the name of the preset, keep it intact. Please don't forget that quotation marks need escaping: \"" is valid but just "" is not.","Перезаписать пресет \""%s\""?","Sobrescrever predefinição existente \""%s\""?","Voreinstellung \""%s\"" überschreiben?","Sobrescribir la configuración \""%s\""?","Écraser le préréglage existant ""%s\"" ?"
+Preset name cannot contain whitespace,JGPHUD_Preset_Warning_Whitespace,Generic warning for the Presets menu,В названии пресета не должно быть пробелов,Nome da predefinição não pode conter espaço em branco,Name der Voreinstellung darf keine Leerzeichen enthalten,Nombre de la configuración no puede tener espacios,Le nom de la présélection ne peut pas contenir d'espace
+Cannot create preset with empty name,JGPHUD_Preset_Warning_EmptyName,Generic warning for the Presets menu,Нельзя создать пресет с пустым названием,Não é possível criar predefinições com um nome em branco,Leerer Name für Voreinstellungen nicht möglich,No se puede crear configuración con nombre en blanco,Impossible de créer un préréglage avec un nom vide
+Built-in presets,JGPHUD_Presets_Menu_BuiltIn,Title of a submenu in the Presets menu. Built-in presets are the presets that are bundled with FlexiHUD,Встроенные пресеты,Predefinições padrão,Eingebaute Voreinstellungen,Configuraciónes predefinidas,Préréglages intégrés
+User presets,JGPHUD_Presets_Menu_User,Title of a submenu in the Presets menu. User presets are the ones created by the player.,Пользовательские пресеты,Predefinições do usuário,Benutzerdefinierte Voreinstellungen,Configuraciones del usuario,Préréglages utilisateur
+Save current preset,JGPHUD_Presets_Menu_Save,Command in the Presets menu that saves the current settings into a preset,Сохранить текущие настройки в пресет,Salvar predefinição atual,Derzeitige Voreinstellung abspeichern,Guardar configuración actual,Sauvegarder le préréglage actuel
+Are you sure you want to reset to default settings?,JGPHUD_Presets_Menu_ResetSettingsConfirm,This just resets all CVARs to their default values. This isn't tied to a preset.,Вы точно хотите сбросить настройки?,Deseja mesmo redefinir para as configurações padrão?,"Bist du sicher, dass du die Standardeinstellung wiederherstellen möchtest?",Quieres reiniciar a las configuraciones por defecto?,Êtes-vous sûr de vouloir rétablir les paramètres par défaut ?
+Are you sure you want to load the default preset?,JGPHUD_Presets_Menu_ResetPresetConfirm,NO LONGER USED,Вы точно хотите загрузить пресет по умолчанию?,Deseja mesmo redefinir para as configurações padrão?,"Bist du sicher, dass du die Standard-Voreinstellung laden möchtest?",,Êtes-vous sûr de vouloir charger le préréglage par défaut ?
+Preset name:,JGPHUD_Presets_Menu_Name,"When the user chooses ""Save current preset"", this line appears, followed by a text input field where the user has to enter the name for their current preset.",Название пресета:,Nome da predefinição:,Name der Voreinstellung:,Nombre de la Configuración,Nom du préréglage :
+Confirm,JGPHUD_Presets_Menu_Confirm,A button the player presses after they've entered the preset name.,Подтвердить,Confirmar,Bestätigen,Confirmar,Confirmer

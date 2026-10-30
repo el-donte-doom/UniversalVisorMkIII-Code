@@ -1,0 +1,12 @@
+version "4.11.0"
+
+#include "zscript/UV_HudVisorDraw.zs"
+#include "zscript/UV_HudVisorStaticGlobals.zs"
+#include "zscript/UV_DynamicDoubleInterpolator.zs"
+#include "zscript/UV_AmmoReader.zs"
+#include "zscript/UV_AmmoReaderFactory.zs"
+#include "zscript/UserPresets/ZJSON/Include.zs"
+#include "zscript/UserPresets/Include.zs"
+#include "zscript/hitfeedback/sharedmath.zs"
+#include "zscript/hitfeedback/handler.zs"
+#include "zscript/hitfeedback/inventory.zs"

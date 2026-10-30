@@ -1,0 +1,584 @@
+AddOptionMenu "OptionsMenu"
+{
+	Submenu "$UVISOR_NAME", "VisorOptions"
+}
+
+OptionMenu "VisorOptions"
+{
+	Title "$UVISOR_INNER_MENU_NAME"
+	
+	StaticText " "
+	StaticText " "
+	Option "$UVISOR_MOD_ENABLED", "uvisor_mod_enabled", "YesNo"
+	Option "$UVISOR_TEXTURE_RESOLUTION", "uvisor_tex_res", "TextureResolutions"
+	
+	StaticText " "
+	Submenu "$UVISOR_MENU_MAIN_TOGGLES", "UV_MENU_MAIN_TOGGLES"
+	
+	StaticText " "
+	Submenu "$UVISOR_MENU_PRESETS", "UV_MENU_PRESETS"
+	
+	StaticText " "
+	Submenu "$UVISOR_MENU_STYLE", "UV_MENU_STYLE"
+
+	StaticText " "
+	Submenu "$UVISOR_MENU_COLORS", "UV_MENU_COLORS"
+	
+	StaticText " "
+	Submenu "$UVISOR_MENU_OFFSETS_SIZES", "UV_MENU_OFFSETS_SIZES"
+	
+	StaticText " "
+	Submenu "$UVISOR_MENU_TOGGLES", "UV_MENU_TOGGLES"
+	
+	StaticText " "
+	Submenu "$UVISOR_MENU_GAMEPLAY", "UV_GAMEPLAY"
+	
+	StaticText " "
+	Submenu "$UVISOR_MENU_BLOOD_SPLASHES", "UV_BLOOD_SPLASHES"
+	
+	StaticText " "
+	Submenu "$UVISOR_MENU_SWAY_SHAKE", "UV_SWAY_SHAKE"
+	
+	StaticText " "
+	Submenu "$UVISOR_SOUNDS", "UV_SOUNDS"
+	
+	StaticText " "
+	SafeCommand "$UVISOR_RESET_ALL_SETTINGS", uvisor_restore_defaults, "$UVISOR_RESET_ALL_SETTINGS_PROMPT"
+	StaticText " "
+	StaticText " ________________________ ", DarkGray
+	StaticText "           v1.2           ", DarkGray
+}
+
+// Main Toggles
+OptionMenu "UV_MENU_MAIN_TOGGLES" {
+	Title "$UVISOR_MENU_MAIN_TOGGLES_INNER"
+	StaticText " "
+	StaticText " "
+	Option "$UVISOR_SHOW_HELMET_PIECES", "uvisor_show_pieces", "OnOff"
+	Option "$UVISOR_SHOW_GLOW", "uvisor_show_glow", "OnOff"
+	Option "$UVISOR_SHOW_GLASS", "uvisor_show_glass", "OnOff"
+	Option "$UVISOR_SHOW_TACTICAL_OVERLAY", "uvisor_show_tactical_overlay", "OnOff"
+	Option "$UVISOR_SHOW_TACTICAL_MARKS", "uvisor_show_tactical_marks", "OnOff"
+	Option "$UVISOR_SHOW_ARMOR_GRID", "uvisor_show_armor_grid", "OnOff"
+	Option "$UVISOR_SHOW_VISOR_CRACKS", "uvisor_show_glass_cracks", "OnOff"
+	Option "$UVISOR_SHOW_SPLASHES", "uvisor_show_blood_splashes", "OnOff"
+	StaticText "$UVISOR_SHOW_SPLASHES_TIP", DarkGray	
+	Option "$UVISOR_STARTUP_ENABLED", "uvisor_startup_anim_enabled", "OnOff"
+	StaticText " "
+	StaticText "-------------------------", LightBlue
+	SafeCommand "$UVISOR_RESET_SUBMENU", uvisor_reset_main_toggles_menu, "$UVISOR_RESET_SUBMENU_PROMPT"
+}
+
+// Presets and Backup
+OptionMenu "UV_MENU_PRESETS" {
+	Title "$UVISOR_MENU_PRESETS_INNER"
+	StaticText " "
+	StaticText " "
+	StaticText "$UVISOR_PREDEFINED_PRESETS_SUBTITLE", LightBlue
+	SafeCommand "Doomguy #1", "uvisor_apply_preset_doomguy_1"
+	SafeCommand "Doomguy #2", "uvisor_apply_preset_doomguy_2"
+	SafeCommand "Doom 2016", "uvisor_apply_preset_doom_2016"
+	SafeCommand "Dark Ages", "uvisor_apply_preset_dark_ages"
+	SafeCommand "Doom 64", "uvisor_apply_preset_doom_64"
+	SafeCommand "Master Chief", "uvisor_apply_preset_master_chief"
+	SafeCommand "Noble Six", "uvisor_apply_preset_noble_six"
+	SafeCommand "Emile", "uvisor_apply_preset_emile"
+	SafeCommand "Diamond Dragon", "uvisor_apply_preset_diamond_dragon"
+	SafeCommand "Republic Commando", "uvisor_apply_preset_republic_commando"
+	SafeCommand "Space Marine", "uvisor_apply_preset_space_marine"
+	SafeCommand "Metroid", "uvisor_apply_preset_metroid"
+	SafeCommand "$UVISOR_SIMPLE_HELMET", "uvisor_apply_preset_simple_helmet"
+	StaticText " "
+	StaticText "$UVISOR_SAVE_USER_PRESET_SUBTITLE", LightBlue
+	TextField "$UVISOR_NEW_PRESET_NAME", "__uvisor_save_preset_name"
+	StaticText "$UVISOR_PRESET_NAME_TIP", DarkGray
+	UV_SaveUserPreset
+	StaticText " "
+	StaticText "$UVISOR_USER_PRESET_ACTIONS_SUBTITLE", LightBlue
+	Class "UV_UserPresetsMenu"
+}
+
+// Style Options
+OptionMenu "UV_MENU_STYLE" {
+	Title "$UVISOR_MENU_STYLE_INNER"
+	StaticText " "
+	StaticText " "
+	Option "$UVISOR_STYLE_HELMET_TOP", "uvisor_style_helmet_top", "TopStyles"
+	StaticText " "
+	Option "$UVISOR_STYLE_HELMET_BOTTOM", "uvisor_style_helmet_bottom", "BottomStyles"
+	StaticText " "
+	Option "$UVISOR_STYLE_HELMET_CORNERS", "uvisor_style_helmet_corners", "CornerStyles"
+	StaticText " "
+	Option "$UVISOR_STYLE_HELMET_SIDE", "uvisor_style_side_glass", "SideGlassStyles"
+	StaticText " "
+	Option "$UVISOR_TACTICAL_1", "uvisor_style_tactical_overlay_1", "TacticalOverlayStyles"
+	Option "$UVISOR_TACTICAL_2", "uvisor_style_tactical_overlay_2", "TacticalOverlayStyles"
+	StaticText " "
+	StaticText "-------------------------", LightBlue
+	SafeCommand "$UVISOR_RESET_SUBMENU", uvisor_reset_style_menu, "$UVISOR_RESET_SUBMENU_PROMPT"
+}
+
+// Colors and Transparency
+OptionMenu "UV_MENU_COLORS" {
+	Title "$UVISOR_MENU_COLORS_INNER"
+	StaticText " "
+	StaticText " "
+	StaticText "$UVISOR_COLORS_SUBTITLE", LightBlue
+	StaticText "$UVISOR_RGB_SLIDERS_TIP", DarkGray
+	ColorPicker "$UVISOR_COLOR_PART_TOP", "uvisor_color_part_top"
+	Option "$UVISOR_SYNC_PART_COLORS", "uvisor_sync_part_colors", "YesNo"
+	StaticText "-----", LightBlue
+	ColorPicker "$UVISOR_COLOR_PART_BOTTOM", "uvisor_color_part_bottom"
+	ColorPicker "$UVISOR_COLOR_PART_CORNERS", "uvisor_color_part_corners"
+	StaticText "-----", LightBlue
+	ColorPicker "$UVISOR_GLOW", "uvisor_color_glow"
+	Option "$UVISOR_GLOW_RENDER_STYLE", "uvisor_translucent_glow_style", "GlowRenderStyles"
+	StaticText "$UVISOR_GLOW_RENDER_TIP", DarkGray
+	Option "$UVISOR_SYNC_GLOW_GLASS", "uvisor_sync_glow_glass", "YesNo"
+	StaticText "-----", LightBlue
+	ColorPicker "$UVISOR_GLASS", "uvisor_color_glass"
+	Option "$UVISOR_SYNC_GLASS_TACTICAL", "uvisor_sync_glass_tactical_overlay", "YesNo"
+	StaticText "-----", LightBlue
+	ColorPicker "$UVISOR_TACTICAL_1", "uvisor_color_tactical_overlay_1"
+	ColorPicker "$UVISOR_TACTICAL_2", "uvisor_color_tactical_overlay_2"
+	StaticText "-----", LightBlue
+	ColorPicker "$UVISOR_VISOR_CRACKS", "uvisor_color_glass_cracks"
+	StaticText "-----", LightBlue
+	ColorPicker "$UVISOR_ARMOR_GRID", "uvisor_color_armor_grid"
+	StaticText " "
+	StaticText "$UVISOR_TRANSPARENCY_SUBTITLE", LightBlue
+	Slider "$UVISOR_ALPHA_PARTS", "uvisor_alpha_parts", 0.0, 1.0, 0.1, 2
+	Slider "$UVISOR_GLOW", "uvisor_alpha_glow", 0.0, 1.0, 0.1, 2
+	Slider "$UVISOR_GLASS", "uvisor_alpha_glass", 0.0, 1.0, 0.1, 2
+	Slider "$UVISOR_TACTICAL_1", "uvisor_alpha_tactical_1", 0.0, 1.0, 0.1, 2
+	Slider "$UVISOR_TACTICAL_2", "uvisor_alpha_tactical_2", 0.0, 1.0, 0.1, 2
+	Slider "$UVISOR_VISOR_CRACKS", "uvisor_alpha_cracks", 0.0, 1.0, 0.1, 2
+	Slider "$UVISOR_ARMOR_GRID", "uvisor_alpha_armor_grid", 0.0, 1.0, 0.1, 2
+	Slider "$UVISOR_BLOOD_SPLASHES", "uvisor_alpha_blood", 0.0, 1.0, 0.1, 2
+	StaticText "-----", LightBlue
+	Option "$UVISOR_OVERRIDE_BOTTOM_MIDDLE_TRANSPARENCY", "uvisor_override_alpha_bottom", "YesNo"
+	Slider "$UVISOR_BOTTOM_MIDDLE_PIECE", "uvisor_alpha_part_bottom", 0.0, 1.0, 0.1, 2, "uvisor_override_alpha_bottom"
+	Slider "$UVISOR_BOTTOM_MIDDLE_GLOW", "uvisor_alpha_glow_bottom", 0.0, 1.0, 0.1, 2, "uvisor_override_alpha_bottom"
+	Slider "$UVISOR_BOTTOM_MIDDLE_GLASS", "uvisor_alpha_glass_bottom", 0.0, 1.0, 0.1, 2, "uvisor_override_alpha_bottom"
+	StaticText " "
+	StaticText "$UVISOR_GAMEPLAY_COLORS_SUBTITLE", LightBlue
+	StaticText "$UVISOR_GAMEPLAY_COLORS_TIP_1", DarkGray
+	StaticText "$UVISOR_GAMEPLAY_COLORS_TIP_2", DarkGray
+	StaticText "$UVISOR_GAMEPLAY_COLORS_TIP_3", DarkGray
+	ColorPicker "$UVISOR_GAMEPLAY_COLORS_STEP_1", "uvisor_gameplay_color_step_1"
+	ColorPicker "$UVISOR_GAMEPLAY_COLORS_STEP_2", "uvisor_gameplay_color_step_2"
+	ColorPicker "$UVISOR_GAMEPLAY_COLORS_STEP_3", "uvisor_gameplay_color_step_3"
+	ColorPicker "$UVISOR_GAMEPLAY_COLORS_STEP_4", "uvisor_gameplay_color_step_4"
+	StaticText " "
+	StaticText "-------------------------", LightBlue
+	SafeCommand "$UVISOR_RESET_SUBMENU", uvisor_reset_colors_menu, "$UVISOR_RESET_SUBMENU_PROMPT"
+}
+
+// Offsets, Scaling
+OptionMenu "UV_MENU_OFFSETS_SIZES" {
+	Title "$UVISOR_MENU_OFFSETS_SIZES_INNER"
+	StaticText " "
+	StaticText " "
+	StaticText "$UVISOR_OFFSET_SUBTITLE", LightBlue
+	Slider "$UVISOR_OFFSET_TOP", "uvisor_offset_top", 0, 160, 1, 0 // 48 + 80 (glass gradient)
+	Slider "$UVISOR_OFFSET_BOTTOM", "uvisor_offset_bottom", 0, 164, 1, 0 // 84 + 80 (glass gradient)
+	Slider "$UVISOR_OFFSET_CORNERS_X", "uvisor_offset_corners_x", 0, 260, 2, 0
+	Slider "$UVISOR_OFFSET_CORNERS_Y", "uvisor_offset_corners_y", 0, 196, 2, 0 // 116 + 80 (glass gradient)
+	Slider "$UVISOR_OFFSET_SIDES_GLASS", "uvisor_offset_sides_glass", 0, 120, 1, 0
+	Slider "$UVISOR_OFFSET_TACTICAL_MARKS", "uvisor_offset_tactical_marks", 0, 1000, 4, 0
+	StaticText " "
+	StaticText "$UVISOR_WIDTH_SCALE_SUBTITLE", LightBlue
+	Slider "$UVISOR_WIDTH_SCALE_BOTTOM", "uvisor_width_scale_bottom", 0.5, 1.5, 0.1, 3
+	Slider "$UVISOR_WIDTH_SCALE_CORNERS", "uvisor_width_scale_corners", 0.5, 1.5, 0.1, 3
+	StaticText " "
+	StaticText "-------------------------", LightBlue
+	SafeCommand "$UVISOR_RESET_SUBMENU", uvisor_reset_offsets_menu, "$UVISOR_RESET_SUBMENU_PROMPT"
+}
+
+// Separate Toggles
+OptionMenu "UV_MENU_TOGGLES" {
+	Title "$UVISOR_MENU_TOGGLES_INNER"
+	StaticText " "
+	StaticText " "
+	StaticText "$UVISOR_TOP_PART_SUBTITLE", LightBlue
+	Option "$UVISOR_HELMET_PIECE", "uvisor_show_part_top", "OnOff"
+	Option "$UVISOR_GLOW", "uvisor_show_glow_top", "OnOff"
+	Option "$UVISOR_GLASS", "uvisor_show_glass_top", "OnOff"
+	StaticText " "
+	StaticText "$UVISOR_BOTTOM_MIDDLE_PART_SUBTITLE", LightBlue
+	Option "$UVISOR_HELMET_PIECE", "uvisor_show_part_bottom", "OnOff"
+	Option "$UVISOR_GLOW", "uvisor_show_glow_bottom", "OnOff"
+	Option "$UVISOR_GLASS", "uvisor_show_glass_bottom", "OnOff"
+	StaticText " "
+	StaticText "$UVISOR_GLASS_SIDES_SUBTITLE", LightBlue
+	Option "$UVISOR_ENABLED", "uvisor_show_glass_sides", "YesNo"
+	StaticText " "
+	StaticText "$UVISOR_BOTTOM_CORNERS_PART_SUBTITLE", LightBlue
+	Option "$UVISOR_HELMET_PIECE", "uvisor_show_part_corners", "OnOff"
+	Option "$UVISOR_GLOW", "uvisor_show_glow_corners", "OnOff"
+	Option "$UVISOR_GLASS", "uvisor_show_glass_corners", "OnOff"
+	StaticText "-----", LightBlue
+	Option "$UVISOR_AUTO_HIDE_CORNERS", "uvisor_auto_hide_corners_mode", "AutoHideCorners"
+	Slider "$UVISOR_SCREENSIZE_CORNERS", "uvisor_auto_hide_corners_screensize", 3, 12, 1, 0
+	StaticText "$UVISOR_AUTO_HIDE_CORNERS_TIP", DarkGray
+	StaticText "$UVISOR_SCREENSIZE_TIP", DarkGray
+	StaticText "$UVISOR_RELATED_ZDOOM_OPTIONS", DarkGray
+	Slider "$DSPLYMNU_SCREENSIZE", "screenblocks", 3.0, 12.0, 1.0, 0
+	Control    "$CNTRLMNU_DISPLAY_INC"     , "sizeup"
+	Control    "$CNTRLMNU_DISPLAY_DEC"     , "sizedown"
+	StaticText " "
+	StaticText "$UVISOR_ARMOR_GRID_SUBTITLE", LightBlue
+	Option "$UVISOR_GRID_IDLE_ANIM_ENABLE", "uvisor_grid_idle_anim_enabled", "OnOff"
+	StaticText "$UVISOR_GRID_IDLE_ANIM_TIP", DarkGray
+	StaticText " "
+	StaticText "-------------------------", LightBlue
+	SafeCommand "$UVISOR_RESET_SUBMENU", uvisor_reset_toggles_menu, "$UVISOR_RESET_SUBMENU_PROMPT"
+}
+
+// Gameplay
+OptionMenu "UV_GAMEPLAY" {
+	Title "$UVISOR_MENU_GAMEPLAY_INNER"
+	StaticText " "
+	StaticText " "
+	StaticText "$UVISOR_OPTIONS_MENU_CLOSING_TIP", DarkGray
+
+	StaticText " "
+	StaticText "$UVISOR_GLOW_GLASS_BASIS_SUBTITLE", LightBlue
+	StaticText "$UVISOR_GLOW_GLASS_BASIS_TIP_1", DarkGray
+	Option "$UVISOR_GLOW", "uvisor_gameplay_color_basis_glow", "GameplayColorBasis"
+	StaticText "$UVISOR_GLOW_GLASS_BASIS_TIP_2", DarkGray
+	Option "$UVISOR_GLASS", "uvisor_gameplay_color_basis_glass", "GameplayColorBasis"
+	StaticText "$UVISOR_AMMO_TYPE_TIP_1", DarkGray
+	StaticText "$UVISOR_AMMO_TYPE_TIP_2", DarkGray
+	StaticText "$UVISOR_AMMO_TYPE_TIP_3", DarkGray
+	StaticText "$UVISOR_AMMO_TYPE_TIP_4", DarkGray
+	StaticText "$UVISOR_AMMO_TYPE_TIP_5", DarkGray
+	StaticText " "
+	StaticText "$UVISOR_VISOR_CRACKS_SUBTITLE", LightBlue
+	Option "$UVISOR_BASIS", "uvisor_cracks_basis", "VisorCracksBasis"
+	StaticText "$UVISOR_VISOR_CRACKS_STEPS_TIP", DarkGray
+	StaticText " "
+	StaticText "$UVISOR_GLASS_GLOW_DESTR_SUBTITLE", LightBlue
+	Option "$UVISOR_HIDE_GLOW_NO_ARMOR", "uvisor_hide_glow_if_empty_armor", "YesNo"
+	Option "$UVISOR_HIDE_GLASS_NO_ARMOR", "uvisor_hide_glass_if_empty_armor", "YesNo"
+	Option "$UVISOR_ANIMATED_GLASS_DESTR", "uvisor_hitfeedback_if_empty_armor", "YesNo", "uvisor_hide_glass_if_empty_armor"
+	StaticText "$UVISOR_ANIMATED_GLASS_DESTR_TIP_1", DarkGray
+	StaticText "$UVISOR_ANIMATED_GLASS_DESTR_TIP_2", DarkGray
+	StaticText " "
+	StaticText "$UVISOR_GLOW_PULSE_SUBTITLE", LightBlue
+	Option "$UVISOR_MODE", "uvisor_glow_pulse_mode", "PulseModes"
+	Slider "$UVISOR_SPEED", "uvisor_glow_pulse_speed", 0.1, 30.0, 0.1, 1, "uvisor_glow_pulse_mode"
+	StaticText " "
+	StaticText "$UVISOR_ARMOR_GRID_SUBTITLE", LightBlue
+	Option "$UVISOR_DISPLAY_MODE", "uvisor_armor_grid_display_mode", "ArmorGridDisplayModes"
+	Option "$UVISOR_GRID_COLOR_BASIS", "uvisor_gameplay_color_basis_armor_grid", "ArmorGridColorBasis"
+	Option "$UVISOR_POWERS_OVERRIDE_GRID_COLOR", "uvisor_powers_overrides_grid_color_mode", "PowersOverrideColorMode"
+	StaticText "$UVISOR_POWERS_OVERRIDE_GRID_COLOR_TIP", DarkGray
+	Option "$UVISOR_GRID_TRANSPARENCY_BASIS", "uvisor_gameplay_alpha_basis_armor_grid", "ArmorGridAlphaBasis"
+	StaticText "$UVISOR_GRID_TRANSPARENCY_BASIS_TIP_1", DarkGray
+	StaticText "$UVISOR_GRID_TRANSPARENCY_BASIS_TIP_2", DarkGray
+	Option "$UVISOR_GRID_DISABLE_WHEN_RADSUIT_NIGHTVISION", "uvisor_grid_disable_when_radsuit_nightvis", "YesNo"
+	StaticText "$UVISOR_GRID_DISABLE_WHEN_RADSUIT_NIGHTVISION_TIP", DarkGray
+	StaticText " "
+	StaticText "$UVISOR_OTHER_SUBTITLE", LightBlue
+	Control "$UVISOR_HOTKEY_TO_ENABLE_DISABLE_MOD", "uvisor_enable_disable"
+	Option "$UVISOR_TRANSPARENCY_WITH_INVISIBILITY", "uvisor_transparency_on_invis", "OnOff"
+	Option "$UVISOR_HIDE_HELMET_3RD_PERSON", "uvisor_hide_helmet_in_third_person", "YesNo"
+	StaticText " "
+	StaticText "-------------------------", LightBlue
+	SafeCommand "$UVISOR_RESET_SUBMENU", uvisor_reset_gameplay_menu, "$UVISOR_RESET_SUBMENU_PROMPT"
+}
+
+// Blood On Visor
+OptionMenu "UV_BLOOD_SPLASHES" {
+	Title "$UVISOR_MENU_BLOOD_SPLASHES_INNER"
+	StaticText " "
+	StaticText " "
+	StaticText "$UVISOR_SPLASHES_SETTINGS_AFFECT_NEW_TIP", DarkGray
+	StaticText "$UVISOR_SPLASHES_DISABLED_TIP", DarkGray
+	StaticText " "
+	Slider "$UVISOR_SPLASHES_TRIGGER_CHANCE", "uvisor_blood_freq", 10, 300, 10, 0
+	StaticText "$UVISOR_SPLASHES_TRIGGER_CHANCE_TIP", DarkGray
+	Slider "$UVISOR_SPLASHES_MAX_DISTANCE", "uvisor_blood_max_init_distance", 60, 180, 5, 1
+	StaticText "$UVISOR_SPLASHES_MAX_DISTANCE_TIP", DarkGray
+	Slider "$UVISOR_SPLASHES_SIZE", "uvisor_blood_size", 0.1, 2.0, 0.1, 1
+	StaticText "$UVISOR_SPLASHES_SIZE_TIP", DarkGray
+	Slider "$UVISOR_MAX_BLOOD_TEXTURES", "uvisor_blood_max_count", 5, 50, 1, 0
+	StaticText "$UVISOR_MAX_BLOOD_TEXTURES_TIP", DarkGray
+	Slider "$UVISOR_SPLASHES_LIFETIME", "uvisor_blood_lifetime", 0, 60, 0.5, 1
+	StaticText "$UVISOR_SPLASHES_LIFETIME_0_TIP", DarkGray
+	Option "$UVISOR_SPLASHES_VANISH", "uvisor_blood_vanishes", "YesNo"
+	StaticText "$UVISOR_SPLASHES_VANISH_TIP", DarkGray
+	Option "$UVISOR_WIPER_MODE", "uvisor_screen_wiper_mode", "AutoScreenWiperModes"
+	StaticText "$UVISOR_WIPER_MODE_TIP", DarkGray
+	Control "$UVISOR_WIPER_HOTKEY", "uvisor_start_screen_wiper"
+	Slider "$UVISOR_BLOOD_DEFAULT_SATURATION_SHIFT", "uvisor_blood_default_saturation_shift", -100, 100, 5, 0
+	StaticText "$UVISOR_BLOOD_DEFAULT_SATURATION_SHIFT_TIP_1", DarkGray
+	StaticText "$UVISOR_BLOOD_DEFAULT_SATURATION_SHIFT_TIP_2", DarkGray
+	Option "$UVISOR_FAMILY_FRIENDLY_BLOOD_COLORS", "uvisor_blood_family_friendly_colors", "OnOff"
+	Option "$UVISOR_BLOOD_DETECTION_MODE", "uvisor_blood_detection_mode", "BloodDetectionModes"
+	StaticText "$UVISOR_BLOOD_DETECTION_MODE_TIP_1", DarkGray
+	StaticText "$UVISOR_BLOOD_DETECTION_MODE_TIP_2", DarkGray
+	StaticText "$UVISOR_BLOOD_DETECTION_MODE_TIP_3", DarkGray
+	StaticText "$UVISOR_BLOOD_DETECTION_MODE_TIP_4", DarkGray
+	StaticText " "
+	StaticText "-------------------------", LightBlue
+	SafeCommand "$UVISOR_RESET_SUBMENU", uvisor_reset_blood_menu, "$UVISOR_RESET_SUBMENU_PROMPT"
+}
+
+// Swaying and Shaking
+OptionMenu "UV_SWAY_SHAKE" {
+	Title "$UVISOR_MENU_SWAY_SHAKE_INNER"
+	StaticText " "
+	StaticText " "
+	Slider "$UVISOR_MAX_HORIZONTAL_SWAY_SHAKE", "uvisor_maxsway_x", 0, 15, 1, 0
+	Slider "$UVISOR_MAX_VERTICAL_SWAY_SHAKE", "uvisor_maxsway_y", 0, 15, 1, 0
+	StaticText " "
+	StaticText "$UVISOR_SWAYING_SUBTITLE", LightBlue
+	Option "$UVISOR_ENABLED", "uvisor_swaying", "OnOff"
+	Slider "$UVISOR_SWAY_SENSITIVITY", "uvisor_sway_sensitivity", 1.0, 2.0, 0.1, 1, "uvisor_swaying"
+	StaticText "-----", LightBlue
+	Slider "$UVISOR_CAMERA_SWAY_MULT_X", "uvisor_camera_sway_mult_x", 0.0, 2.0, 0.1, 1, "uvisor_swaying"
+	Slider "$UVISOR_CAMERA_SWAY_MULT_Y", "uvisor_camera_sway_mult_y", 0.0, 2.0, 0.1, 1, "uvisor_swaying"
+	StaticText "-----", LightBlue
+	Option "$UVISOR_MOVEMENT_BOB_SWAY", "uvisor_movement_sway", "OnOff", "uvisor_swaying"
+	Slider "$UVISOR_MOVEMENT_SWAY_MULT_X", "uvisor_movement_sway_mult_x", 0, 0.6, 0.05, 2, "uvisor_swaying"
+	Slider "$UVISOR_MOVEMENT_SWAY_MULT_Y", "uvisor_movement_sway_mult_y", 0, 0.4, 0.05, 2, "uvisor_swaying"
+	Slider "$UVISOR_MOVEMENT_SWAY_MULT_BOB", "uvisor_movement_sway_mult_bob", 0, 1.0, 0.05, 2, "uvisor_swaying"
+	Option "$UVISOR_BOB_SWAY_MODE", "uvisor_bob_sway_mode", "BobModes", "uvisor_swaying"
+	Slider "$UVISOR_SIMULATED_BOB_FREQ", "uvisor_bob_sway_freq", 0.1, 3.0, 0.05, 2, "uvisor_swaying"
+	StaticText "$UVISOR_VANILLA_BOB_TIP", DarkGray
+	StaticText "$UVISOR_RELATED_ZDOOM_OPTION", DarkGray
+	Slider "$DSPLYMNU_MOVEBOB",			"movebob", 0, 1.0, 0.05, 2
+	StaticText "-----", LightBlue
+	Option "$UVISOR_CROUCH_SWAY", "uvisor_crouch_sway", "OnOff", "uvisor_swaying"
+	Slider "$UVISOR_CROUCH_SWAY_MULT", "uvisor_crouch_sway_intensity", 0.1, 1.0, 0.1, 1, "uvisor_swaying"
+	StaticText "-----", LightBlue
+	Option "$UVISOR_JUMP_SWAY", "uvisor_jump_sway", "OnOff", "uvisor_swaying"
+	Slider "$UVISOR_JUMP_SWAY_MULT", "uvisor_jump_sway_intensity", 0.1, 1.0, 0.1, 1, "uvisor_swaying"
+	StaticText ""
+	StaticText "$UVISOR_SHAKING_SUBTITLE", LightBlue
+	Option "$UVISOR_ENABLED", "uvisor_shaking", "OnOff"
+	StaticText "$UVISOR_SHAKING_TIP", DarkGray
+	Slider "$UVISOR_SENSITIVITY", "uvisor_shaking_sensitivity", 0.1, 0.5, 0.1, 1, "uvisor_shaking"
+	StaticText " "
+	StaticText "-------------------------", LightBlue
+	SafeCommand "$UVISOR_RESET_SUBMENU", uvisor_reset_sway_menu, "$UVISOR_RESET_SUBMENU_PROMPT"
+}
+
+// Sounds
+OptionMenu "UV_SOUNDS" {
+	Title "$UVISOR_SOUNDS_INNER"
+	StaticText " "
+	StaticText " "
+	StaticText "$UVISOR_STARTUP_SUBTITLE", LightBlue
+	Slider "$UVISOR_VOLUME", "uvisor_startup_volume", 0, 1.0, 0.1, 1
+	StaticText " "
+	StaticText "$UVISOR_BREATH_SUBTITLE", LightBlue
+	StaticText "$UVISOR_BREATH_TIP", DarkGray
+	Option "$UVISOR_DISABLE_WHEN_NO_GLASS", "uvisor_breath_disable_if_no_glass", "YesNo"
+	Option "$UVISOR_BREATH_VOICE_TYPE", "uvisor_breath_voice", "BreathVoices"
+	Slider "$UVISOR_VOLUME", "uvisor_breath_volume", 0, 1.0, 0.1, 1
+	Slider "$UVISOR_SOUND_CHANNEL", "uvisor_breath_sound_channel", 20, 255, 1, 0
+	StaticText "$UVISOR_SOUND_CHANNEL_TIP", DarkGray
+	StaticText " "
+	StaticText "$UVISOR_WARNING_SOUND_SUBTITLE", LightBlue
+	StaticText "$UVISOR_WARNING_SOUND_TIP_1", DarkGray
+	StaticText "$UVISOR_WARNING_SOUND_TIP_2", DarkGray
+	Option "$UVISOR_BASIS", "uvisor_warning_sound_mode", "WarningBasis"
+	Slider "$UVISOR_VOLUME", "uvisor_warning_volume", 0, 1.0, 0.1, 1
+	Slider "$UVISOR_SOUND_CHANNEL", "uvisor_warning_sound_channel", 20, 255, 1, 0
+	StaticText "$UVISOR_SOUND_CHANNEL_TIP", DarkGray
+	StaticText " "
+	StaticText "$UVISOR_DEPLETED_ARMOR_SUBTITLE", LightBlue
+	StaticText "$UVISOR_DEPLETED_ARMOR_SOUND_TIP", DarkGray
+	Slider "$UVISOR_VOLUME", "uvisor_depleted_sound_volume", 0, 1.0, 0.1, 1
+	StaticText " "
+	StaticText "$UVISOR_VISOR_CRACKS_SUBTITLE", LightBlue
+	StaticText "$UVISOR_VISOR_CRACKS_SOUND_TIP", DarkGray
+	Slider "$UVISOR_VOLUME", "uvisor_cracks_sounds_volume", 0, 1.0, 0.1, 1
+	StaticText " "
+	StaticText "$UVISOR_ARMOR_HITS_SUBTITLE", LightBlue
+	StaticText "$UVISOR_ARMOR_HITS_SOUND_TIP_1", DarkGray
+	StaticText "$UVISOR_ARMOR_HITS_SOUND_TIP_2", DarkGray
+	StaticText "$UVISOR_ARMOR_HITS_SOUND_TIP_3", DarkGray
+	Slider "$UVISOR_VOLUME", "uvisor_hit_sounds_volume", 0, 1.0, 0.1, 1
+	StaticText " "
+	StaticText "$UVISOR_SCREEN_WIPER_SUBTITLE", LightBlue
+	Slider "$UVISOR_VOLUME", "uvisor_screen_wiper_volume", 0, 1.0, 0.1, 1
+	StaticText " "
+	StaticText "-------------------------", LightBlue
+	SafeCommand "$UVISOR_RESET_SUBMENU", uvisor_reset_sounds_menu, "$UVISOR_RESET_SUBMENU_PROMPT"
+}
+
+OptionValue "TextureResolutions"
+{
+	0, "$UVISOR_TEX_RES_HIGH"
+	1, "$UVISOR_TEX_RES_MED"
+	2, "$UVISOR_TEX_RES_LOW"
+}
+
+OptionValue "GlowRenderStyles"
+{
+	0, "$UVISOR_RSTYLE_ADD"
+	1, "$UVISOR_RSTYLE_TRANSLUCENT"
+}
+
+OptionValue "TopStyles"
+{
+	0, "$UVISOR_NONE"
+	1, "$UVISOR_DOOMGUY_CLASSIC"
+	2, "Doom 2016 (Universal Visor Mk II)"
+	3, "Dark Ages"
+	4, "Republic Commando"
+	5, "$UVISOR_SPACE_MARINE"
+	6, "$UVISOR_SIMPLE_HELMET"
+	7, "$UVISOR_SIMPLE_HELMET_NO_TOP_MIDDLE"
+	8, "Metroid"
+	9, "$UVISOR_PLAIN_GLASS"
+}
+
+OptionValue "BottomStyles"
+{	
+	0, "$UVISOR_NONE"
+	1, "$UVISOR_DOOMGUY_CLASSIC"
+	2, "Doom 2016 (Universal Visor Mk II)"
+	3, "Dark Ages"
+	4, "$UVISOR_SPACE_MARINE"
+	5, "$UVISOR_SIMPLE_HELMET"
+	6, "$UVISOR_CLASSIC_TOP_AS_BOTTOM"
+	7, "$UVISOR_PLAIN_GLASS"
+}
+
+OptionValue "CornerStyles"
+{
+	0, "$UVISOR_NONE"
+	1, "$UVISOR_DOOMGUY_CLASSIC"
+	2, "Doom 2016 (Universal Visor Mk II)"
+	3, "Dark Ages"
+	4, "Republic Commando"
+	5, "$UVISOR_SPACE_MARINE"
+	6, "$UVISOR_SIMPLE_HELMET"
+	7, "Metroid"
+}
+
+OptionValue "SideGlassStyles"
+{
+	0, "$UVISOR_NONE"
+	1, "$UVISOR_PLAIN_GLASS"
+}
+
+OptionValue "TacticalOverlayStyles"
+{
+	0, "$UVISOR_NONE"
+	1, "Doomguy Classic #1"
+	2, "Doomguy Classic #2"
+	3, "Doomguy Classic #3"
+	4, "Doom 2016"
+	5, "Master Chief"
+	6, "Noble Six"
+	7, "$UVISOR_EMILE_HELMET"
+	8, "Mister Chief Paint (Meme)"
+	9, "Republic Commando"
+	10, "$UVISOR_SIDELINES"
+	11, "Lost in darkness"
+	12, "Diamond Dragon #1"
+	13, "$UVISOR_DIAMOND_DRAGON_1_RIGHT"
+	14, "$UVISOR_DIAMOND_DRAGON_2"
+	15, "Metroid"
+	16, "$UVISOR_DIRT"
+	17, "$UVISOR_DIRT_CLEAN"
+	18, "$UVISOR_TACTICAL_CORNERS"
+}
+
+OptionValue "WarningBasis"
+{
+	0, "$UVISOR_HEALTH"
+	1, "$UVISOR_ARMOR"
+	2, "$UVISOR_AMMO_1"
+	3, "$UVISOR_AMMO_2"
+}
+
+OptionValue "VisorCracksBasis"
+{
+	0, "$UVISOR_HEALTH"
+	1, "$UVISOR_ARMOR"
+}
+
+OptionValue "GameplayColorBasis"
+{
+	0, "$UVISOR_NONE_CONSTANT_COLOR"
+	1, "$UVISOR_HEALTH"
+	2, "$UVISOR_ARMOR"
+	3, "$UVISOR_AMMO_1"
+	4, "$UVISOR_AMMO_2"
+}
+
+OptionValue "ArmorGridColorBasis"
+{
+	0, "$UVISOR_NONE_CONSTANT_COLOR"
+	1, "$UVISOR_ARMOR"
+}
+
+OptionValue "ArmorGridDisplayModes"
+{
+	0, "$UVISOR_GRID_DISPLAY_MODE_0"
+	1, "$UVISOR_GRID_DISPLAY_MODE_1"
+	2, "$UVISOR_GRID_DISPLAY_MODE_2"
+	3, "$UVISOR_ALWAYS"
+}
+
+OptionValue "ArmorGridAlphaBasis"
+{
+	0, "$UVISOR_NONE_CONSTANT_TRANSPARENCY"
+	1, "$UVISOR_ARMOR"
+}
+
+OptionValue "AutoHideCorners"
+{
+	0, "$UVISOR_DISABLED"
+	1, "$UVISOR_GLOW"
+	2, "$UVISOR_GLOW_GLASS"
+}
+
+OptionValue "AutoScreenWiperModes"
+{
+	0, "$UVISOR_DISABLED"
+	1, "$UVISOR_WIPER_MODE_1"
+	2, "$UVISOR_WIPER_MODE_2"
+}
+
+OptionValue "BloodDetectionModes"
+{
+	0, "$UVISOR_BLOOD_DETECTION_MODE_1"
+	1, "$UVISOR_BLOOD_DETECTION_MODE_2"
+}
+
+OptionValue "PulseModes"
+{
+	0, "$UVISOR_DISABLED"
+	1, "$UVISOR_PULSE_MODE_1"
+	2, "$UVISOR_PULSE_MODE_2"
+	3, "$UVISOR_PULSE_MODE_3"
+	4, "$UVISOR_PULSE_MODE_4"
+	5, "$UVISOR_PULSE_MODE_5"
+}
+
+OptionValue "PowersOverrideColorMode" {
+	0, "$UVISOR_DISABLED"
+	1, "$UVISOR_POWERS_OVERRIDE_GRID_COLOR_MODE_1"
+	2, "$UVISOR_POWERS_OVERRIDE_GRID_COLOR_MODE_2"
+	3, "$UVISOR_POWERS_OVERRIDE_GRID_COLOR_MODE_3"
+}
+
+OptionValue "BobModes"
+{
+	0, "$UVISOR_BOB_SWAY_MODE_0"
+	1, "$UVISOR_BOB_SWAY_MODE_1"
+}
+
+OptionValue "BreathVoices"
+{
+	0, "$UVISOR_BREATH_VOICE_TYPE_1"
+	1, "$UVISOR_BREATH_VOICE_TYPE_2"
+}

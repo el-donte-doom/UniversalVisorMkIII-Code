@@ -1,0 +1,581 @@
+[enu default]
+
+// Common
+UVISOR_HEALTH = "Health";
+UVISOR_ARMOR = "Armor";
+UVISOR_AMMO_1 = "Ammo 1";
+UVISOR_AMMO_2 = "Ammo 2";
+UVISOR_NONE_CONSTANT_COLOR = "None (Constant Color)";
+UVISOR_RESET_SUBMENU = "* Reset This Submenu To Default *";
+UVISOR_RESET_SUBMENU_PROMPT = "Are you sure you want to reset submenu values?";
+UVISOR_DISABLED = "Disabled";
+
+
+// Top Menu Part
+UVISOR_NAME = "⌞‾‾⌟ Universal Visor Mk. III";
+UVISOR_INNER_MENU_NAME = "\nUniversal Visor Mk. III"; // "\n" to make it one line lower because title usually covers top helmet piece
+UVISOR_MOD_ENABLED = "Mod Enabled";
+UVISOR_TEXTURE_RESOLUTION = "Texture Resolution";
+UVISOR_TEX_RES_HIGH = "High";
+UVISOR_TEX_RES_MED = "Medium";
+UVISOR_TEX_RES_LOW = "Low";
+
+
+// Main Toggles
+UVISOR_MENU_MAIN_TOGGLES = "Main Toggles";
+UVISOR_MENU_MAIN_TOGGLES_INNER = "\nMain Toggles";
+UVISOR_SHOW_HELMET_PIECES = "Helmet Pieces";
+UVISOR_SHOW_GLOW = "Outline Glow";
+UVISOR_SHOW_GLASS = "Glass";
+UVISOR_SHOW_TACTICAL_OVERLAY = "Tactical Lines and Decals";
+UVISOR_SHOW_TACTICAL_MARKS = "Tactical Marks";
+UVISOR_SHOW_ARMOR_GRID = "Armor Grid";
+UVISOR_SHOW_VISOR_CRACKS = "Visor Cracks";
+UVISOR_SHOW_SPLASHES = "Enemy Blood Splashes On Visor";
+UVISOR_SHOW_SPLASHES_TIP = "Some mods have their own screen blood, often it can be toggled";
+UVISOR_STARTUP_ENABLED = "Startup Fade-In From Black";
+
+
+// Presets and Backup
+UVISOR_MENU_PRESETS = "Visual Presets and Backup";
+UVISOR_MENU_PRESETS_INNER = "\nVisual Presets and Backup";
+UVISOR_PREDEFINED_PRESETS_SUBTITLE = "----- Predefined Visual Presets -----";
+UVISOR_SAVE_USER_PRESET_SUBTITLE = "----- Save Visual User Preset -----";
+UVISOR_NEW_PRESET_NAME = "New Preset Name (press to type)";
+UVISOR_PRESET_NAME_TIP = "Preset name can't contain whitespace";
+UVISOR_USER_PRESET_ACTIONS_SUBTITLE = "----- Load User Preset / Overwrite / Delete -----";
+
+
+// Style Options
+UVISOR_MENU_STYLE = "Style Options";
+UVISOR_MENU_STYLE_INNER = "\nStyle Options";
+UVISOR_STYLE_HELMET_TOP = "Top Part";
+UVISOR_STYLE_HELMET_BOTTOM = "Bottom Middle Part";
+UVISOR_STYLE_HELMET_CORNERS = "Bottom Corners Part";
+UVISOR_STYLE_HELMET_SIDE = "Side Glass";
+UVISOR_TACTICAL_1 = "Tactical Lines and Decals #1";
+UVISOR_TACTICAL_2 = "Tactical Lines and Decals #2";
+UVISOR_NONE = "None";
+UVISOR_DOOMGUY_CLASSIC = "Doomguy Classic";
+UVISOR_SPACE_MARINE = "Space Marine";
+UVISOR_SIMPLE_HELMET = "Simple Helmet";
+UVISOR_SIMPLE_HELMET_NO_TOP_MIDDLE = "Simple Helmet (No Top Middle)";
+UVISOR_CLASSIC_TOP_AS_BOTTOM = "Classic Top as Bottom";
+UVISOR_PLAIN_GLASS = "Plain Glass";
+UVISOR_EMILE_HELMET = "Emile's Helmet Scratches";
+UVISOR_SIDELINES = "Sidelines";
+UVISOR_DIAMOND_DRAGON_1_RIGHT = "Diamond Dragon #1 (right)";
+UVISOR_DIAMOND_DRAGON_2 = "Diamond Dragon #2 (to be used with white color)";
+UVISOR_DIRT = "Dirt";
+UVISOR_DIRT_CLEAN = "Dirt Clean";
+UVISOR_TACTICAL_CORNERS = "Tactical Corners";
+
+
+// Colors and Transparency
+UVISOR_MENU_COLORS = "Colors and Transparency";
+UVISOR_MENU_COLORS_INNER = "\nColors and Transparency";
+UVISOR_COLORS_SUBTITLE = "----- Colors -----";
+UVISOR_RGB_SLIDERS_TIP = "Use RGB sliders to go beyond palette colors";
+UVISOR_COLOR_PART_TOP = "Helmet Top Piece";
+UVISOR_SYNC_PART_COLORS = "Sync Other Pieces to Top Color";
+UVISOR_COLOR_PART_BOTTOM = "Helmet Bottom Piece";
+UVISOR_COLOR_PART_CORNERS = "Helmet Corners Pieces";
+UVISOR_GLOW = "Glow";
+UVISOR_GLOW_RENDER_STYLE = "Glow Render Style";
+UVISOR_RSTYLE_TRANSLUCENT = "Translucent (Regular)";
+UVISOR_RSTYLE_ADD = "Additive (Glowing)";
+UVISOR_GLOW_RENDER_TIP = "Additive has a glowing effect, but it may mix glow color with glass one";
+UVISOR_SYNC_GLOW_GLASS = "Sync Glow and Glass Color";
+UVISOR_GLASS = "Glass";
+UVISOR_SYNC_GLASS_TACTICAL = "Sync Glass and Tactical Lines/Decals Colors";
+UVISOR_VISOR_CRACKS = "Visor Cracks";
+UVISOR_ARMOR_GRID = "Armor Grid";
+
+UVISOR_TRANSPARENCY_SUBTITLE = "----- Transparency Values -----";
+UVISOR_ALPHA_PARTS = "Helmet Pieces";
+UVISOR_BLOOD_SPLASHES = "Blood Splashes";
+UVISOR_OVERRIDE_BOTTOM_MIDDLE_TRANSPARENCY = "Override Bottom Middle Transparency";
+UVISOR_BOTTOM_MIDDLE_PIECE = "Bottom Middle Piece";
+UVISOR_BOTTOM_MIDDLE_GLOW = "Bottom Middle Glow";
+UVISOR_BOTTOM_MIDDLE_GLASS = "Bottom Middle Glass";
+
+UVISOR_GAMEPLAY_COLORS_SUBTITLE = "----- Health/Armor/Ammo Based Colors -----";
+UVISOR_GAMEPLAY_COLORS_TIP_1 = "These colors can be enabled in Gameplay submenu";
+UVISOR_GAMEPLAY_COLORS_TIP_2 = "They change gradually between each step";
+UVISOR_GAMEPLAY_COLORS_TIP_3 = "For ammo it's 0-100% where 1st color is 0% and 4th color is 100%";
+UVISOR_GAMEPLAY_COLORS_STEP_1 = "Health/Armor <= 15";
+UVISOR_GAMEPLAY_COLORS_STEP_2 = "40 Health/Armor";
+UVISOR_GAMEPLAY_COLORS_STEP_3 = "100 Health/Armor";
+UVISOR_GAMEPLAY_COLORS_STEP_4 = ">= 200 Health/Armor";
+
+
+// Offsets, Scaling
+UVISOR_MENU_OFFSETS_SIZES = "Position, Scale";
+UVISOR_MENU_OFFSETS_SIZES_INNER = "\nPosition, Scale";
+UVISOR_OFFSET_SUBTITLE = "----- Offsets -----";
+UVISOR_OFFSET_TOP = "Top";
+UVISOR_OFFSET_BOTTOM = "Bottom Middle";
+UVISOR_OFFSET_CORNERS_X = "Bottom Corners - Horizontal";
+UVISOR_OFFSET_CORNERS_Y = "Bottom Corners - Vertical";
+UVISOR_OFFSET_SIDES_GLASS = "Side Glass";
+UVISOR_OFFSET_TACTICAL_MARKS = "Tactical Marks";
+UVISOR_WIDTH_SCALE_SUBTITLE = "----- Width Scale -----";
+UVISOR_WIDTH_SCALE_BOTTOM = "Bottom Middle Part";
+UVISOR_WIDTH_SCALE_CORNERS = "Bottom Corners";
+
+
+// Separate Toggles
+UVISOR_MENU_TOGGLES = "Separate Toggles";
+UVISOR_MENU_TOGGLES_INNER = "\nSeparate Toggles";
+UVISOR_TOP_PART_SUBTITLE = "----- Top Part -----";
+UVISOR_HELMET_PIECE = "Helmet Piece";
+UVISOR_BOTTOM_MIDDLE_PART_SUBTITLE = "----- Bottom Middle Part -----";
+UVISOR_GLASS_SIDES_SUBTITLE = "----- Glass Sides -----";
+UVISOR_ENABLED = "Enabled";
+UVISOR_BOTTOM_CORNERS_PART_SUBTITLE = "----- Bottom Corners Part -----";
+UVISOR_AUTO_HIDE_CORNERS = "Auto Hide Corners Glass/Glow";
+UVISOR_GLOW_GLASS = "Glow and Glass";
+UVISOR_SCREENSIZE_CORNERS = "Screensize to Auto Hide Corners at";
+UVISOR_AUTO_HIDE_CORNERS_TIP = "Useful for semi-transparent HUDs like HXRTC";
+UVISOR_SCREENSIZE_TIP = "Screensize is selected in ZDoom Display Options or with hotkeys";
+UVISOR_RELATED_ZDOOM_OPTIONS = "Related ZDoom options:";
+UVISOR_GRID_IDLE_ANIM_ENABLE = "Armor Grid Idle Animation";
+UVISOR_GRID_IDLE_ANIM_TIP = "Disabling may improve performance";
+
+
+// Gameplay
+UVISOR_MENU_GAMEPLAY = "Gameplay";
+UVISOR_MENU_GAMEPLAY_INNER = "\nGameplay";
+UVISOR_OPTIONS_MENU_CLOSING_TIP = "Some options are applied after menu closing";
+UVISOR_GLOW_GLASS_BASIS_SUBTITLE = "----- Glow, Glass: Color Basis -----";
+UVISOR_GLOW_GLASS_BASIS_TIP_1 = "Override based on health/armor/ammo. The colors can be adjusted in the end of Colors submenu";
+UVISOR_GLOW_GLASS_BASIS_TIP_2 = "Glow color's also affected by glow render style (check the same menu)";
+UVISOR_AMMO_TYPE_TIP_1 = "If weapon doesn't have reloading, Ammo 1/2 bases work the same way";
+UVISOR_AMMO_TYPE_TIP_2 = "If it does, Ammo 1 usually means total ammo, Ammo 2 - current ammo in a mag";
+UVISOR_AMMO_TYPE_TIP_3 = "Select #2 if you need current ammo indicator";
+UVISOR_AMMO_TYPE_TIP_4 = "If types are swapped, select #1 (e.g. Beautiful Doom, Abyssal Marine, DoomRL, Lost in Darkness)";
+UVISOR_AMMO_TYPE_TIP_5 = "Incompatible with Hideous Destructor ammo";
+UVISOR_VISOR_CRACKS_SUBTITLE = "----- Visor Cracks -----";
+UVISOR_BASIS = "Basis";
+UVISOR_VISOR_CRACKS_STEPS_TIP = "Health/armor steps: 0, 15, 30, 50, 70";
+UVISOR_GLASS_GLOW_DESTR_SUBTITLE = "----- Glass and Glow Destruction -----";
+UVISOR_HIDE_GLOW_NO_ARMOR = "Hide Glow When No Armor";
+UVISOR_HIDE_GLASS_NO_ARMOR = "Hide Glass When No Armor";
+UVISOR_ANIMATED_GLASS_DESTR = "Animated Glass Destruction When No Armor";
+UVISOR_ANIMATED_GLASS_DESTR_TIP_1 = "Animation from PB Hit Feedback addon adapted to use UV colors and transparency";
+UVISOR_ANIMATED_GLASS_DESTR_TIP_2 = "Recommended to keep only one if you have it standalone or in another mod";
+UVISOR_GLOW_PULSE_SUBTITLE = "----- Glow Pulse -----";
+UVISOR_MODE = "Mode";
+UVISOR_SPEED = "Speed";
+UVISOR_PULSE_MODE_1 = "Constant (Decorative)";
+UVISOR_PULSE_MODE_2 = "At Health <= 30";
+UVISOR_PULSE_MODE_3 = "At Armor <= 30";
+UVISOR_PULSE_MODE_4 = "At Low Ammo 1";
+UVISOR_PULSE_MODE_5 = "At Low Ammo 2";
+UVISOR_ARMOR_GRID_SUBTITLE = "----- Armor Grid -----";
+UVISOR_DISPLAY_MODE = "Display Mode";
+UVISOR_GRID_DISPLAY_MODE_0 = "When Armor > 0";
+UVISOR_GRID_DISPLAY_MODE_1 = "When Radiation Suit Is On";
+UVISOR_GRID_DISPLAY_MODE_2 = "When Armor > 0 or Radiation Suit Is On";
+UVISOR_ALWAYS = "Always";
+UVISOR_GRID_COLOR_BASIS = "Armor Grid Color Basis";
+UVISOR_POWERS_OVERRIDE_GRID_COLOR = "Powers Override Grid Color";
+UVISOR_POWERS_OVERRIDE_GRID_COLOR_TIP = "Radsuit: lime, Invulnerability: glowing green, God Mode: glowing gold";
+UVISOR_POWERS_OVERRIDE_GRID_COLOR_MODE_1 = "Radsuit";
+UVISOR_POWERS_OVERRIDE_GRID_COLOR_MODE_2 = "Radsuit, Invulnerability";
+UVISOR_POWERS_OVERRIDE_GRID_COLOR_MODE_3 = "Radsuit, Invulnerability, God Mode";
+UVISOR_GRID_TRANSPARENCY_BASIS = "Transparency Basis";
+UVISOR_NONE_CONSTANT_TRANSPARENCY = "None (Constant Transparency)";
+UVISOR_GRID_TRANSPARENCY_BASIS_TIP_1 = "Armor-based transparency is only for armor-based grid display modes";
+UVISOR_GRID_TRANSPARENCY_BASIS_TIP_2 = "It's still multiplied by grid transparency from Colors submenu";
+UVISOR_GRID_DISABLE_WHEN_RADSUIT_NIGHTVISION = "Disable When Radsuit or Nightvision Are On";
+UVISOR_GRID_DISABLE_WHEN_RADSUIT_NIGHTVISION_TIP = "Sort of compatibility with overlays from other mods (e.g. PB)";
+UVISOR_OTHER_SUBTITLE = "----- Other -----";
+UVISOR_HOTKEY_TO_ENABLE_DISABLE_MOD = "Hotkey to Enable/Disable Mod";
+UVISOR_TRANSPARENCY_WITH_INVISIBILITY = "Transparency Effect With Invisibility Items";
+UVISOR_HIDE_HELMET_3RD_PERSON = "Hide Helmet in Third Person (Chase Camera)";
+
+
+// Blood On Visor
+UVISOR_MENU_BLOOD_SPLASHES = "Blood On Visor";
+UVISOR_MENU_BLOOD_SPLASHES_INNER = "\nBlood On Visor";
+UVISOR_SPLASHES_SETTINGS_AFFECT_NEW_TIP = "Settings affect new splashes";
+UVISOR_SPLASHES_DISABLED_TIP = "Blood splashes are disabled when there's no glass";
+UVISOR_SPLASHES_TRIGGER_CHANCE = "Splashes Trigger Chance (Frequency)";
+UVISOR_SPLASHES_TRIGGER_CHANCE_TIP = "> 100 means chance of double or triple splashes";
+UVISOR_SPLASHES_MAX_DISTANCE = "Max Distance to Enemy";
+UVISOR_SPLASHES_MAX_DISTANCE_TIP = "More distance - more splashes triggered. Increase for mods like BD, NashGore";
+UVISOR_SPLASHES_SIZE = "Splashes Size Multiplier";
+UVISOR_SPLASHES_SIZE_TIP = "Size is still randomized";
+UVISOR_MAX_BLOOD_TEXTURES = "Max Blood Textures Count on Screen";
+UVISOR_MAX_BLOOD_TEXTURES_TIP = "One texture usually contains multiple splashes";
+UVISOR_SPLASHES_LIFETIME = "Splashes Lifetime (sec.)";
+UVISOR_SPLASHES_LIFETIME_0_TIP = "If set to 0 sec., wiper will be started immediately";
+UVISOR_SPLASHES_VANISH = "Splashes Vanish (Gradually) in Their Lifetime";
+UVISOR_SPLASHES_VANISH_TIP = "If no vanishing, blood can only be cleaned with the screen wiper";
+UVISOR_WIPER_MODE = "Screen Wiper Auto Mode";
+UVISOR_WIPER_MODE_TIP = "First splash means first on clean visor";
+UVISOR_WIPER_MODE_1 = "First Splash Lifetime or Max Count Reached";
+UVISOR_WIPER_MODE_2 = "Only After Max Count Reached";
+UVISOR_WIPER_HOTKEY = "Hotkey to Manually Start Screen Wiper";
+UVISOR_BLOOD_DEFAULT_SATURATION_SHIFT = "Default Blood Saturation";
+UVISOR_BLOOD_DEFAULT_SATURATION_SHIFT_TIP_1 = "If color can't be recognized, the default color set by base game/mod is used (usually red)";
+UVISOR_BLOOD_DEFAULT_SATURATION_SHIFT_TIP_2 = "However saturation may mismatch a little. Adjust if needed";
+UVISOR_FAMILY_FRIENDLY_BLOOD_COLORS = "Family-Friendly Blood Colors";
+UVISOR_BLOOD_DETECTION_MODE = "Blood Detection Mode";
+UVISOR_BLOOD_DETECTION_MODE_TIP_1 = "Enemy-based better detects colors and tuned to filter damage types similar to blood-based";
+UVISOR_BLOOD_DETECTION_MODE_TIP_2 = "Also it checks player's line of sight";
+UVISOR_BLOOD_DETECTION_MODE_TIP_3 = "Select blood-based only if other mod is incompatible";
+UVISOR_BLOOD_DETECTION_MODE_TIP_4 = "e.g. no blood where it should be or vice versa";
+UVISOR_BLOOD_DETECTION_MODE_1 = "Enemy-based (Default)";
+UVISOR_BLOOD_DETECTION_MODE_2 = "Blood-based";
+
+
+// Swaying and Shaking
+UVISOR_MENU_SWAY_SHAKE = "Swaying and Shaking";
+UVISOR_MENU_SWAY_SHAKE_INNER = "\nSwaying and Shaking";
+UVISOR_MAX_HORIZONTAL_SWAY_SHAKE = "Max Horizontal Sway or Shake";
+UVISOR_MAX_VERTICAL_SWAY_SHAKE = "Max Vertical Sway or Shake";
+UVISOR_SWAYING_SUBTITLE = "----- Swaying -----";
+UVISOR_SWAY_SENSITIVITY = "Overall Sensitivity";
+UVISOR_CAMERA_SWAY_MULT_X = "Camera Sway X Multiplier";
+UVISOR_CAMERA_SWAY_MULT_Y = "Camera Sway Y Multiplier";
+UVISOR_MOVEMENT_BOB_SWAY = "Movement and Bob Sway";
+UVISOR_MOVEMENT_SWAY_MULT_X = "Movement Sway X Multiplier";
+UVISOR_MOVEMENT_SWAY_MULT_Y = "Movement Sway Y Multiplier";
+UVISOR_MOVEMENT_SWAY_MULT_BOB = "Bob Sway Multiplier";
+UVISOR_BOB_SWAY_MODE = "Bob Sway Mode";
+UVISOR_BOB_SWAY_MODE_0 = "Simulated With Controlled Frequency (Default)";
+UVISOR_BOB_SWAY_MODE_1 = "Controlled By Vanilla Bob";
+UVISOR_SIMULATED_BOB_FREQ = "Simulated Bob Frequency";
+UVISOR_VANILLA_BOB_TIP = "Vanilla bob sway depends on bob amount (which works differently in mods)";
+UVISOR_RELATED_ZDOOM_OPTION = "Related ZDoom option:";
+UVISOR_CROUCH_SWAY = "Crouch Sway";
+UVISOR_CROUCH_SWAY_MULT = "Crouch Sway Multiplier";
+UVISOR_JUMP_SWAY = "Jump Sway";
+UVISOR_JUMP_SWAY_MULT = "Jump Sway Multiplier";
+UVISOR_SHAKING_SUBTITLE = "----- Shaking -----";
+UVISOR_SHAKING_TIP = "Helmet shakes after high damage or explosions, etc. with moderate damage";
+UVISOR_SENSITIVITY = "Sensitivity";
+
+
+// Sounds
+UVISOR_SOUNDS = "Sounds";
+UVISOR_SOUNDS_INNER = "\nSounds";
+UVISOR_STARTUP_SUBTITLE = "----- Startup Fade In -----";
+UVISOR_VOLUME = "Volume";
+UVISOR_BREATH_SUBTITLE = "----- Immersive Breathing -----";
+UVISOR_BREATH_TIP = "Played constantly, speed is affected by health (steps: 0, 30, 60)";
+UVISOR_DISABLE_WHEN_NO_GLASS = "Disable When No Glass or It's Destroyed";
+UVISOR_BREATH_VOICE_TYPE = "Breathing Voice Type";
+UVISOR_BREATH_VOICE_TYPE_1 = "Low";
+UVISOR_BREATH_VOICE_TYPE_2 = "High";
+UVISOR_SOUND_CHANNEL = "Sound Channel";
+UVISOR_SOUND_CHANNEL_TIP = "Change in case of incompatibility with sounds from other mod (extremely rare)";
+UVISOR_WARNING_SOUND_SUBTITLE = "----- Health/Armor/Ammo Warning -----";
+UVISOR_WARNING_SOUND_TIP_1 = "Played constantly when health or armor < 30 or low ammo";
+UVISOR_WARNING_SOUND_TIP_2 = "See more info about Ammo 1/2 in the Gameplay submenu";
+UVISOR_DEPLETED_ARMOR_SUBTITLE = "----- Depleted Armor -----";
+UVISOR_DEPLETED_ARMOR_SOUND_TIP = "Played once when player loses all armor";
+UVISOR_VISOR_CRACKS_SUBTITLE = "----- Visor Cracks -----";
+UVISOR_VISOR_CRACKS_SOUND_TIP = "Played when glass gets additional cracks from damage";
+UVISOR_ARMOR_HITS_SUBTITLE = "----- Armor Hits -----";
+UVISOR_ARMOR_HITS_SOUND_TIP_1 = "Played when player receives a big enough damage in single hit";
+UVISOR_ARMOR_HITS_SOUND_TIP_2 = "(more than 10 or more than 5 for explosion, etc.)";
+UVISOR_ARMOR_HITS_SOUND_TIP_3 = "Some mods already have their own hit sounds";
+UVISOR_SCREEN_WIPER_SUBTITLE = "----- Screen Wiper -----";
+
+UVISOR_RESET_ALL_SETTINGS = "* Reset Settings to Default (except saved presets) *";
+UVISOR_RESET_ALL_SETTINGS_PROMPT = "Are you sure you want to restore defaults?";
+
+
+//////////////////////////////////////////////////
+[rus ru]
+// Common
+UVISOR_HEALTH = "Здоровье";
+UVISOR_ARMOR = "Броня";
+UVISOR_AMMO_1 = "Боезапас 1";
+UVISOR_AMMO_2 = "Боезапас 2";
+UVISOR_NONE_CONSTANT_COLOR = "Нет (Неизменный Цвет)";
+UVISOR_RESET_SUBMENU = "* Сбросить Подменю к Стандартным Настройкам *";
+UVISOR_RESET_SUBMENU_PROMPT = "Вы точно хотите сбросить данное подменю?";
+UVISOR_DISABLED = "Отключено";
+
+
+// Top Menu Part
+UVISOR_NAME = "⌞‾‾⌟ Universal Visor Mk. III";
+UVISOR_INNER_MENU_NAME = "\nUniversal Visor Mk. III"; // "\n" to make it one line lower because title usually covers top helmet piece
+UVISOR_MOD_ENABLED = "Мод Включён";
+UVISOR_TEXTURE_RESOLUTION = "Разрешение Текстур";
+UVISOR_TEX_RES_HIGH = "Высокое";
+UVISOR_TEX_RES_MED = "Среднее";
+UVISOR_TEX_RES_LOW = "Низкое";
+
+
+// Main Toggles
+UVISOR_MENU_MAIN_TOGGLES = "Основные Переключатели";
+UVISOR_MENU_MAIN_TOGGLES_INNER = "\nОсновные Переключатели";
+UVISOR_SHOW_HELMET_PIECES = "Части Шлема";
+UVISOR_SHOW_GLOW = "Контурная Подсветка";
+UVISOR_SHOW_GLASS = "Стекло";
+UVISOR_SHOW_TACTICAL_OVERLAY = "Тактические Линии и Декали";
+UVISOR_SHOW_TACTICAL_MARKS = "Тактические Метки";
+UVISOR_SHOW_ARMOR_GRID = "Сетка Брони";
+UVISOR_SHOW_VISOR_CRACKS = "Трещины Визора";
+UVISOR_SHOW_SPLASHES = "Вражеские Пятна Крови на Визоре";
+UVISOR_SHOW_SPLASHES_TIP = "У некоторых модов есть свои пятна, обычно у них есть переключатель";
+UVISOR_STARTUP_ENABLED = "Переход из Чёрного Экрана на Старте";
+
+
+// Presets and Backup
+UVISOR_MENU_PRESETS = "Визуальные Пресеты и Бэкап";
+UVISOR_MENU_PRESETS_INNER = "\nВизуальные Пресеты и Бэкап";
+UVISOR_PREDEFINED_PRESETS_SUBTITLE = "----- Предустановленные Визуальные Пресеты -----";
+UVISOR_SAVE_USER_PRESET_SUBTITLE = "----- Сохранение Визуального Пользовательского Пресета -----";
+UVISOR_NEW_PRESET_NAME = "Имя Нового Пресета (Нажмите Для Ввода)";
+UVISOR_PRESET_NAME_TIP = "Имя пресета не может содержать пробелы";
+UVISOR_USER_PRESET_ACTIONS_SUBTITLE = "----- Загрузить Пользовательский Пресет / Перезаписать / Удалить -----";
+
+
+// Style Options
+UVISOR_MENU_STYLE = "Настройки Стиля";
+UVISOR_MENU_STYLE_INNER = "\nНастройки Стиля";
+UVISOR_STYLE_HELMET_TOP = "Верхняя Часть";
+UVISOR_STYLE_HELMET_BOTTOM = "Нижняя Средняя Часть";
+UVISOR_STYLE_HELMET_CORNERS = "Нижние Углы";
+UVISOR_STYLE_HELMET_SIDE = "Стекло по Бокам";
+UVISOR_TACTICAL_1 = "Тактические Линии и Декали #1";
+UVISOR_TACTICAL_2 = "Тактические Линии и Декали #2";
+UVISOR_NONE = "Отключено";
+UVISOR_DOOMGUY_CLASSIC = "Классичекий Думгай";
+UVISOR_SPACE_MARINE = "Космодесант";
+UVISOR_SIMPLE_HELMET = "Простой Шлем";
+UVISOR_SIMPLE_HELMET_NO_TOP_MIDDLE = "Простой Шлем (Без Верхней Средней Части)";
+UVISOR_CLASSIC_TOP_AS_BOTTOM = "Классический Верх Внизу";
+UVISOR_PLAIN_GLASS = "Простое Стекло";
+UVISOR_EMILE_HELMET = "Царапины Шлема Эмиля";
+UVISOR_SIDELINES = "Боковые Линии";
+UVISOR_DIAMOND_DRAGON_1_RIGHT = "Diamond Dragon #1 (справа)";
+UVISOR_DIAMOND_DRAGON_2 = "Diamond Dragon #2 (для использования с белым цветом)";
+UVISOR_DIRT = "Грязь";
+UVISOR_DIRT_CLEAN = "Грязь Очищенная";
+UVISOR_TACTICAL_CORNERS = "Тактические Углы";
+
+
+// Colors and Transparency
+UVISOR_MENU_COLORS = "Цвета и Прозрачность";
+UVISOR_MENU_COLORS_INNER = "\nЦвета и Прозрачность";
+UVISOR_COLORS_SUBTITLE = "----- Цвета -----";
+UVISOR_RGB_SLIDERS_TIP = "Используйте RGB-слайдеры для выбора цветов вне палитры";
+UVISOR_COLOR_PART_TOP = "Верхняя Часть Шлема";
+UVISOR_SYNC_PART_COLORS = "Синхронизировать Остальные Части с Цветом Верхней";
+UVISOR_COLOR_PART_BOTTOM = "Нижняя Часть Шлема";
+UVISOR_COLOR_PART_CORNERS = "Нижние Углы Шлема";
+UVISOR_GLOW = "Подсветка";
+UVISOR_GLOW_RENDER_STYLE = "Стиль Рендера Подсветки";
+UVISOR_RSTYLE_TRANSLUCENT = "Translucent (Простой)";
+UVISOR_RSTYLE_ADD = "Additive (Светящийся)";
+UVISOR_GLOW_RENDER_TIP = "Светящийся также может смешать цвет подсветки с цветом стекла";
+UVISOR_SYNC_GLOW_GLASS = "Синхронизировать Цвет Подсветки и Стекла";
+UVISOR_GLASS = "Стекло";
+UVISOR_SYNC_GLASS_TACTICAL = "Синхронизировать Цвет Стекла и Тактических Линий/Декалей";
+UVISOR_VISOR_CRACKS = "Трещины Визора";
+UVISOR_ARMOR_GRID = "Сетка Брони";
+
+UVISOR_TRANSPARENCY_SUBTITLE = "----- Значения Прозрачности -----";
+UVISOR_ALPHA_PARTS = "Части Шлема";
+UVISOR_BLOOD_SPLASHES = "Пятна Крови";
+UVISOR_OVERRIDE_BOTTOM_MIDDLE_TRANSPARENCY = "Отдельная Прозрачность Нижней Средней Части";
+UVISOR_BOTTOM_MIDDLE_PIECE = "Нижняя Средняя Часть Шлема";
+UVISOR_BOTTOM_MIDDLE_GLOW = "Нижняя Средняя Подсветка";
+UVISOR_BOTTOM_MIDDLE_GLASS = "Нижнее Среднее Стекло";
+
+UVISOR_GAMEPLAY_COLORS_SUBTITLE = "----- Цвета на Основе Здоровья/Брони/Боезапаса -----";
+UVISOR_GAMEPLAY_COLORS_TIP_1 = "Эти цвета могут быть включены в подменю Геймплей";
+UVISOR_GAMEPLAY_COLORS_TIP_2 = "Они постепенно меняются между каждым из следующих шагов";
+UVISOR_GAMEPLAY_COLORS_TIP_3 = "For ammo it's 0-100% where 1st color is 0% and 4th color is 100%";
+UVISOR_GAMEPLAY_COLORS_TIP_3 = "Для боезапаса - это его процент (0-100), где 1й цвет - 0%, а четвёртый - 100%";
+UVISOR_GAMEPLAY_COLORS_STEP_1 = "Здоровье/Броня <= 15";
+UVISOR_GAMEPLAY_COLORS_STEP_2 = "40 Здоровья/Брони";
+UVISOR_GAMEPLAY_COLORS_STEP_3 = "100 Здоровья/Брони";
+UVISOR_GAMEPLAY_COLORS_STEP_4 = ">= 200 Здоровья/Брони";
+
+
+// Offsets, Scaling
+UVISOR_MENU_OFFSETS_SIZES = "Положение, Масштаб";
+UVISOR_MENU_OFFSETS_SIZES_INNER = "\nПоложение, Масштаб";
+UVISOR_OFFSET_SUBTITLE = "----- Сдвиги -----";
+UVISOR_OFFSET_TOP = "Верхняя Часть";
+UVISOR_OFFSET_BOTTOM = "Нижняя Средняя Часть";
+UVISOR_OFFSET_CORNERS_X = "Нижние Углы - Горизонтальный Сдвиг";
+UVISOR_OFFSET_CORNERS_Y = "Нижние Углы - Вертикальный Сдвиг";
+UVISOR_OFFSET_SIDES_GLASS = "Стекло по Бокам";
+UVISOR_OFFSET_TACTICAL_MARKS = "Тактические Метки";
+UVISOR_WIDTH_SCALE_SUBTITLE = "----- Ширина -----";
+UVISOR_WIDTH_SCALE_BOTTOM = "Нижняя Средняя Часть";
+UVISOR_WIDTH_SCALE_CORNERS = "Нижние Углы";
+
+
+// Separate Toggles
+UVISOR_MENU_TOGGLES = "Отдельные Переключатели";
+UVISOR_MENU_TOGGLES_INNER = "\nОтдельные Переключатели";
+UVISOR_TOP_PART_SUBTITLE = "----- Верхняя Часть -----";
+UVISOR_HELMET_PIECE = "Шлем";
+UVISOR_BOTTOM_MIDDLE_PART_SUBTITLE = "----- Нижняя Средняя Часть -----";
+UVISOR_GLASS_SIDES_SUBTITLE = "----- Стекло по Бокам -----";
+UVISOR_ENABLED = "Включено";
+UVISOR_BOTTOM_CORNERS_PART_SUBTITLE = "----- Нижние Углы -----";
+UVISOR_AUTO_HIDE_CORNERS = "Автоматически Скрывать Стекло и Подсветку Углов";
+UVISOR_GLOW_GLASS = "Подсветка и Стекло";
+UVISOR_SCREENSIZE_CORNERS = "Размер Экрана, При Котором Скрывать";
+UVISOR_AUTO_HIDE_CORNERS_TIP = "Полезно для полупрозрачных интерфейсов, например HXRTC";
+UVISOR_SCREENSIZE_TIP = "Размера экрана выбирается в настройках Экрана ZDoom или клавишами";
+UVISOR_RELATED_ZDOOM_OPTIONS = "Соответствующие настройки ZDoom:";
+UVISOR_GRID_IDLE_ANIM_ENABLE = "Периодическая Анимация Сетки Брони (Полупрозрачная)";
+UVISOR_GRID_IDLE_ANIM_TIP = "Отключение может улучшить производительность";
+
+
+// Gameplay
+UVISOR_MENU_GAMEPLAY = "Геймплей";
+UVISOR_MENU_GAMEPLAY_INNER = "\Геймплей";
+UVISOR_OPTIONS_MENU_CLOSING_TIP = "Некоторые настройки применяются после закрытия меню";
+UVISOR_GLOW_GLASS_BASIS_SUBTITLE = "----- Подсветка, Стекло: Основа Цвета -----";
+UVISOR_GLOW_GLASS_BASIS_TIP_1 = "Переопределение по здоровью/броне/боезапасу. Сами цвета настраиваются в конце цветового подменю";
+UVISOR_GLOW_GLASS_BASIS_TIP_2 = "Цвет подсветки также зависит от стиля рендера (см. то же подменю)";
+UVISOR_AMMO_TYPE_TIP_1 = "Если у оружия нет перезарядки, Боезапас 1/2 действует одинаково";
+UVISOR_AMMO_TYPE_TIP_2 = "Если есть, Боезапас 1 обычно означат общий, а Б. 2 - текущий в рожке и т.д.";
+UVISOR_AMMO_TYPE_TIP_3 = "Выберите #2, если нужен индикатор текущего боезапаса";
+UVISOR_AMMO_TYPE_TIP_4 = "Если типы сделаны наборот, выберите #1 (например: Beautiful Doom, Abyssal Marine, DoomRL, Lost in Darkness)";
+UVISOR_AMMO_TYPE_TIP_5 = "Несовместимо с боезапасом в Hideous Destructor";
+UVISOR_VISOR_CRACKS_SUBTITLE = "----- Трещины Визора -----";
+UVISOR_BASIS = "Основа";
+UVISOR_VISOR_CRACKS_STEPS_TIP = "Шаги здоровья/брони: 0, 15, 30, 50, 70";
+UVISOR_GLASS_GLOW_DESTR_SUBTITLE = "----- Разрушение Стекла и Подсветки -----";
+UVISOR_HIDE_GLOW_NO_ARMOR = "Скрывать Подсветку, Когда Нет Брони";
+UVISOR_HIDE_GLASS_NO_ARMOR = "Скрывать Стекло, Когда Нет Брони";
+UVISOR_ANIMATED_GLASS_DESTR = "Анимация Разрушения Стекла, Когда Нет Брони";
+UVISOR_ANIMATED_GLASS_DESTR_TIP_1 = "Анимация из PB Hit Feedback, адаптированная для цветов и прозрачности UV";
+UVISOR_ANIMATED_GLASS_DESTR_TIP_2 = "Рекомендуется оставить только одну, если она есть в другом моде";
+UVISOR_GLOW_PULSE_SUBTITLE = "----- Пульсация Подсветки -----";
+UVISOR_MODE = "Режим";
+UVISOR_SPEED = "Скорость";
+UVISOR_PULSE_MODE_1 = "Всегда Включена (Декоративная)";
+UVISOR_PULSE_MODE_2 = "При Здоровье <= 30";
+UVISOR_PULSE_MODE_3 = "При Броне <= 30";
+UVISOR_PULSE_MODE_4 = "При Низком Боезапасе 1";
+UVISOR_PULSE_MODE_5 = "При Низком Боезапасе 2";
+UVISOR_ARMOR_GRID_SUBTITLE = "----- Сетка Брони -----";
+UVISOR_DISPLAY_MODE = "Режим Отображения";
+UVISOR_GRID_DISPLAY_MODE_0 = "Когда Броня > 0";
+UVISOR_GRID_DISPLAY_MODE_1 = "Когда Надет Защитный Костюм";
+UVISOR_GRID_DISPLAY_MODE_2 = "Когда Броня > 0 or Надет Защитный Костюм";
+UVISOR_ALWAYS = "Всегда";
+UVISOR_GRID_COLOR_BASIS = "Основа Цвета Сетки Брони";
+UVISOR_POWERS_OVERRIDE_GRID_COLOR = "Усиления Переопределяют Цвет";
+UVISOR_POWERS_OVERRIDE_GRID_COLOR_TIP = "Защитный костюм: зелёный, Неуязвимость: светящийся лайм, Режим бога: светящийся золотой";
+UVISOR_POWERS_OVERRIDE_GRID_COLOR_MODE_1 = "Защитный Костюм";
+UVISOR_POWERS_OVERRIDE_GRID_COLOR_MODE_2 = "Защитный Костюм, Неуязвимость";
+UVISOR_POWERS_OVERRIDE_GRID_COLOR_MODE_3 = "Защитный Костюм, Invulnerability, Режим бога";
+UVISOR_GRID_TRANSPARENCY_BASIS = "Основа Прозрачности";
+UVISOR_NONE_CONSTANT_TRANSPARENCY = "Отсутствует (Одинаковая Прозрачность)";
+UVISOR_GRID_TRANSPARENCY_BASIS_TIP_1 = "Основаная на броне - только для основанного на броне отображения сетки";
+UVISOR_GRID_TRANSPARENCY_BASIS_TIP_2 = "Она всё равно умножается на прозрачность сетки из цветового подменю";
+UVISOR_GRID_DISABLE_WHEN_RADSUIT_NIGHTVISION = "Отключить при Защитном Костюме или Ночном Видении";
+UVISOR_GRID_DISABLE_WHEN_RADSUIT_NIGHTVISION_TIP = "Своего рода совместимость с эффектами других модов (например, PB)";
+UVISOR_OTHER_SUBTITLE = "----- Прочее -----";
+UVISOR_HOTKEY_TO_ENABLE_DISABLE_MOD = "Горячая Клавиша для Вкл./Откл. Мода";
+UVISOR_TRANSPARENCY_WITH_INVISIBILITY = "Эффект Прозрачности для Невидимости и т.д.";
+UVISOR_HIDE_HELMET_3RD_PERSON = "Скрывать Шлем При Виде от 3 Лица (Chase Camera)";
+
+
+// Blood On Visor
+UVISOR_MENU_BLOOD_SPLASHES = "Кровь на Визоре";
+UVISOR_MENU_BLOOD_SPLASHES_INNER = "\nКровь на Визоре";
+UVISOR_SPLASHES_SETTINGS_AFFECT_NEW_TIP = "Настройки влияют на новые пятна";
+UVISOR_SPLASHES_DISABLED_TIP = "Пятна отключается, когда нет стекла шлема";
+UVISOR_SPLASHES_TRIGGER_CHANCE = "Шанс (Частота) Появления Пятен";
+UVISOR_SPLASHES_TRIGGER_CHANCE_TIP = "> 100 означает вероятность двойный и тройных пятен";
+UVISOR_SPLASHES_MAX_DISTANCE = "Максимальная Расстояние до Врага";
+UVISOR_SPLASHES_MAX_DISTANCE_TIP = "Больше расстояние - больше пятен. Увеличьте для модов вроде BD, NashGore";
+UVISOR_SPLASHES_SIZE = "Размер Пятен";
+UVISOR_SPLASHES_SIZE_TIP = "Размер всё равно зависит от случая";
+UVISOR_MAX_BLOOD_TEXTURES = "Максимальное Кол-во Текстур Крови";
+UVISOR_MAX_BLOOD_TEXTURES_TIP = "Одна текстура обычно содержит несколько пятен";
+UVISOR_SPLASHES_LIFETIME = "Продолжительность Пятен";
+UVISOR_SPLASHES_LIFETIME_0_TIP = "Если выбрано 0 сек., очиститель запускается сразу";
+UVISOR_SPLASHES_VANISH = "Пятна Исчезают (Постепенно) в Течение Своей Продолжительности";
+UVISOR_SPLASHES_VANISH_TIP = "Если нет исчезания, пятна очищаются только с помощью очистителя визора";
+UVISOR_WIPER_MODE = "Авто-Режим Очистителя";
+UVISOR_WIPER_MODE_TIP = "Первое пятно - это первое на чистом визоре";
+UVISOR_WIPER_MODE_1 = "Продолжительность Первого Пятна или Когда Максимум Текстур";
+UVISOR_WIPER_MODE_2 = "Только Когда Максимум Текстур";
+UVISOR_WIPER_HOTKEY = "Клавиша Для Ручного Запуска Очистителя";
+UVISOR_BLOOD_DEFAULT_SATURATION_SHIFT = "Яркость Стандартной Крови";
+UVISOR_BLOOD_DEFAULT_SATURATION_SHIFT_TIP_1 = "Если цвет нельзя определить, используется стандартный из игры/мода (обычно красный)";
+UVISOR_BLOOD_DEFAULT_SATURATION_SHIFT_TIP_2 = "Однако яркость (насыщенность) может слегка не совпадать. Отрегулируйте при необходимости";
+UVISOR_FAMILY_FRIENDLY_BLOOD_COLORS = "Цвета Для Всей Семьи";
+UVISOR_BLOOD_DETECTION_MODE = "Режим Обнаружения Крови";
+UVISOR_BLOOD_DETECTION_MODE_TIP_1 = "На основе врагов лучше определяются цвета и тоже фильтруются типы урона";
+UVISOR_BLOOD_DETECTION_MODE_TIP_2 = "Ещё проверяется угол зрения игрока";
+UVISOR_BLOOD_DETECTION_MODE_TIP_3 = "Выберите основанную на крови, только при несовместимости с модом";
+UVISOR_BLOOD_DETECTION_MODE_TIP_4 = "т.е. если нет крови, где она должна быть, или наоборот";
+UVISOR_BLOOD_DETECTION_MODE_1 = "На Основе Врагов (Стандартная)";
+UVISOR_BLOOD_DETECTION_MODE_2 = "На Основе Крови";
+
+
+// Swaying and Shaking
+UVISOR_MENU_SWAY_SHAKE = "Покачивание и Тряска Шлема";
+UVISOR_MENU_SWAY_SHAKE_INNER = "\nПокачивание и Тряска Шлема";
+UVISOR_MAX_HORIZONTAL_SWAY_SHAKE = "Макс. Горизонтальное Покачивание и Тряска";
+UVISOR_MAX_VERTICAL_SWAY_SHAKE = "Макс. Вертикальное Покачивание и Тряска";
+UVISOR_SWAYING_SUBTITLE = "----- Покачивание -----";
+UVISOR_SWAY_SENSITIVITY = "Общая Чувствительность";
+UVISOR_CAMERA_SWAY_MULT_X = "Множитель Гориз. Покачивания При Движении Камеры";
+UVISOR_CAMERA_SWAY_MULT_Y = "Множитель Верт. Покачивания При Движении Камеры";
+UVISOR_MOVEMENT_BOB_SWAY = "Покачивание Шлема при Движении (Bob) Персонажа";
+UVISOR_MOVEMENT_SWAY_MULT_X = "Множитель Гориз. Покачивания При Движении Персонажа";
+UVISOR_MOVEMENT_SWAY_MULT_Y = "Множитель Верт. Покачивания При Движении Персонажа";
+UVISOR_MOVEMENT_SWAY_MULT_BOB = "Общий Множитель При Движении Персонажа";
+UVISOR_BOB_SWAY_MODE = "Режим Покачивания при Движении";
+UVISOR_BOB_SWAY_MODE_0 = "Симуляция Движения с Настройкой Частоты (Стандартный)";
+UVISOR_BOB_SWAY_MODE_1 = "На Основе Стандартного Движения Zdoom";
+UVISOR_SIMULATED_BOB_FREQ = "Частота Для Симуляции";
+UVISOR_VANILLA_BOB_TIP = "На Основе Стандартного зависит от настройки в Zdoom (ведёт себя по-разному в модах)";
+UVISOR_RELATED_ZDOOM_OPTION = "Соответствующая настройка:";
+UVISOR_CROUCH_SWAY = "Покачивание от Приседания";
+UVISOR_CROUCH_SWAY_MULT = "Множитель Покачивания от Приседания";
+UVISOR_JUMP_SWAY = "Покачивание от Прыжка";
+UVISOR_JUMP_SWAY_MULT = "Множитель Покачивания от Прыжка";
+UVISOR_SHAKING_SUBTITLE = "----- Тряска Шлема -----";
+UVISOR_SHAKING_TIP = "Шлем трясётся при высоком уроне или взрывах и т.д. с уроном поменьше";
+UVISOR_SENSITIVITY = "Чувствительность";
+
+
+// Sounds
+UVISOR_SOUNDS = "Звуки";
+UVISOR_SOUNDS_INNER = "\Звуки";
+UVISOR_STARTUP_SUBTITLE = "----- Переход из Чёрного Экрана на Старте -----";
+UVISOR_VOLUME = "Громкость";
+UVISOR_BREATH_SUBTITLE = "----- Иммерсивное Дыхание -----";
+UVISOR_BREATH_TIP = "Действует постоянно, скорость зависит от здоровья (шаги: 0, 30, 60)";
+UVISOR_DISABLE_WHEN_NO_GLASS = "Отключить, Когда Нет Стекла Или Оно Разрушено";
+UVISOR_BREATH_VOICE_TYPE = "Тип Голоса Для Дыхания";
+UVISOR_BREATH_VOICE_TYPE_1 = "Низкий";
+UVISOR_BREATH_VOICE_TYPE_2 = "Высокй";
+UVISOR_SOUND_CHANNEL = "Звуковой Канал";
+UVISOR_SOUND_CHANNEL_TIP = "Поменяйте при несовместимости со звуками другого мода (крайне редко)";
+UVISOR_WARNING_SOUND_SUBTITLE = "----- Предупреждение о Здоровье/Броне/Боезапасе -----";
+UVISOR_WARNING_SOUND_TIP_1 = "Действует постоянно, когда здоровье или броня < 30 или малый боезапас";
+UVISOR_WARNING_SOUND_TIP_2 = "См. подробнее про Боезапас 1/2 в подменю Геймплей";
+UVISOR_DEPLETED_ARMOR_SUBTITLE = "----- Потеря Брони -----";
+UVISOR_DEPLETED_ARMOR_SOUND_TIP = "Включается один раз при потере всей брони";
+UVISOR_VISOR_CRACKS_SUBTITLE = "----- Трещины Визора -----";
+UVISOR_VISOR_CRACKS_SOUND_TIP = "Включается, когда появляются новые трещины на стекле";
+UVISOR_ARMOR_HITS_SUBTITLE = "----- Удары по Броне -----";
+UVISOR_ARMOR_HITS_SOUND_TIP_1 = "Включается, когда игрок получает большой урон за один раз";
+UVISOR_ARMOR_HITS_SOUND_TIP_2 = "(больше 10 или больше 5 для взрывов и т.д.";
+UVISOR_ARMOR_HITS_SOUND_TIP_3 = "У некоторых модов уже есть свои звуки ударов";
+UVISOR_SCREEN_WIPER_SUBTITLE = "----- Очиститель Визора -----";
+
+UVISOR_RESET_ALL_SETTINGS = "* Сбросить к Стандартным Настройкам (кроме сохранённых пресетов) *";
+UVISOR_RESET_ALL_SETTINGS_PROMPT = "Вы уверены, что хотите сбросить мод к стандартным настройкам?";

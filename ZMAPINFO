@@ -1,0 +1,3 @@
+gameinfo {
+	AddEventHandlers = "UV_HitFeedback_Handler", "UV_HudVisorDraw", "UV_HudVisorStaticGlobals", "UV_PresetHandler"
+}
