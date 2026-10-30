@@ -12,8 +12,8 @@ UVISOR_DISABLED = "Disabled";
 
 
 // Top Menu Part
-UVISOR_NAME = "⌞‾‾⌟ Universal Visor Mk. III";
-UVISOR_INNER_MENU_NAME = "\nUniversal Visor Mk. III"; // "\n" to make it one line lower because title usually covers top helmet piece
+UVISOR_NAME = "⌞‾‾⌟ Universal Visor Mk III";
+UVISOR_INNER_MENU_NAME = "\nUniversal Visor Mk III"; // "\n" to make it one line lower because title usually covers top helmet piece
 UVISOR_MOD_ENABLED = "Mod Enabled";
 UVISOR_TEXTURE_RESOLUTION = "Texture Resolution";
 UVISOR_TEX_RES_HIGH = "High";
@@ -188,8 +188,8 @@ UVISOR_GRID_TRANSPARENCY_BASIS = "Transparency Basis";
 UVISOR_NONE_CONSTANT_TRANSPARENCY = "None (Constant Transparency)";
 UVISOR_GRID_TRANSPARENCY_BASIS_TIP_1 = "Armor-based transparency is only for armor-based grid display modes";
 UVISOR_GRID_TRANSPARENCY_BASIS_TIP_2 = "It's still multiplied by grid transparency from Colors submenu";
-UVISOR_GRID_DISABLE_WHEN_RADSUIT_NIGHTVISION = "Disable When Radsuit or Nightvision Are On";
-UVISOR_GRID_DISABLE_WHEN_RADSUIT_NIGHTVISION_TIP = "Sort of compatibility with overlays from other mods (e.g. PB)";
+UVISOR_GRID_DISABLE_WHEN_RADSUIT_NIGHTVISION = "Disable When Radsuit (all types) or PB Nightvision Are On";
+UVISOR_GRID_DISABLE_WHEN_RADSUIT_NIGHTVISION_TIP = "Sort of compatibility with overlays from other mods";
 UVISOR_OTHER_SUBTITLE = "----- Other -----";
 UVISOR_HOTKEY_TO_ENABLE_DISABLE_MOD = "Hotkey to Enable/Disable Mod";
 UVISOR_TRANSPARENCY_WITH_INVISIBILITY = "Transparency Effect With Invisibility Items";
@@ -224,9 +224,8 @@ UVISOR_BLOOD_DEFAULT_SATURATION_SHIFT_TIP_2 = "However saturation may mismatch a
 UVISOR_FAMILY_FRIENDLY_BLOOD_COLORS = "Family-Friendly Blood Colors";
 UVISOR_BLOOD_DETECTION_MODE = "Blood Detection Mode";
 UVISOR_BLOOD_DETECTION_MODE_TIP_1 = "Enemy-based better detects colors and tuned to filter damage types similar to blood-based";
-UVISOR_BLOOD_DETECTION_MODE_TIP_2 = "Also it checks player's line of sight";
-UVISOR_BLOOD_DETECTION_MODE_TIP_3 = "Select blood-based only if other mod is incompatible";
-UVISOR_BLOOD_DETECTION_MODE_TIP_4 = "e.g. no blood where it should be or vice versa";
+UVISOR_BLOOD_DETECTION_MODE_TIP_2 = "Select blood-based only if other mod is incompatible";
+UVISOR_BLOOD_DETECTION_MODE_TIP_3 = "e.g. no blood where it should be or vice versa";
 UVISOR_BLOOD_DETECTION_MODE_1 = "Enemy-based (Default)";
 UVISOR_BLOOD_DETECTION_MODE_2 = "Blood-based";
 
@@ -303,8 +302,8 @@ UVISOR_DISABLED = "Отключено";
 
 
 // Top Menu Part
-UVISOR_NAME = "⌞‾‾⌟ Universal Visor Mk. III";
-UVISOR_INNER_MENU_NAME = "\nUniversal Visor Mk. III"; // "\n" to make it one line lower because title usually covers top helmet piece
+UVISOR_NAME = "⌞‾‾⌟ Universal Visor Mk III";
+UVISOR_INNER_MENU_NAME = "\nUniversal Visor Mk III"; // "\n" to make it one line lower because title usually covers top helmet piece
 UVISOR_MOD_ENABLED = "Мод Включён";
 UVISOR_TEXTURE_RESOLUTION = "Разрешение Текстур";
 UVISOR_TEX_RES_HIGH = "Высокое";
@@ -393,7 +392,6 @@ UVISOR_BOTTOM_MIDDLE_GLASS = "Нижнее Среднее Стекло";
 UVISOR_GAMEPLAY_COLORS_SUBTITLE = "----- Цвета на Основе Здоровья/Брони/Боезапаса -----";
 UVISOR_GAMEPLAY_COLORS_TIP_1 = "Эти цвета могут быть включены в подменю Геймплей";
 UVISOR_GAMEPLAY_COLORS_TIP_2 = "Они постепенно меняются между каждым из следующих шагов";
-UVISOR_GAMEPLAY_COLORS_TIP_3 = "For ammo it's 0-100% where 1st color is 0% and 4th color is 100%";
 UVISOR_GAMEPLAY_COLORS_TIP_3 = "Для боезапаса - это его процент (0-100), где 1й цвет - 0%, а четвёртый - 100%";
 UVISOR_GAMEPLAY_COLORS_STEP_1 = "Здоровье/Броня <= 15";
 UVISOR_GAMEPLAY_COLORS_STEP_2 = "40 Здоровья/Брони";
@@ -468,7 +466,7 @@ UVISOR_ARMOR_GRID_SUBTITLE = "----- Сетка Брони -----";
 UVISOR_DISPLAY_MODE = "Режим Отображения";
 UVISOR_GRID_DISPLAY_MODE_0 = "Когда Броня > 0";
 UVISOR_GRID_DISPLAY_MODE_1 = "Когда Надет Защитный Костюм";
-UVISOR_GRID_DISPLAY_MODE_2 = "Когда Броня > 0 or Надет Защитный Костюм";
+UVISOR_GRID_DISPLAY_MODE_2 = "Когда Броня > 0 или Надет Защитный Костюм";
 UVISOR_ALWAYS = "Всегда";
 UVISOR_GRID_COLOR_BASIS = "Основа Цвета Сетки Брони";
 UVISOR_POWERS_OVERRIDE_GRID_COLOR = "Усиления Переопределяют Цвет";
@@ -480,8 +478,8 @@ UVISOR_GRID_TRANSPARENCY_BASIS = "Основа Прозрачности";
 UVISOR_NONE_CONSTANT_TRANSPARENCY = "Отсутствует (Одинаковая Прозрачность)";
 UVISOR_GRID_TRANSPARENCY_BASIS_TIP_1 = "Основаная на броне - только для основанного на броне отображения сетки";
 UVISOR_GRID_TRANSPARENCY_BASIS_TIP_2 = "Она всё равно умножается на прозрачность сетки из цветового подменю";
-UVISOR_GRID_DISABLE_WHEN_RADSUIT_NIGHTVISION = "Отключить при Защитном Костюме или Ночном Видении";
-UVISOR_GRID_DISABLE_WHEN_RADSUIT_NIGHTVISION_TIP = "Своего рода совместимость с эффектами других модов (например, PB)";
+UVISOR_GRID_DISABLE_WHEN_RADSUIT_NIGHTVISION = "Отключить при Защитном Костюме (любом) или Ночном Видении (PB)";
+UVISOR_GRID_DISABLE_WHEN_RADSUIT_NIGHTVISION_TIP = "Своего рода совместимость с эффектами других модов";
 UVISOR_OTHER_SUBTITLE = "----- Прочее -----";
 UVISOR_HOTKEY_TO_ENABLE_DISABLE_MOD = "Горячая Клавиша для Вкл./Откл. Мода";
 UVISOR_TRANSPARENCY_WITH_INVISIBILITY = "Эффект Прозрачности для Невидимости и т.д.";
@@ -516,9 +514,8 @@ UVISOR_BLOOD_DEFAULT_SATURATION_SHIFT_TIP_2 = "Однако яркость (на
 UVISOR_FAMILY_FRIENDLY_BLOOD_COLORS = "Цвета Для Всей Семьи";
 UVISOR_BLOOD_DETECTION_MODE = "Режим Обнаружения Крови";
 UVISOR_BLOOD_DETECTION_MODE_TIP_1 = "На основе врагов лучше определяются цвета и тоже фильтруются типы урона";
-UVISOR_BLOOD_DETECTION_MODE_TIP_2 = "Ещё проверяется угол зрения игрока";
-UVISOR_BLOOD_DETECTION_MODE_TIP_3 = "Выберите основанную на крови, только при несовместимости с модом";
-UVISOR_BLOOD_DETECTION_MODE_TIP_4 = "т.е. если нет крови, где она должна быть, или наоборот";
+UVISOR_BLOOD_DETECTION_MODE_TIP_2 = "Выберите На основе крови только при несовместимости с модом";
+UVISOR_BLOOD_DETECTION_MODE_TIP_3 = "т.е. если нет крови, где она должна быть, или наоборот";
 UVISOR_BLOOD_DETECTION_MODE_1 = "На Основе Врагов (Стандартная)";
 UVISOR_BLOOD_DETECTION_MODE_2 = "На Основе Крови";
 
