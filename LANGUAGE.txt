@@ -69,6 +69,15 @@ UVISOR_DIAMOND_DRAGON_2 = "Diamond Dragon #2 (to be used with white color)";
 UVISOR_DIRT = "Dirt";
 UVISOR_DIRT_CLEAN = "Dirt Clean";
 UVISOR_TACTICAL_CORNERS = "Tactical Corners";
+UVISOR_ARMOR_GRID_CELL_TYPE = "Armor Grid Cell Type";
+UVISOR_ARMOR_GRID_SHAPE_TYPE = "Armor Grid Shape Type";
+UVISOR_CELL_TYPE_BIG = "Big";
+UVISOR_CELL_TYPE_SMALL = "Small";
+UVISOR_SHAPE_ROUND_SMALL = "Round Small";
+UVISOR_SHAPE_ROUND_BIG = "Round Big";
+UVISOR_SHAPE_RECTANGULAR_SMALL = "Rectangular Small";
+UVISOR_SHAPE_RECTANGULAR_BIG = "Rectangular Big";
+UVISOR_SHAPE_RECTANGULAR_BIGGEST = "Rectangular Biggest";
 
 
 // Colors and Transparency
@@ -140,7 +149,7 @@ UVISOR_AUTO_HIDE_CORNERS_TIP = "Useful for semi-transparent HUDs like HXRTC";
 UVISOR_SCREENSIZE_TIP = "Screensize is selected in ZDoom Display Options or with hotkeys";
 UVISOR_RELATED_ZDOOM_OPTIONS = "Related ZDoom options:";
 UVISOR_GRID_IDLE_ANIM_ENABLE = "Armor Grid Idle Animation";
-UVISOR_GRID_IDLE_ANIM_TIP = "Disabling may improve performance";
+UVISOR_GRID_IDLE_ANIM_TIP = "Happens randomly every 7-42 secs. May descrease fps (1-2 on a weak hardware) at these moments";
 
 
 // Gameplay
@@ -359,6 +368,15 @@ UVISOR_DIAMOND_DRAGON_2 = "Diamond Dragon #2 (для использования 
 UVISOR_DIRT = "Грязь";
 UVISOR_DIRT_CLEAN = "Грязь Очищенная";
 UVISOR_TACTICAL_CORNERS = "Тактические Углы";
+UVISOR_ARMOR_GRID_CELL_TYPE = "Сетка Брони - Тип Ячеек";
+UVISOR_ARMOR_GRID_SHAPE_TYPE = "Сетка Брони - Общая Форма";
+UVISOR_CELL_TYPE_BIG = "Большая";
+UVISOR_CELL_TYPE_SMALL = "Малая";
+UVISOR_SHAPE_ROUND_SMALL = "Круглая Малая";
+UVISOR_SHAPE_ROUND_BIG = "Круглая Большая";
+UVISOR_SHAPE_RECTANGULAR_SMALL = "Прямоугольная Малая";
+UVISOR_SHAPE_RECTANGULAR_BIG = "Прямоугольная Большая";
+UVISOR_SHAPE_RECTANGULAR_BIGGEST = "Прямоугольная Самая Большая";
 
 
 // Colors and Transparency
@@ -430,7 +448,7 @@ UVISOR_AUTO_HIDE_CORNERS_TIP = "Полезно для полупрозрачны
 UVISOR_SCREENSIZE_TIP = "Размера экрана выбирается в настройках Экрана ZDoom или клавишами";
 UVISOR_RELATED_ZDOOM_OPTIONS = "Соответствующие настройки ZDoom:";
 UVISOR_GRID_IDLE_ANIM_ENABLE = "Периодическая Анимация Сетки Брони (Полупрозрачная)";
-UVISOR_GRID_IDLE_ANIM_TIP = "Отключение может улучшить производительность";
+UVISOR_GRID_IDLE_ANIM_TIP = "Появляется случайно каждые 7-42 сек. Может уменьшить фпс (1-2 на слабом железе) в эти моменты";
 
 
 // Gameplay

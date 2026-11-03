@@ -292,6 +292,8 @@ class UV_PresetHandler : StaticEventHandler
 		addCVarData('uvisor_style_side_glass');
 		addCVarData('uvisor_style_tactical_overlay_1');
 		addCVarData('uvisor_style_tactical_overlay_2');
+		addCVarData('uvisor_armor_grid_cell_type');
+		addCVarData('uvisor_armor_grid_shape_type');
 		addCVarData('uvisor_color_part_top');
 		addCVarData('uvisor_sync_part_colors');
 		addCVarData('uvisor_color_part_bottom');

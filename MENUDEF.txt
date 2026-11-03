@@ -114,6 +114,11 @@ OptionMenu "UV_MENU_STYLE" {
 	Option "$UVISOR_TACTICAL_1", "uvisor_style_tactical_overlay_1", "TacticalOverlayStyles"
 	Option "$UVISOR_TACTICAL_2", "uvisor_style_tactical_overlay_2", "TacticalOverlayStyles"
 	StaticText " "
+	Option "$UVISOR_ARMOR_GRID_CELL_TYPE", "uvisor_armor_grid_cell_type", "ArmorGridCellTypes"
+	Option "$UVISOR_ARMOR_GRID_SHAPE_TYPE", "uvisor_armor_grid_shape_type", "ArmorGridShapeTypes"
+	Option "$UVISOR_GRID_IDLE_ANIM_ENABLE", "uvisor_grid_idle_anim_enabled", "OnOff"
+	StaticText "$UVISOR_GRID_IDLE_ANIM_TIP", DarkGray
+	StaticText " "
 	StaticText "-------------------------", LightBlue
 	SafeCommand "$UVISOR_RESET_SUBMENU", uvisor_reset_style_menu, "$UVISOR_RESET_SUBMENU_PROMPT"
 }
@@ -147,19 +152,19 @@ OptionMenu "UV_MENU_COLORS" {
 	ColorPicker "$UVISOR_ARMOR_GRID", "uvisor_color_armor_grid"
 	StaticText " "
 	StaticText "$UVISOR_TRANSPARENCY_SUBTITLE", LightBlue
-	Slider "$UVISOR_ALPHA_PARTS", "uvisor_alpha_parts", 0.0, 1.0, 0.1, 2
-	Slider "$UVISOR_GLOW", "uvisor_alpha_glow", 0.0, 1.0, 0.1, 2
-	Slider "$UVISOR_GLASS", "uvisor_alpha_glass", 0.0, 1.0, 0.1, 2
-	Slider "$UVISOR_TACTICAL_1", "uvisor_alpha_tactical_1", 0.0, 1.0, 0.1, 2
-	Slider "$UVISOR_TACTICAL_2", "uvisor_alpha_tactical_2", 0.0, 1.0, 0.1, 2
-	Slider "$UVISOR_VISOR_CRACKS", "uvisor_alpha_cracks", 0.0, 1.0, 0.1, 2
-	Slider "$UVISOR_ARMOR_GRID", "uvisor_alpha_armor_grid", 0.0, 1.0, 0.1, 2
-	Slider "$UVISOR_BLOOD_SPLASHES", "uvisor_alpha_blood", 0.0, 1.0, 0.1, 2
+	Slider "$UVISOR_ALPHA_PARTS", "uvisor_alpha_parts", 0.0, 1.0, 0.05, 2
+	Slider "$UVISOR_GLOW", "uvisor_alpha_glow", 0.0, 1.0, 0.05, 2
+	Slider "$UVISOR_GLASS", "uvisor_alpha_glass", 0.0, 1.0, 0.05, 2
+	Slider "$UVISOR_TACTICAL_1", "uvisor_alpha_tactical_1", 0.0, 1.0, 0.05, 2
+	Slider "$UVISOR_TACTICAL_2", "uvisor_alpha_tactical_2", 0.0, 1.0, 0.05, 2
+	Slider "$UVISOR_VISOR_CRACKS", "uvisor_alpha_cracks", 0.0, 1.0, 0.05, 2
+	Slider "$UVISOR_ARMOR_GRID", "uvisor_alpha_armor_grid", 0.0, 1.0, 0.05, 2
+	Slider "$UVISOR_BLOOD_SPLASHES", "uvisor_alpha_blood", 0.0, 1.0, 0.05, 2
 	StaticText "-----", LightBlue
 	Option "$UVISOR_OVERRIDE_BOTTOM_MIDDLE_TRANSPARENCY", "uvisor_override_alpha_bottom", "YesNo"
-	Slider "$UVISOR_BOTTOM_MIDDLE_PIECE", "uvisor_alpha_part_bottom", 0.0, 1.0, 0.1, 2, "uvisor_override_alpha_bottom"
-	Slider "$UVISOR_BOTTOM_MIDDLE_GLOW", "uvisor_alpha_glow_bottom", 0.0, 1.0, 0.1, 2, "uvisor_override_alpha_bottom"
-	Slider "$UVISOR_BOTTOM_MIDDLE_GLASS", "uvisor_alpha_glass_bottom", 0.0, 1.0, 0.1, 2, "uvisor_override_alpha_bottom"
+	Slider "$UVISOR_BOTTOM_MIDDLE_PIECE", "uvisor_alpha_part_bottom", 0.0, 1.0, 0.05, 2, "uvisor_override_alpha_bottom"
+	Slider "$UVISOR_BOTTOM_MIDDLE_GLOW", "uvisor_alpha_glow_bottom", 0.0, 1.0, 0.05, 2, "uvisor_override_alpha_bottom"
+	Slider "$UVISOR_BOTTOM_MIDDLE_GLASS", "uvisor_alpha_glass_bottom", 0.0, 1.0, 0.05, 2, "uvisor_override_alpha_bottom"
 	StaticText " "
 	StaticText "$UVISOR_GAMEPLAY_COLORS_SUBTITLE", LightBlue
 	StaticText "$UVISOR_GAMEPLAY_COLORS_TIP_1", DarkGray
@@ -226,10 +231,6 @@ OptionMenu "UV_MENU_TOGGLES" {
 	Slider "$DSPLYMNU_SCREENSIZE", "screenblocks", 3.0, 12.0, 1.0, 0
 	Control    "$CNTRLMNU_DISPLAY_INC"     , "sizeup"
 	Control    "$CNTRLMNU_DISPLAY_DEC"     , "sizedown"
-	StaticText " "
-	StaticText "$UVISOR_ARMOR_GRID_SUBTITLE", LightBlue
-	Option "$UVISOR_GRID_IDLE_ANIM_ENABLE", "uvisor_grid_idle_anim_enabled", "OnOff"
-	StaticText "$UVISOR_GRID_IDLE_ANIM_TIP", DarkGray
 	StaticText " "
 	StaticText "-------------------------", LightBlue
 	SafeCommand "$UVISOR_RESET_SUBMENU", uvisor_reset_toggles_menu, "$UVISOR_RESET_SUBMENU_PROMPT"
@@ -488,6 +489,21 @@ OptionValue "TacticalOverlayStyles"
 	16, "$UVISOR_DIRT"
 	17, "$UVISOR_DIRT_CLEAN"
 	18, "$UVISOR_TACTICAL_CORNERS"
+}
+
+OptionValue "ArmorGridCellTypes"
+{
+	0, "$UVISOR_CELL_TYPE_BIG"
+	1, "$UVISOR_CELL_TYPE_SMALL"
+}
+
+OptionValue "ArmorGridShapeTypes"
+{
+	0, "$UVISOR_SHAPE_ROUND_SMALL"
+	1, "$UVISOR_SHAPE_ROUND_BIG"
+	2, "$UVISOR_SHAPE_RECTANGULAR_SMALL"
+	3, "$UVISOR_SHAPE_RECTANGULAR_BIG"
+	4, "$UVISOR_SHAPE_RECTANGULAR_BIGGEST"
 }
 
 OptionValue "WarningBasis"
