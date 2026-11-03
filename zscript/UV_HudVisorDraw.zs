@@ -111,6 +111,15 @@ class UV_HudVisorDraw : EventHandler
 		"Corners"				// 18
     };
 	
+	static const string armorGridShapeTypes[] = 
+	{
+		"Round_Small",			// 0
+		"Round_Big",			// 1
+		"Rectangular_Small",	// 2
+		"Rectangular_Big",		// 3
+		"Rectangular_Biggest"	// 4
+	};
+	
 	enum ScreenAnchors
 	{
 		TOP_LEFT,
@@ -455,9 +464,10 @@ class UV_HudVisorDraw : EventHandler
 	double damageArmorGridAlpha;
 	bool armorGridDisableWhenOtherOverlay;
 	
-	const GRID_IDLE_CYCLE_TICKS = 175;
+	const GRID_IDLE_CYCLE_TICKS = 245;
     const GRID_IDLE_FADE_TICKS = 35;
 	int gridIdleTimer;
+	int gridIdleNextTriggerTick;
 	double prevGridIdleAlphaImage_1;
 	double gridIdleAlphaImage_1;
 	double prevGridIdleAlphaImage_2;
@@ -984,10 +994,11 @@ class UV_HudVisorDraw : EventHandler
 			.CheckForTexture(commonGraphicsPath .. "Tactical_Lines_Decals/Overlay_" .. tacticalOverlayStyles[styleTacticalOverlay_1] .. ".png");
 		texTacticalOverlay_2 = TexMan
 			.CheckForTexture(commonGraphicsPath .. "Tactical_Lines_Decals/Overlay_" .. tacticalOverlayStyles[styleTacticalOverlay_2] .. ".png");
-		texArmorGrid = TexMan.CheckForTexture(commonGraphicsPath .. "Armor_Grid/" .. "armor_grid.png");
-		texArmorGridIdleAnim = TexMan.CheckForTexture(commonGraphicsPath .. "Armor_Grid/" .. "armor_grid_idle_anim.png");
-		texArmorGridDamage = TexMan.CheckForTexture(commonGraphicsPath .. "Armor_Grid/" .. "armor_grid_damage.png");
-		texArmorGridDamageHeavy = TexMan.CheckForTexture(commonGraphicsPath .. "Armor_Grid/" .. "armor_grid_damage_heavy.png");
+		String armorGridTexturesPath = GetArmorGridTexturesPath();
+		texArmorGrid = TexMan.CheckForTexture(armorGridTexturesPath .. "/armor_grid.png");
+		texArmorGridIdleAnim = TexMan.CheckForTexture(armorGridTexturesPath .. "/armor_grid_idle_anim.png");
+		texArmorGridDamage = TexMan.CheckForTexture(armorGridTexturesPath .. "/armor_grid_damage.png");
+		texArmorGridDamageHeavy = TexMan.CheckForTexture(armorGridTexturesPath .. "/armor_grid_damage_heavy.png");
 		
 		texPartTop = TexMan.CheckForTexture(helmetGraphicsPath .. topStyles[styleTop] .. "/Part_Top.png");
 		texPartBottom = TexMan.CheckForTexture(helmetGraphicsPath .. bottomStyles[styleBottom] .. "/Part_Bottom.png");
@@ -1011,6 +1022,14 @@ class UV_HudVisorDraw : EventHandler
 		isGL_EnhancedNV = Cvar.GetCvar("gl_enhanced_nightvision", playerinf).GetBool();
 		
 		texScreenWiper = TexMan.CheckForTexture(commonGraphicsPath .. "screen_wiper.png");
+	}
+	
+	ui String GetArmorGridTexturesPath() {
+		int armorGridCellType = Cvar.GetCvar("uvisor_armor_grid_cell_type", playerinf).GetInt();
+		int armorGridShapeType = Cvar.GetCvar("uvisor_armor_grid_shape_type", playerinf).GetInt();
+		String cellPath = armorGridCellType == 0 ? "Cell_Big/" : "Cell_Small/";
+		String shapePath = "Shape_" .. armorGridShapeTypes[armorGridShapeType];
+		return commonGraphicsPath .. "Armor_Grid/" .. cellPath .. shapePath;
 	}
 	
 	ui void DrawStartupFade() {
@@ -2445,7 +2464,7 @@ class UV_HudVisorDraw : EventHandler
 			combinedR += playerinf.BlendR * playerinf.BlendA;
 			combinedG += playerinf.BlendG * playerinf.BlendA;
 			combinedB += playerinf.BlendB * playerinf.BlendA;
-			Console.Printf("playerinf.Blend: R=%f, G=%f, B=%f, A=%f", playerinf.BlendR, playerinf.BlendG, playerinf.BlendB, playerinf.BlendA);
+// 			Console.Printf("playerinf.Blend: R=%f, G=%f, B=%f, A=%f", playerinf.BlendR, playerinf.BlendG, playerinf.BlendB, playerinf.BlendA);
 		}
 		for (int i = 0; i < powerupBlendColors.Size(); i++) {
 			Color pColor = powerupBlendColors[i];
@@ -2455,8 +2474,8 @@ class UV_HudVisorDraw : EventHandler
 			combinedR += (pColor.r / 255.0) * blendColorAlpha;
 			combinedG += (pColor.g / 255.0) * blendColorAlpha;
 			combinedB += (pColor.b / 255.0) * blendColorAlpha;
-			Console.Printf("powerupBlendColors[%d]: R=%f, G=%f, B=%f, A=%f",
-						   i, pColor.r/255.0, pColor.g/255.0, pColor.b/255.0, blendColorAlpha);
+// 			Console.Printf("powerupBlendColors[%d]: R=%f, G=%f, B=%f, A=%f",
+// 						   i, pColor.r/255.0, pColor.g/255.0, pColor.b/255.0, blendColorAlpha);
 		}
 		if (combinedA > 0.0) {
 			double normR = clamp(combinedR / combinedA, 0.0, 1.0);
@@ -2652,26 +2671,30 @@ class UV_HudVisorDraw : EventHandler
 			gridIdleAlphaImage_1 = 1.0;
 			prevGridIdleAlphaImage_2 = 0.0;
 			gridIdleAlphaImage_2 = 0.0;
+			gridIdleNextTriggerTick = 0;
 			return;
 		}
 		gridIdleTimer++;
 		prevGridIdleAlphaImage_1 = gridIdleAlphaImage_1;
 		prevGridIdleAlphaImage_2 = gridIdleAlphaImage_2;
-		// Init idle anim randomly after at least GRID_IDLE_CYCLE_TICKS and up to GRID_IDLE_CYCLE_TICKS * 10
-        if (gridIdleTimer >= random(GRID_IDLE_CYCLE_TICKS, GRID_IDLE_CYCLE_TICKS * 10)) {
-            gridIdleTimer = 0;
+		// Select tick for the very first time
+		if (gridIdleNextTriggerTick <= 0) {
+			gridIdleNextTriggerTick = random(GRID_IDLE_CYCLE_TICKS, GRID_IDLE_CYCLE_TICKS * 6); // 7-42 sec
 		}
-        if (gridIdleTimer < GRID_IDLE_FADE_TICKS)
-        {
-            // First fade: image1 → image2
-            double tickRatio = double(gridIdleTimer) / GRID_IDLE_FADE_TICKS;   // 0 → 1
+        if (gridIdleTimer >= gridIdleNextTriggerTick) {
+            gridIdleTimer = 0;
+			// Reselect tick
+			gridIdleNextTriggerTick = random(GRID_IDLE_CYCLE_TICKS, GRID_IDLE_CYCLE_TICKS * 8);
+		}
+        if (gridIdleTimer < GRID_IDLE_FADE_TICKS) {
+            // First fade: image1 to image2
+            double tickRatio = double(gridIdleTimer) / GRID_IDLE_FADE_TICKS; // 0 to 1
             gridIdleAlphaImage_1 = 1.0 - tickRatio;
             gridIdleAlphaImage_2 = tickRatio;
         }
-        else if (gridIdleTimer < 2 * GRID_IDLE_FADE_TICKS)
-        {
-            // Second fade: image2 → image1
-            double tickRatio = double(gridIdleTimer - GRID_IDLE_FADE_TICKS) / GRID_IDLE_FADE_TICKS; // 0 → 1
+        else if (gridIdleTimer < 2 * GRID_IDLE_FADE_TICKS) {
+            // Reverse fade: image2 to image1
+            double tickRatio = double(gridIdleTimer - GRID_IDLE_FADE_TICKS) / GRID_IDLE_FADE_TICKS; // 0 to 1
             gridIdleAlphaImage_1 = tickRatio;
             gridIdleAlphaImage_2 = 1.0 - tickRatio;
         } else {

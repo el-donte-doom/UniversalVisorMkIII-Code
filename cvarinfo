@@ -30,6 +30,8 @@ user int uvisor_style_helmet_corners = 1;
 user int uvisor_style_side_glass = 1;
 user int uvisor_style_tactical_overlay_1 = 1;
 user int uvisor_style_tactical_overlay_2 = 0;
+user int uvisor_armor_grid_cell_type = 0;
+user int uvisor_armor_grid_shape_type = 0;
 
 
 // Colors and Transparency
