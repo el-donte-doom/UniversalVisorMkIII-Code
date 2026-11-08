@@ -140,7 +140,8 @@ class UV_HudVisorDraw : EventHandler
 		PART_CORNER,
 		GLOW,
 		GLASS,
-		ARMOR_GRID
+		ARMOR_GRID,
+		SCREEN_WIPER
 	};
 	
 	ui bool initialUIInitDone;
@@ -296,6 +297,12 @@ class UV_HudVisorDraw : EventHandler
 	ui double uiSwayOffY; // Gets interpolated from SwayOffY
 	ui double uiSwayOffX_ArmorGrid;
 	ui double uiSwayOffY_ArmorGrid;
+	ui double forwardOfsHelmet;
+	ui bool usePB_Sway;
+	ui double hudExpansionX;
+	ui double hudExpansionY;
+	ui double uiScaledMaxSwayX;
+	ui double uiScaledMaxSwayY;
 	
 	ui int warningSoundBasisUIContext;
 	ui bool isGL_EnhancedNV;
@@ -307,8 +314,7 @@ class UV_HudVisorDraw : EventHandler
 	bool wasMenuOpened;
 	double scaleFactorWidthPlay;
 	double scaleFactorHeightPlay;
-	bool showGlassPlayContext;
-	bool baseShowGlassPlayContext;
+	bool isGlassDestroyed;
 	bool hideGlassIfEmptyArmorPlayContext;
 	bool transparencyEffectWhenInvis;
 	bool isDemonPlayer;
@@ -628,7 +634,7 @@ class UV_HudVisorDraw : EventHandler
 	bool lowAmmo1Active;
 	int lowAmmo2Ticker;
 	bool lowAmmo2Active;
-	UV_AmmoReaderFactory Factory;
+	UV_AmmoReaderFactory ammoReaderFactory;
 		
 	
 	
@@ -735,16 +741,12 @@ class UV_HudVisorDraw : EventHandler
 			}
 			
 			initialUIInitDone = true;
-			// prevGametic is incremented in another block later
+			//// prevGametic is incremented in another block later
 		}
 		
 		FracTicGlobal = e.FracTic;
-		
-		uiSwayOffX = InterpolateValue(OldSwayOffX, SwayOffX, e.FracTic);
-		uiSwayOffY = InterpolateValue(OldSwayOffY, SwayOffY, e.FracTic);
-		
-		uiSwayOffX_ArmorGrid = uiSwayOffX * 0.6;
-		uiSwayOffY_ArmorGrid = uiSwayOffY * 0.6;
+
+		UpdateUiSwayVars();
 		
 		if (screenWiperAnimTicker > 0) {
 			DrawScreenWiper(); // does Screen.SetClipRect()
@@ -759,16 +761,16 @@ class UV_HudVisorDraw : EventHandler
 		if (showArmorGrid && isArmorGridShownVar) {
 			DrawArmorGrid();
 		} else if (needsTextureWarmUp) {
-			DrawSimpleTextureCustom(
+			DrawArmorGridTexture(
 				texArmorGrid, (0,0), (Screen.GetWidth(), Screen.GetHeight()), 0, colorArmorGrid, renderStyleArmorGrid
 			);
-			DrawSimpleTextureCustom(
+			DrawArmorGridTexture(
 				texArmorGridIdleAnim, (0,0), (Screen.GetWidth(), Screen.GetHeight()), 0, colorArmorGrid, renderStyleArmorGrid
 			);
-			DrawSimpleTextureCustom(
+			DrawArmorGridTexture(
 				texArmorGridDamage, (0,0), (Screen.GetWidth(), Screen.GetHeight()), 0, colorArmorGrid, renderStyleArmorGrid
 			);
-			DrawSimpleTextureCustom(
+			DrawArmorGridTexture(
 				texArmorGridDamageHeavy, (0,0), (Screen.GetWidth(), Screen.GetHeight()), 0, colorArmorGrid, renderStyleArmorGrid
 			);
 		}
@@ -789,17 +791,19 @@ class UV_HudVisorDraw : EventHandler
 		
 		if (showTacticalOverlay) {
 			if (styleTacticalOverlay_1 != 0) {
-				DrawTacticalOverlay(texTacticalOverlay_1, alphaTactical_1, colorTacticalOverlay_1);
+				DrawFullScreenTexture(texTacticalOverlay_1, alphaTactical_1, 
+					colorTacticalOverlay_1, isPbExpanding: usePB_Sway);
 			}
 			if (styleTacticalOverlay_2 != 0) {
-				DrawTacticalOverlay(texTacticalOverlay_2, alphaTactical_2, colorTacticalOverlay_2);
+				DrawFullScreenTexture(texTacticalOverlay_2, alphaTactical_2, 
+					colorTacticalOverlay_2, isPbExpanding: usePB_Sway);
 			}
 		} else if (needsTextureWarmUp) {
 			if (styleTacticalOverlay_1 != 0) {
-				DrawTacticalOverlay(texTacticalOverlay_1, 0, colorTacticalOverlay_1);
+				DrawFullScreenTexture(texTacticalOverlay_1, 0, colorTacticalOverlay_1);
 			}
 			if (styleTacticalOverlay_2 != 0) {
-				DrawTacticalOverlay(texTacticalOverlay_2, 0, colorTacticalOverlay_2);
+				DrawFullScreenTexture(texTacticalOverlay_2, 0, colorTacticalOverlay_2);
 			}
 		}
 		
@@ -1032,6 +1036,30 @@ class UV_HudVisorDraw : EventHandler
 		return commonGraphicsPath .. "Armor_Grid/" .. cellPath .. shapePath;
 	}
 	
+	ui void UpdateUiSwayVars() {
+		UV_SwaySourceHolder reg = UV_SwaySourceHolder(StaticEventHandler.Find("UV_SwaySourceHolder"));
+		UV_SwaySource src = reg ? reg.source : null;
+		if (src && src.isEnabled) { // use swaying data from patch
+			uiSwayOffX = InterpolateValue(src.swayOffsetOld.x, src.swayOffset.x, FracTicGlobal);
+			uiSwayOffY = InterpolateValue(src.swayOffsetOld.y, src.swayOffset.y, FracTicGlobal);
+			hudExpansionX = InterpolateValue(src.hudExpansionOld.x, src.hudExpansion.x, FracTicGlobal);
+			hudExpansionY = InterpolateValue(src.hudExpansionOld.y, src.hudExpansion.y, FracTicGlobal);
+			forwardOfsHelmet = InterpolateValue(src.forwardOfsOld, src.forwardOfs, FracTicGlobal);
+			uiScaledMaxSwayX = src.marginX;
+			uiScaledMaxSwayY = src.marginY;
+		} else { // use default Mk III swaying (calculated in DoHelmetSwaying)
+			uiSwayOffX = InterpolateValue(OldSwayOffX, SwayOffX, FracTicGlobal);
+			uiSwayOffY = InterpolateValue(OldSwayOffY, SwayOffY, FracTicGlobal);
+			hudExpansionX = 0;
+			hudExpansionY = 0;
+			uiScaledMaxSwayX = scaledMaxSwayX;
+			uiScaledMaxSwayY = scaledMaxSwayY;
+		}
+		
+		uiSwayOffX_ArmorGrid = uiSwayOffX * 0.7; // to make it feel like an outer shell or something like that
+		uiSwayOffY_ArmorGrid = uiSwayOffY * 0.7;
+	}
+	
 	ui void DrawStartupFade() {
 		TextureID texBlack = TexMan.CheckForTexture("graphics/startup_black.png");
 		double alphaBlackInter;
@@ -1074,20 +1102,16 @@ class UV_HudVisorDraw : EventHandler
 			gridImage_2_AlphaInter *= usualGridAlphaInterpolated;
 			// Draw damage grid
 			TextureID finalGridDamageTexture = armorGridHeavyDamageTicker > 0 ? texArmorGridDamageHeavy : texArmorGridDamage;
-			DrawSimpleTextureCustom(finalGridDamageTexture, (x,y), (w,h), damageGridAlphaInterpolated, 
-				texColor, renderStyleArmorGrid, UV_HudVisorDraw.ARMOR_GRID); // if damage ticker is active, calc alpha ratio of two idle grid textures (as one) AND damage texture
+			DrawArmorGridTexture(finalGridDamageTexture, (x,y), (w,h), damageGridAlphaInterpolated,
+				texColor, renderStyleArmorGrid); // if damage ticker is active, calc alpha ratio of two idle grid textures (as one) AND damage texture
 		}
 		// Draw idle grid (two textures if anim enabled)
-		DrawSimpleTextureCustom(texArmorGrid, (x,y), (w,h), 
+		DrawArmorGridTexture(texArmorGrid, (x,y), (w,h), 
 			gridImage_1_AlphaInter, texColor, renderStyleArmorGrid);
 		if (gridIdleAnimEnabled) {
-			DrawSimpleTextureCustom(texArmorGridIdleAnim, (x,y), (w,h), gridImage_2_AlphaInter, 
-				texColor, renderStyleArmorGrid, UV_HudVisorDraw.ARMOR_GRID);
+			DrawArmorGridTexture(texArmorGridIdleAnim, (x,y), (w,h), gridImage_2_AlphaInter, 
+				texColor, renderStyleArmorGrid);
 		}
-	}
-	
-	ui void DrawTacticalOverlay(TextureID tex, double overlayAlpha, Color overlayColor) {
-		DrawFullScreenTexture(tex, overlayAlpha, overlayColor);
 	}
 	
 	ui void DrawGlass() {
@@ -1425,21 +1449,21 @@ class UV_HudVisorDraw : EventHandler
 		[origWidth, origHeight] = TexMan.GetSize(texture);
 		double texWidth = ceil(origWidth * scaleFactorWidth); // without ceil it could be 1559.9996 instead of 1600 which will not pass next check
 		texWidth *= optionalWidthScale;
-		double diffSwayTex = Screen.GetWidth() + scaledMaxSwayX * 2 - texWidth;
+		double diffSwayTex = Screen.GetWidth() + uiScaledMaxSwayX * 2 - texWidth;
 		if ((helmetSwaying || helmetShaking)
-				&& diffSwayTex <= scaledMaxSwayX * 2 // if scaled texture width equals screenwidth or is a bit bigger (but not bigger than scaledMaxSwayX * 2)
+				&& diffSwayTex <= uiScaledMaxSwayX * 2 // if scaled texture width equals screenwidth or is a bit bigger (but not bigger than uiScaledMaxSwayX * 2)
 				&& diffSwayTex > 0 // and if not already big enough
 				&& (anchor == UV_HudVisorDraw.TOP_MIDDLE || anchor == UV_HudVisorDraw.BOTTOM_MIDDLE)) {
 			texWidth += diffSwayTex; // increase its width to get extra space for swaying
 		}
 		double texHeight = ceil(origHeight * scaleFactorHeight);
 		texHeight *= optionalHeightScale;
-		diffSwayTex = Screen.GetHeight() + scaledMaxSwayY * 2 - texHeight;
+		diffSwayTex = Screen.GetHeight() + uiScaledMaxSwayY * 2 - texHeight;
 		if ((helmetSwaying || helmetShaking) 
-				&& diffSwayTex <= scaledMaxSwayY * 2
+				&& diffSwayTex <= uiScaledMaxSwayY * 2
 				&& diffSwayTex > 0
 				&& (anchor == UV_HudVisorDraw.MIDDLE_LEFT || anchor == UV_HudVisorDraw.MIDDLE_RIGHT)) {
-			texHeight += scaledMaxSwayY * 2;
+			texHeight += uiScaledMaxSwayY * 2;
 		}
 		offsetX *= scaleFactorWidth;
 		offsetY *= scaleFactorHeight;
@@ -1479,10 +1503,25 @@ class UV_HudVisorDraw : EventHandler
 			texRenderStyle = STYLE_TranslucentStencil;
 		}
 		
+		double anchorOfsX = 0, anchorOfsY = 0;
+		double ofs = forwardOfsHelmet;
+		if (ofs != 0) {
+			switch(anchor) {
+				case UV_HudVisorDraw.TOP_LEFT:      anchorOfsX =  ofs; anchorOfsY =  ofs; break;
+				case UV_HudVisorDraw.TOP_MIDDLE:    anchorOfsX =  0;   anchorOfsY =  ofs; break;
+				case UV_HudVisorDraw.TOP_RIGHT:     anchorOfsX = -ofs; anchorOfsY =  ofs; break;
+				case UV_HudVisorDraw.MIDDLE_LEFT:   anchorOfsX =  ofs; anchorOfsY =  0;   break;
+				case UV_HudVisorDraw.MIDDLE_RIGHT:  anchorOfsX = -ofs; anchorOfsY =  0;   break;
+				case UV_HudVisorDraw.BOTTOM_LEFT:   anchorOfsX =  ofs; anchorOfsY = -ofs; break;
+				case UV_HudVisorDraw.BOTTOM_MIDDLE: anchorOfsX =  0;   anchorOfsY = -ofs; break;
+				case UV_HudVisorDraw.BOTTOM_RIGHT:  anchorOfsX = -ofs; anchorOfsY = -ofs; break;
+			}
+		}
+		
 		Screen.DrawTexture(
 			texture, false,
-			x + uiSwayOffX + ShakeOffsetX, // already scaled
-			y + uiSwayOffY + ShakeOffsetY,
+			x + uiSwayOffX + anchorOfsX + ShakeOffsetX, // already scaled
+			y + uiSwayOffY + anchorOfsY + ShakeOffsetY,
 			DTA_DestWidthF, texWidth,
 			DTA_DestHeightF, texHeight,
 			DTA_Alpha, texAlpha,
@@ -1519,69 +1558,69 @@ class UV_HudVisorDraw : EventHandler
 			case TOP_LEFT:
 				x = 0 - offsetX;
 				if (helmetSwaying || helmetShaking) {
-					x -= scaledMaxSwayX;
+					x -= uiScaledMaxSwayX;
 				}
 				y = 0 - offsetY;
 				if (helmetSwaying || helmetShaking) {
-					y -= scaledMaxSwayY;
+					y -= uiScaledMaxSwayY;
 				}
 				break;
 			case TOP_MIDDLE:
 				x = Screen.GetWidth() / 2.0 - texWidth / 2.0;
 				y = 0 - offsetY;
 				if (helmetSwaying || helmetShaking) {
-					y -= scaledMaxSwayY;
+					y -= uiScaledMaxSwayY;
 				}
 				break;
 			case TOP_RIGHT:
 				x = Screen.GetWidth() - texWidth + offsetX;
 				if (helmetSwaying || helmetShaking) {
-					x += scaledMaxSwayX;
+					x += uiScaledMaxSwayX;
 				}
 				y = 0 - offsetY;
 				if (helmetSwaying || helmetShaking) {
-					y -= scaledMaxSwayY;
+					y -= uiScaledMaxSwayY;
 				}
 				break;
 			case MIDDLE_LEFT:
 				x = 0 - offsetX;
 				if (helmetSwaying || helmetShaking) {
-					x -= scaledMaxSwayX;
+					x -= uiScaledMaxSwayX;
 				}
 				y = Screen.GetHeight() / 2.0 - texHeight / 2.0;
 				break;
 			case MIDDLE_RIGHT:
 				x = Screen.GetWidth() - texWidth + offsetX;
 				if (helmetSwaying || helmetShaking) {
-					x += scaledMaxSwayX;
+					x += uiScaledMaxSwayX;
 				}
 				y = Screen.GetHeight() / 2.0 - texHeight / 2.0;
 				break;
 			case BOTTOM_LEFT:
 				x = 0 - offsetX;
 				if (helmetSwaying || helmetShaking) {
-					x -= scaledMaxSwayX;
+					x -= uiScaledMaxSwayX;
 				}
 				y = Screen.GetHeight() - texHeight + offsetY;
 				if (helmetSwaying || helmetShaking) {
-					y += scaledMaxSwayY;
+					y += uiScaledMaxSwayY;
 				}
 				break;
 			case BOTTOM_MIDDLE:
 				x = Screen.GetWidth() / 2.0 - texWidth / 2.0;
 				y = Screen.GetHeight() - texHeight + offsetY;
 				if (helmetSwaying || helmetShaking) {
-					y += scaledMaxSwayY;
+					y += uiScaledMaxSwayY;
 				}
 				break;
 			case BOTTOM_RIGHT:
 				x = Screen.GetWidth() - texWidth + offsetX;
 				if (helmetSwaying || helmetShaking) {
-					x += scaledMaxSwayX;
+					x += uiScaledMaxSwayX;
 				}
 				y = Screen.GetHeight() - texHeight + offsetY;
 				if (helmetSwaying || helmetShaking) {
-					y += scaledMaxSwayY;
+					y += uiScaledMaxSwayY;
 				}
 				break;
 		}
@@ -1595,7 +1634,8 @@ class UV_HudVisorDraw : EventHandler
 									double offsetX = 0,
 									double offsetY = 0,
 									int texRenderStyle = STYLE_Translucent,
-									double degree = 0) {
+									double degree = 0,
+									bool isPbExpanding = false) {
 		if (invisEffectOn) {
 			[texAlpha, texRenderStyle] = GetPartialInvisibilityDrawParams(texAlpha);
 		}
@@ -1603,12 +1643,14 @@ class UV_HudVisorDraw : EventHandler
 			texRenderStyle = Style_TranslucentStencil;
 		}
 		texColor = CalculateColorWithBrightnessAndPowerup(texColor);
+		double eX = isPbExpanding ? hudExpansionX : 0.0;
+		double eY = isPbExpanding ? hudExpansionY : 0.0;
 		Screen.DrawTexture(
 			texture, false, 
-			offsetX + uiSwayOffX + ShakeOffsetX - scaledMaxSwayX, // move texture (and increase size in DestWidth/DestHeight) not to draw beyond its edges
-			offsetY + uiSwayOffY + ShakeOffsetY - scaledMaxSwayY,
-			DTA_DestWidthF, (Screen.GetWidth() + scaledMaxSwayX * 2) * sizeMult, 
-			DTA_DestHeightF, (Screen.GetHeight() + scaledMaxSwayY * 2) * sizeMult, 
+			offsetX - eX + uiSwayOffX + ShakeOffsetX - uiScaledMaxSwayX, // move texture (and increase size in DestWidth/DestHeight) not to draw beyond its edges
+			offsetY - eY + uiSwayOffY + ShakeOffsetY - uiScaledMaxSwayY,
+			DTA_DestWidthF, (Screen.GetWidth() + eX * 2 + uiScaledMaxSwayX * 2) * sizeMult, 
+			DTA_DestHeightF, (Screen.GetHeight() + eY * 2 + uiScaledMaxSwayY * 2) * sizeMult, 
 			DTA_Alpha, 	texAlpha,
 			DTA_Color, texColor,
 			DTA_LegacyRenderStyle, texRenderStyle,
@@ -1616,21 +1658,27 @@ class UV_HudVisorDraw : EventHandler
 		);
 	}
 	
-	ui void DrawSimpleTextureCustom(TextureID texture, vector2 coords, vector2 size, 
-									double texAlpha, Color texColor, int texRenderStyle, UV_TextureTypes texType = -1) {
+	ui void DrawArmorGridTexture(TextureID texture, vector2 coords, vector2 size, 
+									double texAlpha, Color texColor, int texRenderStyle) {
 		if (invisEffectOn) {
-			[texAlpha, texRenderStyle] = GetPartialInvisibilityDrawParams(texAlpha, texType);
+			[texAlpha, texRenderStyle] = GetPartialInvisibilityDrawParams(texAlpha, UV_HudVisorDraw.ARMOR_GRID);
 		}
-		if (ShouldUseStencilStyle(texType)) {
+		if (ShouldUseStencilStyle(UV_HudVisorDraw.ARMOR_GRID)) {
 			texRenderStyle = Style_TranslucentStencil;
 		}
+
+		double newX = coords.x - hudExpansionX;
+		double newY = coords.y - hudExpansionY;
+		double newW = size.x + hudExpansionX * 2;
+		double newH = size.y + hudExpansionY * 2;
+
 		Screen.DrawTexture(
 			texture, false, 
-			coords.x + uiSwayOffX_ArmorGrid + ShakeOffsetX - scaledMaxSwayX, // move texture (and increase size in DestWidth/DestHeight) not to draw beyond its edges
-			coords.y + uiSwayOffY_ArmorGrid + ShakeOffsetY - scaledMaxSwayY,
-			DTA_DestWidthF, size.x + scaledMaxSwayX * 2, 
-			DTA_DestHeightF, size.y + scaledMaxSwayY * 2, 
-			DTA_Alpha, 	texAlpha,
+			newX + uiSwayOffX_ArmorGrid + ShakeOffsetX - uiScaledMaxSwayX,
+			newY + uiSwayOffY_ArmorGrid + ShakeOffsetY - uiScaledMaxSwayY,
+			DTA_DestWidthF,  newW + uiScaledMaxSwayX * 2, 
+			DTA_DestHeightF, newH + uiScaledMaxSwayY * 2, 
+			DTA_Alpha, texAlpha,
 			DTA_Color, texColor,
 			DTA_LegacyRenderStyle, texRenderStyle
 		);
@@ -1641,7 +1689,7 @@ class UV_HudVisorDraw : EventHandler
 			|| 
 			(NV_PackInverseMapOn 
 				&& !isLastPowerupColomapped 
-				&& (texType == -1 || texType == UV_HudVisorDraw.ARMOR_GRID) // grid, blood, wiper
+				&& (texType == -1 || texType == UV_HudVisorDraw.ARMOR_GRID || texType == UV_HudVisorDraw.SCREEN_WIPER) // grid, blood, wiper
 			);
 	}
 
@@ -1816,7 +1864,7 @@ class UV_HudVisorDraw : EventHandler
 		}
 		return newColor;
 	}
-	
+
 	ui int CalculateGrayscaleAmount(Color originalColor) {
 		// luminosity method
 		return int(0.2126 * originalColor.r + 0.7152 * originalColor.g + 0.0722 * originalColor.b);
@@ -1871,14 +1919,6 @@ class UV_HudVisorDraw : EventHandler
 		return prev * (1.0 - fracTic) + next * fracTic;
 	}
 	
-	ui Color InterpolateColor(Color prev, Color next, double fracTic) {
-			int r, g, b;
-			r = InterpolateValue(prev.r, next.r, fracTic);
-			g = InterpolateValue(prev.g, next.g, fracTic);
-			b = InterpolateValue(prev.b, next.b, fracTic);
-			return Color(255, r, g, b);
-	}
-	
 	override void InterfaceProcess(ConsoleEvent e) {
         if (e.name == "UV_SavegameLoaded") {
 			InitUIVars(); // called only in menu/console or on level start otherwise
@@ -1904,9 +1944,9 @@ class UV_HudVisorDraw : EventHandler
 		startupTicker = STARTUP_TICKS;
 		paramsForIsVisible.minDist = 1; // prevent false positives (for our case), which apparently happen when minDist is 0
 		globals = UV_HudVisorStaticGlobals.Get();
-		if (!Factory) {
-            Factory = new("UV_AmmoReaderFactory");
-            Factory.readerClassName = "UV_AmmoReader";
+		if (!ammoReaderFactory) {
+            ammoReaderFactory = new("UV_AmmoReaderFactory");
+            ammoReaderFactory.readerClassName = "UV_AmmoReader";
         }
 	}
 	
@@ -1936,7 +1976,7 @@ class UV_HudVisorDraw : EventHandler
 		}
 		
 		CheckPowersAndVehicles();
-		SetBlendColorAndAlpha();
+		SetPlayerBlendColorAndAlpha();
 		SetStoredHealthArmor();
 		
 		if (showBloodSplashesPlayContext) {
@@ -1957,9 +1997,9 @@ class UV_HudVisorDraw : EventHandler
 		}
 		
 		if (hideGlassIfEmptyArmorPlayContext && totalArmor == 0) {
-			showGlassPlayContext = false;
+			isGlassDestroyed = true;
 		} else {
-			showGlassPlayContext = baseShowGlassPlayContext;
+			isGlassDestroyed = false;
 		}
 		
 		if (level.time > STARTUP_BLACK_SOLID_TICKS - 5) { // Some mods start up (fade in) a bit late, so show grid after a delay
@@ -2125,9 +2165,6 @@ class UV_HudVisorDraw : EventHandler
 		
 		hideGlassIfEmptyArmorPlayContext = Cvar.GetCvar("uvisor_hide_glass_if_empty_armor", playerinf).GetBool();
 		
-		showGlassPlayContext = Cvar.GetCvar("uvisor_show_glass", playerinf).GetBool();
-		baseShowGlassPlayContext = showGlassPlayContext;
-		
 		showArmorGridPlay = Cvar.GetCvar("uvisor_show_armor_grid", playerinf).GetInt();
 		gridIdleAnimEnabled = Cvar.GetCvar("uvisor_grid_idle_anim_enabled", playerinf).GetBool();
 		armorGridDisplayModePlay = Cvar.GetCvar("uvisor_armor_grid_display_mode", playerinf).GetInt();
@@ -2170,7 +2207,7 @@ class UV_HudVisorDraw : EventHandler
 			}
 		} else if (showBloodSplashesPlayContext && bloodDetectionMode == 0 && e.Thing.bIsMonster) {
 			if (!IsActorInLineOfSightAndNear(e.thing)) return;
-			if (!showGlassPlayContext) return;
+			if (isGlassDestroyed) return;
 			string enemyClassName = e.thing.GetClassName();
 			if (e.thing.bloodColor == UNSET_COLOR && (e.thing.bNOBLOOD || e.thing.bNOBLOODDECALS)) {
 				if (!(globals.isDD_Loaded && enemyClassName.IndexOf("CYBORG") != -1) // Don't return if BD64 (except Lost Souls) or some enemies in DD
@@ -2424,37 +2461,9 @@ class UV_HudVisorDraw : EventHandler
 		if (machineGunEnterLeaveTicker > 0) {
 			machineGunEnterLeaveTicker--;
 		}
-		
-// 		console.printf("invulnerabilityOn: " .. invulnerabilityOn);
-// 		console.printf("nightVisionOn: " .. nightVisionOn);
-// 		console.printf("^isLastColormappedPowerupBlinking: " .. isLastColormappedPowerupBlinking);
-// 		console.printf(" isVanillaInvulernabilityBlinking: " .. isVanillaInvulernabilityBlinking);
 	}
-	
-	Color GetColorFromColormap(int subTableIndex, int originalPaletteIndex)
-	{
-		int colormapLump = Wads.CheckNumForName("COLORMAP", Wads.GLOBALNAMESPACE);
-		int palLump = Wads.CheckNumForName("PLAYPAL", Wads.GLOBALNAMESPACE);
-		
-		if (colormapLump == -1 || palLump == -1)
-			return Color(255, 0, 255);
-		
-		String colormapData = Wads.ReadLump(colormapLump);
-		String palData = Wads.ReadLump(palLump);
-		
-		// Use ByteAt() instead of getCharAt()
-		int startOffset = subTableIndex * 256;
-		int remappedIndex = colormapData.ByteAt(startOffset + originalPaletteIndex);
-		
-		int colorOffset = remappedIndex * 3;
-		int r = palData.ByteAt(colorOffset);
-		int g = palData.ByteAt(colorOffset + 1);
-		int b = palData.ByteAt(colorOffset + 2);
-		
-		return Color(r, g, b);
-	}
-	
-	void SetBlendColorAndAlpha() {
+
+	void SetPlayerBlendColorAndAlpha() {
 		double combinedA;
 		double combinedR;
 		double combinedG;
@@ -2483,6 +2492,8 @@ class UV_HudVisorDraw : EventHandler
 			double normB = clamp(combinedB / combinedA, 0.0, 1.0);
 			effectiveBlendAlpha = min(combinedA, 1.0);
 			combPlayerBlendAndPowerupBlendColor = Color(255, int(normR * 255.0), int(normG * 255.0), int(normB * 255.0));
+		} else {
+			combPlayerBlendAndPowerupBlendColor = UNSET_COLOR;
 		}
 	}
 	
@@ -2705,7 +2716,7 @@ class UV_HudVisorDraw : EventHandler
 	override void WorldThingSpawned(worldEvent e) {
 		// Trigger enemy blood splash in based on blood actor mode
 		if (Cvar.GetCvar("uvisor_mod_enabled", playerinf).GetBool() == 0) return;
-		if (!showGlassPlayContext) return;
+		if (isGlassDestroyed) return;
 		if (!showBloodSplashesPlayContext || bloodDetectionMode != 1 || !e.thing || e.thing.target == playerinf.mo ) return;
 		
 		bool isBlood = false;
@@ -2837,7 +2848,7 @@ class UV_HudVisorDraw : EventHandler
 	}
 	
 	void UpdateBloodSplashesData() {
-		if (!showGlassPlayContext) {
+		if (isGlassDestroyed) {
 			for (int i = 0; i < bloodMaxCount; i++) {
 				if (currentBloodSplashes[i]) {
 					currentBloodSplashes[i].fadeInTicker = 0;
@@ -2889,7 +2900,7 @@ class UV_HudVisorDraw : EventHandler
 	}
 	
 	void UpdateScreenWiperData() {
-		if (showGlassPlayContext) {
+		if (!isGlassDestroyed) {
 			if (clipRatio >= 0.8 || clipRatio <= 0.2) {
 				screenWiperAnimTicker--;
 			} else {
@@ -3141,7 +3152,7 @@ class UV_HudVisorDraw : EventHandler
 				/// Vanilla-like Bob Mode (or Helmeter-like)
 				double BobAmount = playerinf.ViewZ - (playerinf.mo.pos.Z + playerinf.ViewHeight);
 				if (globals.isPB_Loaded) {
-					BobAmount *= 20; // Very crude, but I'm too tired to integrate actual PB bob. Without multpilier it would be very small
+					BobAmount *= 20; // So that it looks good even without the PB patch. Without multiplier it would be very small
 					if (!wasGrounded && IsGrounded && abs(PrevVelZ) > 1.0 && abs(PrevVelZ) < 7.0) {
 						BobAmount = 0; // Prevent swaying on small ledge step
 					}
@@ -3221,40 +3232,43 @@ class UV_HudVisorDraw : EventHandler
 			crouchStaticOffset = isCrouching ? 5.0 * CrouchSwayIntensity : 0.0;
 		}
 		
-		rawSwayY += mJumpOffset;
-		rawSwayY += mFallingOffset;
-		rawSwayY += mLandingOffset;
-		rawSwayY += crouchStartOffset;
-		rawSwayY += crouchStaticOffset;
+		if (scaledMaxSwayX > 0) {
+			rawSwayX = clamp(rawSwayX, -MaxSwayX, MaxSwayX);
+			DynSwayX.Update(rawSwayX * 60.0);
+			double smoothSwayX = DynSwayX.GetValue() / 60.0;
+			SwayOffX = ApplySwaySensitivity(smoothSwayX, MaxSwayX);
+			SwayOffX *= scaleFactorWidthPlay;
+			SwayOffX = Clamp(SwayOffX, -scaledMaxSwayX, scaledMaxSwayX);
+		} else {
+			SwayOffX = 0;
+		}
 		
-		rawSwayX = clamp(rawSwayX, -MaxSwayX, MaxSwayX);
-		rawSwayY = clamp(rawSwayY, -MaxSwayY, MaxSwayY);
+		if (scaledMaxSwayY > 0) {
+			rawSwayY += mJumpOffset;
+			rawSwayY += mFallingOffset;
+			rawSwayY += mLandingOffset;
+			rawSwayY += crouchStartOffset;
+			rawSwayY += crouchStaticOffset;
+			rawSwayY = clamp(rawSwayY, -MaxSwayY, MaxSwayY);
+			DynSwayY.Update(rawSwayY * 60.0);
+			double smoothSwayY = DynSwayY.GetValue() / 60.0;
+			SwayOffY = ApplySwaySensitivity(smoothSwayY, MaxSwayY);
+			SwayOffY *= scaleFactorHeightPlay;
+			SwayOffY = Clamp(SwayOffY, -scaledMaxSwayY, scaledMaxSwayY);
+		} else {
+			SwayOffY = 0;
+		}
 
-		DynSwayX.Update(rawSwayX * 60.0);
-		DynSwayY.Update(rawSwayY * 60.0);
-		
-		double smoothSwayX = DynSwayX.GetValue() / 60.0;
-		double smoothSwayY = DynSwayY.GetValue() / 60.0;
-		
-		SwayOffX = ApplySwaySensitivity(smoothSwayX, MaxSwayX);
-		SwayOffY = ApplySwaySensitivity(smoothSwayY, MaxSwayY);
-		
-		SwayOffX *= scaleFactorWidthPlay;
-		SwayOffY *= scaleFactorHeightPlay;	
-		
-		// Safety measures
-		SwayOffX = Clamp(SwayOffX, -scaledMaxSwayX, scaledMaxSwayX);
-		SwayOffY = Clamp(SwayOffY, -scaledMaxSwayY, scaledMaxSwayY);
 		if (helmetShaking) {
 			double totalX = SwayOffX + ShakeOffsetX;
 			double totalY = SwayOffY + ShakeOffsetY;
-			if (abs(totalX) > scaledMaxSwayX) {
+			if (abs(totalX) > scaledMaxSwayX && scaledMaxSwayX > 0) {
 				// Reduce both sway and shake while keeping their ratio
 				double scaleX = scaledMaxSwayX / abs(totalX);
 				SwayOffX *= scaleX;
 				ShakeOffsetX *= scaleX;
 			}
-			if (abs(totalY) > scaledMaxSwayY) {
+			if (abs(totalY) > scaledMaxSwayY && scaledMaxSwayY > 0) {
 				double scaleY = scaledMaxSwayY / abs(totalY);
 				SwayOffY *= scaleY;
 				ShakeOffsetY *= scaleY;
@@ -3322,8 +3336,8 @@ class UV_HudVisorDraw : EventHandler
 			playerinf.mo.A_StopSound(prevBreathSoundChannel);
 		}
 		if (breathVolume <= 0
-			|| gamestate != GS_LEVEL // Prevent breath in main menu in some mods
-			|| (breathDisableIfNoGlass && !showGlassPlayContext)
+			|| gamestate != GS_LEVEL // Prevent breath in main menu with mods overriding Titlemap
+			|| (breathDisableIfNoGlass && isGlassDestroyed)
 			|| (level.time < 1)
 		) {
             return;
