@@ -298,7 +298,6 @@ class UV_HudVisorDraw : EventHandler
 	ui double uiSwayOffX_ArmorGrid;
 	ui double uiSwayOffY_ArmorGrid;
 	ui double forwardOfsHelmet;
-	ui bool usePB_Sway;
 	ui double hudExpansionX;
 	ui double hudExpansionY;
 	ui double uiScaledMaxSwayX;
@@ -792,11 +791,11 @@ class UV_HudVisorDraw : EventHandler
 		if (showTacticalOverlay) {
 			if (styleTacticalOverlay_1 != 0) {
 				DrawFullScreenTexture(texTacticalOverlay_1, alphaTactical_1, 
-					colorTacticalOverlay_1, isPbExpanding: usePB_Sway);
+					colorTacticalOverlay_1, expandX: hudExpansionX, expandY: hudExpansionY);
 			}
 			if (styleTacticalOverlay_2 != 0) {
 				DrawFullScreenTexture(texTacticalOverlay_2, alphaTactical_2, 
-					colorTacticalOverlay_2, isPbExpanding: usePB_Sway);
+					colorTacticalOverlay_2, expandX: hudExpansionX, expandY: hudExpansionY);
 			}
 		} else if (needsTextureWarmUp) {
 			if (styleTacticalOverlay_1 != 0) {
@@ -1635,7 +1634,7 @@ class UV_HudVisorDraw : EventHandler
 									double offsetY = 0,
 									int texRenderStyle = STYLE_Translucent,
 									double degree = 0,
-									bool isPbExpanding = false) {
+									double expandX = 0, double expandY = 0) {
 		if (invisEffectOn) {
 			[texAlpha, texRenderStyle] = GetPartialInvisibilityDrawParams(texAlpha);
 		}
@@ -1647,10 +1646,10 @@ class UV_HudVisorDraw : EventHandler
 		double eY = isPbExpanding ? hudExpansionY : 0.0;
 		Screen.DrawTexture(
 			texture, false, 
-			offsetX - eX + uiSwayOffX + ShakeOffsetX - uiScaledMaxSwayX, // move texture (and increase size in DestWidth/DestHeight) not to draw beyond its edges
-			offsetY - eY + uiSwayOffY + ShakeOffsetY - uiScaledMaxSwayY,
-			DTA_DestWidthF, (Screen.GetWidth() + eX * 2 + uiScaledMaxSwayX * 2) * sizeMult, 
-			DTA_DestHeightF, (Screen.GetHeight() + eY * 2 + uiScaledMaxSwayY * 2) * sizeMult, 
+			offsetX - expandX + uiSwayOffX + ShakeOffsetX - uiScaledMaxSwayX, // move texture (and increase size in DestWidth/DestHeight) not to draw beyond its edges
+			offsetY - expandY + uiSwayOffY + ShakeOffsetY - uiScaledMaxSwayY,
+			DTA_DestWidthF, (Screen.GetWidth() + expandX * 2 + uiScaledMaxSwayX * 2) * sizeMult, 
+			DTA_DestHeightF, (Screen.GetHeight() + expandY * 2 + uiScaledMaxSwayY * 2) * sizeMult, 
 			DTA_Alpha, 	texAlpha,
 			DTA_Color, texColor,
 			DTA_LegacyRenderStyle, texRenderStyle,
