@@ -1804,12 +1804,12 @@ class UV_HudVisorDraw : EventHandler
 			if (globals.isBD_Loaded) {
 				int grayscaleAmount = CalculateGrayscaleAmount(originalColor);
 				return Color(255, grayscaleAmount, grayscaleAmount, grayscaleAmount);
-			} else if (globals.isHellrider_Loaded) {
+			} else if (globals.isHellriderLoaded) {
 				int grayscaleAmount = CalculateGrayscaleAmount(originalColor) * 3.5;
 				int r = int(grayscaleAmount * 0.35);
 				int g = int(grayscaleAmount * 0.25);
 				return Color(255, r, g, grayscaleAmount);
-			} else if (globals.isHellriderVengeful_Loaded) {
+			} else if (globals.isHellriderVengefulLoaded) {
 				int grayscaleAmount = CalculateGrayscaleAmount(originalColor);
 				return Color(255, 10, grayscaleAmount + 65, grayscaleAmount + 10);
 			}
@@ -1822,7 +1822,7 @@ class UV_HudVisorDraw : EventHandler
 		}
 		bool _nightVisionOn = false;
 		Color newColor = originalColor;
-		if (globals.isNightVisionPack_Loaded) { 
+		if (globals.isNightVisionPackLoaded) { 
 			// Night Vision Pack
 			int grayscaleAmount = CalculateGrayscaleAmount(originalColor);
 			
@@ -2415,7 +2415,7 @@ class UV_HudVisorDraw : EventHandler
 // 					console.printf("lastColormappedPowerup: " .. lastColormappedPowerup);
 					isLastPowerupColomapped = true; // gets reset if not last
 				}
-				if (globals.isNightVisionPack_Loaded && invItem is NVNightVisionInverseMapStr) {
+				if (globals.isNightVisionPackLoaded && invItem is NVNightVisionInverseMapStr) {
 					NV_PackInverseMapOn = true; 
 				}
 				if (invItem is invulnerableStr) {
