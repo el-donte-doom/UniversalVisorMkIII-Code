@@ -613,6 +613,7 @@ class UV_HudVisorDraw : EventHandler
 	bool breathDisableIfNoGlass;
 	double prevBreathVolume;
 	double breathVolume;
+	int prevBreathVoice;
 	int breathVoice;
 	int prevBreathSoundChannel;
 	int breathSoundChannel;
@@ -2045,6 +2046,8 @@ class UV_HudVisorDraw : EventHandler
 		DoBreathingSound();
 		prevWarningSoundChannel = warningSoundChannel;
 		prevBreathSoundChannel = breathSoundChannel;
+		prevBreathVolume = breathVolume;
+		prevBreathVoice = breathVoice;
 		
 		if (helmetShaking) {
 			DoHelmetShaking();
@@ -2086,8 +2089,6 @@ class UV_HudVisorDraw : EventHandler
 		}
 		
 		CheckAmmo();
-		
-		prevBreathVolume = breathVolume;
 
 		if (startupTicker > 0) {
 			startupTicker--;
@@ -3333,8 +3334,10 @@ class UV_HudVisorDraw : EventHandler
 	}
 	
 	void DoBreathingSound() {
-		if (prevBreathSoundChannel != breathSoundChannel || prevBreathVolume != breathVolume) {
-			playerinf.mo.A_StopSound(prevBreathSoundChannel);
+		if (prevBreathSoundChannel != breathSoundChannel
+        				|| prevBreathVolume != breathVolume
+        				|| prevBreathVoice != breathVoice) {
+			playerinf.mo.A_StopSound(prevBreathSoundChannel);  // restart to immediately see the difference
 		}
 		if (breathVolume <= 0
 			|| gamestate != GS_LEVEL // Prevent breath in main menu with mods overriding Titlemap
