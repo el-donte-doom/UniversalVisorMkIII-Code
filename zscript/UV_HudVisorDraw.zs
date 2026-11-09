@@ -3028,12 +3028,14 @@ class UV_HudVisorDraw : EventHandler
 	
 	void NotifyIfLowAmmo(int currentAmmo, int maxAmmo, int ammoType) {
 		bool foundLowAmmo;
-		if (maxAmmo > 0 && ((maxAmmo <= 200 && double(currentAmmo) / maxAmmo <= 0.095)
-				|| (maxAmmo > 200 && double(currentAmmo) / maxAmmo <= 0.05)
-				|| (maxAmmo <= 10 && maxAmmo >= 2 && currentAmmo < 2)
-				|| (maxAmmo < 2 && currentAmmo < 1)
-				)) {
-			foundLowAmmo = true;
+		if (maxAmmo > 0) {
+			if (	   (maxAmmo > 400 && currentAmmo <= 30)
+					|| (maxAmmo > 200 && currentAmmo <= 20)
+					|| (maxAmmo <= 200 && double(currentAmmo) / maxAmmo <= 0.08)
+					|| (maxAmmo <= 12 && maxAmmo >= 2 && currentAmmo < 2)
+					) {
+				foundLowAmmo = true;
+			}
 		}
 		if (foundLowAmmo) {
 			if (ammoType == 1) {
@@ -3362,7 +3364,9 @@ class UV_HudVisorDraw : EventHandler
 		}
 		if (warningVolume <= 0 || playerinf.mo.IsActorPlayingSound(warningSoundChannel) || playerinf.health <= 0 || (level.time < 1)) {
 			return;
-		} else if ((warningSoundBasis == 0 && playerinf.health < 30) 
+		} else if (inVehicle) {
+            return;
+        } else if ((warningSoundBasis == 0 && playerinf.health < 30)
 				|| (warningSoundBasis == 1 && totalArmor < 30)
 				|| ((warningSoundBasis == 2 && warningAmmo1Active) || (warningSoundBasis == 3 && warningAmmo2Active))) {
 			playerinf.mo.A_StartSound("uvisor_warn", warningSoundChannel, volume: warningVolume, attenuation: ATTN_STATIC);
