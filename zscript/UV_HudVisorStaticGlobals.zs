@@ -8,10 +8,11 @@ class UV_HudVisorStaticGlobals: StaticEventHandler {
 	bool isBP_Loaded;
 	bool isDD_Loaded;
 	bool isLitDOOM_Loaded;
+	bool isBeautifulDoomLoaded;
 	bool isBD64_Loaded;
-	bool isHellrider_Loaded;
-	bool isHellriderVengeful_Loaded;
-	bool isNightVisionPack_Loaded;
+	bool isHellriderLoaded;
+	bool isHellriderVengefulLoaded;
+	bool isNightVisionPackLoaded;
 	double bloodDefaultSaturationMultiplier;
 	
 	static UV_HudVisorStaticGlobals Get() {
@@ -40,8 +41,11 @@ class UV_HudVisorStaticGlobals: StaticEventHandler {
 		}
 		string playerClassName = playerinf.mo.getclassname();
 		
+		string BD_ActorName = "BIG_FUCKING_GUN";
+		Class<Actor> BD_ActorClass = BD_ActorName;
+		
 		string BP_ActorName = "BP_Pistol";
-		Class<Actor> BP_Class = BP_ActorName;
+		Class<Actor> BP_ActorClass = BP_ActorName;
 		
 		string BD64_ActorName = "64ZombieMan";
 		Class<Actor> BD64_ActorClass = BD64_ActorName;
@@ -52,14 +56,26 @@ class UV_HudVisorStaticGlobals: StaticEventHandler {
 		string PB_ActorName = "PB_Shotgun";
 		Class<Actor> PB_ActorClass = PB_ActorName;
 		
+		string BeautD_ActorName = "BDoomWeapon";
+		Class<Actor> BeautD_ActorClass = BeautD_ActorName;
+		
+		string HellriderActorName = "HR_InvulnerabilitySphere";
+		Class<Actor> HellriderActorClass = HellriderActorName;
+		
+		string HellriderVengefulActorName = "HR_Maskofliterally";
+		Class<Actor> HellriderVengefulActorClass = HellriderVengefulActorName;
+		
+		string NightVisionPackActorName = "NVNightVision";
+		Class<Actor> NightVisionPackActorClass = NightVisionPackActorName;
+		
 		bloodDefaultSaturationMultiplier = 1.55; 
-		if (FindClass("BIG_FUCKING_GUN")) {
+		if (BD_ActorClass) {
 			isBD_Loaded = true;
 		} else if (playerClassName == "PB_PlayerPrawn" || playerClassName == "PBXCore_Player" || PB_ActorClass) {
 			isPB_Loaded = true;
 			// PB blood decals seem to be darker than in most mods (but actually more in line with the defaultbloodcolor)
 			bloodDefaultSaturationMultiplier = 1.35; 
-		} else if (BP_Class) {
+		} else if (BP_ActorClass) {
 			isBP_Loaded = true;
 		} else if (playerClassName == "Kiwi") {
 			isDD_Loaded = true;
@@ -67,16 +83,15 @@ class UV_HudVisorStaticGlobals: StaticEventHandler {
 			isLitDOOM_Loaded = true;
 		} else if (BD64_ActorClass) {
 			isBD64_Loaded = true;
-		} else if (FindClass("HR_InvulnerabilitySphere")) {
-			isHellrider_Loaded = true;
-		} else if (FindClass("HR_Maskofliterally")) {
-			isHellriderVengeful_Loaded = true;
+		} else if (BeautD_ActorClass) {
+			isBeautifulDoomLoaded = true;
+		} else if (HellriderActorClass) {
+			isHellriderLoaded = true;
+		} else if (HellriderVengefulActorClass) {
+			isHellriderVengefulLoaded = true;
 		}
-		if (FindClass("NVNightVision")) {
-			isNightVisionPack_Loaded = true;
+		if (NightVisionPackActorClass) {
+			isNightVisionPackLoaded = true;
 		}
-		console.printf("gameinfo.defaultbloodcolor: " .. gameinfo.defaultbloodcolor);
-		console.printf("isPB_Loaded: " .. isPB_Loaded);
-		console.printf("bloodDefaultSaturationMultiplier: " .. bloodDefaultSaturationMultiplier);
 	}
 }
