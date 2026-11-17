@@ -40,6 +40,12 @@ class UV_HudVisorDraw : EventHandler
 	bool isLastPowerupColomapped;
 	Color combPlayerBlendAndPowerupBlendColor;
 	double effectiveBlendAlpha;
+	double dLightsBrightnessWeighted;
+	Vector3 dLightsFullColorWeighted;
+	double prevCombinedBrightnessScale;
+	double combinedBrightnessScale;
+	Vector3 prevCombinedFullColorScale;
+	Vector3 combinedFullColorScale;
 	
 	
 	///// UI CONTEXT VARS /////
@@ -668,7 +674,7 @@ class UV_HudVisorDraw : EventHandler
 			// needsTextureWarmUp: draw fullscreen textures with alpha 0 to avoid stutter when they're firstly drawn midgame
 			// Usually when player firstly gets armor and glass, cracks, grid, tactical lines appear
 		}
-		
+
 		if (prevGametic != gametic || Menu.GetCurrentMenu() != null || consolestate || !initialUIInitDone) {
 			// Calculations which better be in UI context to instantly update hud when changing options in the menu
 			// (e.g. gameplay color steps)
@@ -1091,7 +1097,7 @@ class UV_HudVisorDraw : EventHandler
 			gridImage_1_AlphaInter *= alphaArmorGridMult;
 			gridImage_2_AlphaInter *= alphaArmorGridMult;
 		}
-		Color texColor = CalculateColorWithBrightnessAndPowerup(colorArmorGrid, UV_HudVisorDraw.ARMOR_GRID);
+		Color texColor = BlendColorWithEnvironmentAndPowerups(colorArmorGrid, UV_HudVisorDraw.ARMOR_GRID);
 		if (armorGridDamageAnimTicker > 0) {
 			// Calc alpha ratio for usual grid (may be a combo of two idle textures) and damage grid 
 			double usualGridAlphaInterpolated 
@@ -1115,7 +1121,7 @@ class UV_HudVisorDraw : EventHandler
 	}
 	
 	ui void DrawGlass() {
-		Color texColor = CalculateColorWithBrightnessAndPowerup(colorGlass, UV_HudVisorDraw.GLASS);
+		Color texColor = BlendColorWithEnvironmentAndPowerups(colorGlass, UV_HudVisorDraw.GLASS);
 		double texAlpha = alphaGlass;
 		double texAlphaBottom = overrideAlphaBottom ? alphaGlassBottom : alphaGlass;
 		if (showGlassSides && styleSideGlass != 0) {
@@ -1184,7 +1190,7 @@ class UV_HudVisorDraw : EventHandler
 	}
 	
 	ui void DrawGlow() {
-		Color texColor = CalculateColorWithBrightnessAndPowerup(colorGlow, UV_HudVisorDraw.GLOW);
+		Color texColor = BlendColorWithEnvironmentAndPowerups(colorGlow, UV_HudVisorDraw.GLOW);
 		double texAlpha = alphaGlow;
 		if (pulseActive) {
 			targetPulseAlpha = alphaGlow * (sin(pulseTime) * 0.5 + 0.5);
@@ -1277,7 +1283,8 @@ class UV_HudVisorDraw : EventHandler
 	}
 	
 	ui void DrawPieces() {
-		Color texColorTop = CalculateColorWithBrightnessAndPowerup(colorPartTop, UV_HudVisorDraw.PART_TOP);
+		Color texColorTop = BlendColorWithEnvironmentAndPowerups(colorPartTop, UV_HudVisorDraw.PART_TOP);
+// 		console.printf("  texColorTop: " .. texColorTop);
 		if (showTacticalMarks) {
 			int w, h;
 			[w, h] = TexMan.getSize(texPartTacticalMarkLeft);
@@ -1313,7 +1320,7 @@ class UV_HudVisorDraw : EventHandler
 			);
 		}
 		if (showPartBottom && styleBottom != 7 && styleBottom != 0) { // if not Plain_Glass or None
-			Color texColorBottom = CalculateColorWithBrightnessAndPowerup(colorPartBottom, UV_HudVisorDraw.PART_BOTTOM);
+			Color texColorBottom = BlendColorWithEnvironmentAndPowerups(colorPartBottom, UV_HudVisorDraw.PART_BOTTOM);
 			DrawHelmetTextureCustom(
 				UV_HudVisorDraw.PART_BOTTOM,
 				texPartBottom, 
@@ -1325,7 +1332,7 @@ class UV_HudVisorDraw : EventHandler
 			);
 		}
 		if (showPartCorners && styleCorners != 0) {
-			Color texColorCorners = CalculateColorWithBrightnessAndPowerup(colorPartCorners, UV_HudVisorDraw.PART_CORNER);
+			Color texColorCorners = BlendColorWithEnvironmentAndPowerups(colorPartCorners, UV_HudVisorDraw.PART_CORNER);
 			DrawHelmetTextureCustom(
 				UV_HudVisorDraw.PART_CORNER,
 				texPartCornerLeft, 
@@ -1387,7 +1394,7 @@ class UV_HudVisorDraw : EventHandler
 		double x = Screen.GetWidth() - (Screen.GetWidth() + w) * ratioInterpolated;
 		double y = 0;
 		Color wiperColor = FULL_WHITE_COLOR;
-		wiperColor = CalculateColorWithBrightnessAndPowerup(wiperColor);
+		wiperColor = BlendColorWithEnvironmentAndPowerups(wiperColor, UV_HudVisorDraw.SCREEN_WIPER);
 		Screen.DrawTexture(
 			texScreenWiper, false,
 			x + uiSwayOffX + ShakeOffsetX,
@@ -1412,7 +1419,7 @@ class UV_HudVisorDraw : EventHandler
 			if (ShouldUseStencilStyle()) {
 				texRenderStyle = STYLE_TranslucentStencil;
 			}
-			Color texColor = CalculateColorWithBrightnessAndPowerup(bs.bColor);			
+			Color texColor = BlendColorWithEnvironmentAndPowerups(bs.bColor);			
 
 			double x = InterpolateValue(bs.prevCoordinates.x, bs.coordinates.x, FracTicGlobal);
 			double y = InterpolateValue(bs.prevCoordinates.y, bs.coordinates.y, FracTicGlobal);
@@ -1642,9 +1649,7 @@ class UV_HudVisorDraw : EventHandler
 		if (ShouldUseStencilStyle()) {
 			texRenderStyle = Style_TranslucentStencil;
 		}
-		texColor = CalculateColorWithBrightnessAndPowerup(texColor);
-		double eX = isPbExpanding ? hudExpansionX : 0.0;
-		double eY = isPbExpanding ? hudExpansionY : 0.0;
+		texColor = BlendColorWithEnvironmentAndPowerups(texColor);
 		Screen.DrawTexture(
 			texture, false, 
 			offsetX - expandX + uiSwayOffX + ShakeOffsetX - uiScaledMaxSwayX, // move texture (and increase size in DestWidth/DestHeight) not to draw beyond its edges
@@ -1744,9 +1749,9 @@ class UV_HudVisorDraw : EventHandler
 		return interpolatedColor;
 	}
 	
-	ui Color CalculateColorWithBrightnessAndPowerup(Color originalColor, UV_TextureTypes texType = -1) {
+	ui Color BlendColorWithEnvironmentAndPowerups(Color originalColor, UV_TextureTypes texType = -1) {
 		Color newColor = Color(255, originalColor.r, originalColor.g, originalColor.b); // 
-		bool isAffectedByBrightness = true;
+		bool isAffectedByEnvironment = true;
 		
 		if (ShouldUseStencilStyle(texType)) {
 			// default invulnerability, to use with Stencil style. No PB, cause no white effect there
@@ -1764,41 +1769,25 @@ class UV_HudVisorDraw : EventHandler
 				// Light Amplification mode (vanilla / NV Pack default mode / other mods)
 				newColor = BrightenColor(originalColor, 1.1);
 			}
-			isAffectedByBrightness = false;
+			isAffectedByEnvironment = false;
 		}
 		
 		if (lastColormappedPowerup && !isLastColormappedPowerupBlinking) { // last name of a powerup with Powerup.Colormap (false if empty string, i.e. no such powerup)
-			newColor = CalcColorWithColormappedPowerup(newColor, lastColormappedPowerup, texType);
-			isAffectedByBrightness = false;
+			newColor = BlendColorWithColormappedPowerup(newColor, lastColormappedPowerup, texType);
+			isAffectedByEnvironment = false;
 		}
 		if (combPlayerBlendAndPowerupBlendColor && effectiveBlendAlpha) { // if Powerup.Color or A_SetBlend()
 			newColor = BlendColors(newColor, combPlayerBlendAndPowerupBlendColor, effectiveBlendAlpha);
 		}
 		
-		if (!isAffectedByBrightness) {
+		if (!isAffectedByEnvironment) {
 			return newColor;
 		}
-		double brightness = double(playerinf.mo.cursector.lightlevel) / double(255.0); // lightlevel is 0-255
-		brightness *= 1.3;
-		brightness = Clamp(brightness, 0.4, 1.0); // So it's never too dark
-		double influence = 1.0;
-		if (texType == UV_HudVisorDraw.GLOW) { // Reduce brightness influence
-			influence = 0.35;
-		} else if (texType == UV_HudVisorDraw.ARMOR_GRID) {
-			influence = 0.5;
-		} else if (texType > -1) { // Reduce for helmet pieces and glass too, but not so much
-			influence = 0.85;
-		}
-		brightness = 1.0 + (brightness - 1.0) * influence;
-		int r, g, b;
-		r = int(newColor.r * brightness);
-		g = int(newColor.g * brightness);
-		b = int(newColor.b * brightness);
-		
-		return Color(255, r, g, b);
+
+		return BlendColorWithEnvironment(newColor, texType);
 	}
 	
-	ui Color CalcColorWithColormappedPowerup(Color originalColor, String powerupName, UV_TextureTypes texType = -1) {
+	ui Color BlendColorWithColormappedPowerup(Color originalColor, String powerupName, UV_TextureTypes texType = -1) {
 		// Can't read actual Colormap colors, so hardcode for names
 	
 		if (powerupName == "PowerInvulnerable") {
@@ -1857,14 +1846,59 @@ class UV_HudVisorDraw : EventHandler
 
 		if (globals.isDD_Loaded && powerupName == "PowerNightVisionMode") { // DD goggles (green)
 			_nightVisionOn = true;
-			newColor = Color(255, 0, CalculateGrayscaleAmount(originalColor), 0);
+			newColor = Color(255, 0, CalculateGrayscaleAmount(originalColor) + 35, 0);
 		}
-		if (_nightVisionOn && texType > -1 && texType != UV_HudVisorDraw.ARMOR_GRID) {
-			newColor = BlendColors(originalColor, newColor, 0.2); // Simulate light reflection for helmet parts except armor grid
+		if (_nightVisionOn && texType > -1 && texType != UV_HudVisorDraw.ARMOR_GRID && texType != UV_HudVisorDraw.SCREEN_WIPER) {
+			// Simulate light reflection for helmet parts except armor grid and wiper (and glow, but we don't get to this line with glow)
+			newColor = BlendColors(originalColor, newColor, 0.2); 
 		}
 		return newColor;
 	}
+	
+	ui Color BlendColorWithEnvironment(Color originalColor, UV_TextureTypes texType = -1) {
+		double overallEnvInfluence = 1.0;
+		if (texType == UV_HudVisorDraw.GLOW || texType == UV_HudVisorDraw.SCREEN_WIPER) {
+			overallEnvInfluence = 0.35;
+		} else if (texType == UV_HudVisorDraw.ARMOR_GRID) {
+			overallEnvInfluence = 0.5;
+		} else if (texType > -1) {  // Reduce for helmet pieces and glass too, but not so much
+			overallEnvInfluence = 0.85;
+		}
+		// Dynamic lights (already  calculated in play context)
+		double dynScaleR, dynScaleG, dynScaleB;
+		if (texType == UV_HudVisorDraw.GLOW || texType == UV_HudVisorDraw.ARMOR_GRID || texType == UV_HudVisorDraw.SCREEN_WIPER) {
+			// Only brightness change
+			double interBrightnessScale = InterpolateValue(prevCombinedBrightnessScale, combinedBrightnessScale, FracTicGlobal);
+			dynScaleR = dynScaleG = dynScaleB = ApplyInfluence(interBrightnessScale, overallEnvInfluence);
+		} else {
+			// Full color path
+			Vector3 interFullColorScale = (
+				InterpolateValue(prevCombinedFullColorScale.X, combinedFullColorScale.X, FracTicGlobal),
+				InterpolateValue(prevCombinedFullColorScale.Y, combinedFullColorScale.Y, FracTicGlobal),
+				InterpolateValue(prevCombinedFullColorScale.Z, combinedFullColorScale.Z, FracTicGlobal)
+			);
+			double colR = interFullColorScale.X;
+			double colG = interFullColorScale.Y;
+			double colB = interFullColorScale.Z;
+			double rawBrightness = (colR + colG + colB) / 3.0;
+			double softenedBrightness = ApplyInfluence(rawBrightness, overallEnvInfluence);
+			double colorInfluence = 0.6; // separate color influence control, seems to be a good balance
+			dynScaleR = softenedBrightness + (colR - rawBrightness) * colorInfluence;
+			dynScaleG = softenedBrightness + (colG - rawBrightness) * colorInfluence;
+			dynScaleB = softenedBrightness + (colB - rawBrightness) * colorInfluence;
+		}
+		int r = int(originalColor.r * dynScaleR);
+		int g = int(originalColor.g * dynScaleG);
+		int b = int(originalColor.b * dynScaleB);
+		return Color(255, r, g, b);
+	}
 
+	// Pulls a value toward neutral 1.0 by influence (1 = full effect, 0 = no change)
+	// Simple multiplying would darken low-influence elements instead of leaving them neutral in our case
+	ui double ApplyInfluence(double value, double influence) {
+		return 1.0 + (value - 1.0) * influence;
+	}
+	
 	ui int CalculateGrayscaleAmount(Color originalColor) {
 		// luminosity method
 		return int(0.2126 * originalColor.r + 0.7152 * originalColor.g + 0.0722 * originalColor.b);
@@ -1974,8 +2008,8 @@ class UV_HudVisorDraw : EventHandler
 		if (startupAnimEnabled && startupVolume > 0 && level.time == STARTUP_BLACK_SOLID_TICKS - 8) {
 			S_StartSound("uvisor_startup", CHAN_AUTO, volume: startupVolume);
 		}
-		
 		CheckPowersAndVehicles();
+		UpdateLightState(playerinf.mo.pos, playerinf.mo.Angle, playerinf.mo.Pitch);
 		SetPlayerBlendColorAndAlpha();
 		SetStoredHealthArmor();
 		
@@ -2382,7 +2416,6 @@ class UV_HudVisorDraw : EventHandler
 		isLastPowerupColomapped = false;
 		lastColormappedPowerup = "";
 		powerupBlendColors.Clear();
-		combPlayerBlendAndPowerupBlendColor = UNSET_COLOR;
 		effectiveBlendAlpha = 0.0;
 		string invulnerableStr;
 		string nightVisionStr;
@@ -2462,7 +2495,158 @@ class UV_HudVisorDraw : EventHandler
 			machineGunEnterLeaveTicker--;
 		}
 	}
+	
+	void UpdateLightState(Vector3 point, double playerViewYaw, double playerViewPitch) {
+		prevCombinedBrightnessScale = combinedBrightnessScale;
+		prevCombinedFullColorScale = combinedFullColorScale;
+		double sectorBrightnessScale = 1.0;
+		if (playerinf.mo.cursector) {
+			double raw = double(playerinf.mo.cursector.lightlevel) / 255.0;
+			sectorBrightnessScale = 0.3 + 0.7 * raw; // makes it never too dark even in darkest sectors
+		}
+		
+		SetDynamicLightContribution(point, playerViewYaw, playerViewPitch);
+		// 		console.printf("^ playerinf.mo.cursector.lightlevel: %f", playerinf.mo.cursector.lightlevel);
+// 		console.printf("  dLightsBrightnessWeighted: %.1f", dLightsBrightnessWeighted);
+// 		console.printf("  dLightsFullColorWeighted: (%.1f, %.1f, %.1f)",
+// 			dLightsFullColorWeighted.x,
+// 			dLightsFullColorWeighted.y,
+// 			dLightsFullColorWeighted.z);
 
+		// Brightness-only path for glow, armor grid, wiper
+		combinedBrightnessScale = BlendBrightness(sectorBrightnessScale, dLightsBrightnessWeighted);
+		
+		// Full color change (including brightness) for other textures
+		double colR = dLightsFullColorWeighted.X;
+		double colG = dLightsFullColorWeighted.Y;
+		double colB = dLightsFullColorWeighted.Z;
+		combinedFullColorScale.X = BlendBrightness(sectorBrightnessScale, colR);
+		combinedFullColorScale.Y = BlendBrightness(sectorBrightnessScale, colG);
+		combinedFullColorScale.Z = BlendBrightness(sectorBrightnessScale, colB);
+		double colMax = max(colR, max(colG, colB));
+		if (colMax > 0.01) {
+			double hueR = colR / colMax;
+			double hueG = colG / colMax;
+			double hueB = colB / colMax;
+			double saturation = 1.0 - min(hueR, min(hueG, hueB));
+			double tint = sectorBrightnessScale * saturation * 0.25 * colMax;
+			combinedFullColorScale.X = TintTowardHue(combinedFullColorScale.X, hueR, tint);
+			combinedFullColorScale.Y = TintTowardHue(combinedFullColorScale.Y, hueG, tint);
+			combinedFullColorScale.Z = TintTowardHue(combinedFullColorScale.Z, hueB, tint);
+		}
+	}
+
+	void SetDynamicLightContribution(Vector3 point, double playerViewYaw, double playerViewPitch) {
+		double totalBrightness = 0.0;
+		double rSum = 0.0;
+		double gSum = 0.0;
+		double bSum = 0.0;
+		
+		Vector3 playerViewDirection = GetDirectionFromAngles(playerViewYaw, playerViewPitch);
+		ThinkerIterator iterator = ThinkerIterator.Create("DynamicLight");
+		DynamicLight light;
+
+		while ((light = DynamicLight(iterator.Next())) != null) {
+			if (light.bDormant) // if sleeping
+				continue;
+
+			// zdoom wiki: max mapunit radius is actually double the size argument
+			double effectiveRadius = light.args[DynamicLight.LIGHT_INTENSITY] * 2.0;
+			double distanceToLight = (light.pos - point).Length();
+			if (effectiveRadius <= 0.0 || distanceToLight >= effectiveRadius)
+				continue;
+
+			double distanceAttenuation = 1.0 - (distanceToLight / effectiveRadius);
+			double directionAttenuation = 1.0;
+			if (light.bSpot) {
+				directionAttenuation = SpotlightConeAttenuation(light, point); // fade to 0 outside the cone
+			}
+			double finalAttenuation = distanceAttenuation * directionAttenuation;
+
+			// How far off the player's view this light is (0 to 180 degrees if strictly behind)
+			Vector3 toLight = (light.pos - point).Unit();
+			double cosViewAngle = Clamp(playerViewDirection dot toLight, -1.0, 1.0);
+			double angleDegrees = acos(cosViewAngle);
+
+			// Full influence up to 65 degrees, then fades to 0 (up to 180 degrees)
+			double behindness = Smoothstep(65.0, 180.0, angleDegrees);
+
+			// Soft floor, so HUD never goes fully black
+			double brightnessFacing = 0.25 + 0.75 * (1.0 - behindness);
+			// Color fades harder, behind the player it's basically gone
+			double colorFacing = 0.08 + 0.92 * (1.0 - behindness) ** 1.8;
+
+			double rChannel = light.args[DynamicLight.LIGHT_RED];
+			double gChannel = light.args[DynamicLight.LIGHT_GREEN];
+			double bChannel = light.args[DynamicLight.LIGHT_BLUE];
+
+			// Average (not max/sum) so colored lights aren't underweighted vs white
+			double averageIntensity = (rChannel + gChannel + bChannel) / 3.0;
+
+			// Facing applied per-light - front lights contribute fully, back ones barely
+			totalBrightness += averageIntensity * finalAttenuation * brightnessFacing;
+
+			rSum += rChannel * finalAttenuation * colorFacing;
+			gSum += gChannel * finalAttenuation * colorFacing;
+			bSum += bChannel * finalAttenuation * colorFacing;
+		}
+
+		// 0.4 and 0.9 seem to give good balance
+		dLightsBrightnessWeighted = Clamp(totalBrightness / 255.0 * 0.4, 0.0, 1.0);
+		dLightsFullColorWeighted = (
+			Clamp(rSum / 255.0 * 0.9, 0.0, 1.0),
+			Clamp(gSum / 255.0 * 0.9, 0.0, 1.0),
+			Clamp(bSum / 255.0 * 0.9, 0.0, 1.0)
+		);
+	}
+	
+	// Combines two brightness values (used for sector brightness and dynamic lights brightness)
+	double BlendBrightness(double base, double add) {
+		return 1.0 - (1.0 - base) * (1.0 - add);
+	}
+
+	// Create visible hue even at full brightness (e.g. when very bright sector, but also a colored dynamic light)
+	// So it subtracts from non-dominant channels, but partially, not just channel*hue to keep colored elements
+	// if hue=1: no change (already dominant channel), hue=0: reduced by amount
+	double TintTowardHue(double channel, double hue, double amount) {
+		return channel * (1.0 - amount * (1.0 - hue));
+	}
+	
+	// Get forward vector (player's view or spotlights direction)
+	Vector3 GetDirectionFromAngles(double yaw, double pitch) {
+		double horizontal = cos(pitch);
+		return (
+			cos(yaw) * horizontal,
+			sin(yaw) * horizontal,
+			sin(-pitch) // +pitch = down
+		);
+	}
+
+	// Smooth 0 to 1 ramp between edges
+	double Smoothstep(double edge0, double edge1, double x) {
+		double t = Clamp((x - edge0) / (edge1 - edge0), 0.0, 1.0);
+		return t * t * (3.0 - 2.0 * t);
+	}
+
+	// 1.0 inside inner cone, 0.0 outside outer cone, linear fade between
+	double SpotlightConeAttenuation(DynamicLight light, Vector3 point) {
+		Vector3 lightPosition = light.pos;
+		// Some spotlights seem to be attached to an actor positioned higher than the actual light
+		if (light is "Spotlight") {
+			lightPosition.Z -= 16;
+		}
+		Vector3 spotDirection = GetDirectionFromAngles(light.Angle, light.Pitch);
+		Vector3 toPoint = (point - lightPosition).Unit();
+		double cosToPoint = spotDirection dot toPoint;
+		double cosInner = cos(light.SpotInnerAngle);
+		double cosOuter = cos(light.SpotOuterAngle);
+		if (cosToPoint <= cosOuter) 
+			return 0.0;
+		if (cosToPoint >= cosInner) 
+			return 1.0;
+		return (cosToPoint - cosOuter) / (cosInner - cosOuter);
+	}
+	
 	void SetPlayerBlendColorAndAlpha() {
 		double combinedA;
 		double combinedR;
