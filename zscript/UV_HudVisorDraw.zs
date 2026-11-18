@@ -325,6 +325,10 @@ class UV_HudVisorDraw : EventHandler
 	string PB_NightVisionStr;
 	string NVNightVisionInverseMapStr;
 	string PB_HelmetAnimStr;
+	string invulnerableStr;
+	string nightVisionStr;
+	string PB_SpeedPowerupStr;
+	string PB_QuadDamagePowerupStr;
 	Array<Color> powerupBlendColors;
 	static const string isDemonPlayerFlags[] = {
 		"isDemonPlayer", // using only this one isn't reliable cause it's not set if two nearby demon powerups picked up very quickly
@@ -1983,6 +1987,8 @@ class UV_HudVisorDraw : EventHandler
 		PB_NightVisionStr = "PB_PowerLightAmp";
 		NVNightVisionInverseMapStr = "NVNightVisionInverseMap";
 		PB_HelmetAnimStr = "DoingHelmetAnim";
+		PB_SpeedPowerupStr = "PB_PowerSpeed";
+		PB_QuadDamagePowerupStr = "PB_PowerDoomDamage";
 		startupTicker = STARTUP_TICKS;
 		paramsForIsVisible.minDist = 1; // prevent false positives (for our case), which apparently happen when minDist is 0
 		globals = UV_HudVisorStaticGlobals.Get();
@@ -2435,8 +2441,7 @@ class UV_HudVisorDraw : EventHandler
 		effectiveBlendAlpha = 0.0;
 		if (globals.isPB_Loaded) {
 			invulnerableStr = "PB_PowerInvul"; // check specifically this one to avoid grid highlight when doing melee groly kills
-		} 
-		else {
+		} else {
 			invulnerableStr = "PowerInvulnerable";
 		}
 		if (globals.isDD_Loaded) {
@@ -2465,13 +2470,19 @@ class UV_HudVisorDraw : EventHandler
 				}
 				if (globals.isNightVisionPackLoaded && invItem is NVNightVisionInverseMapStr) {
 					NV_PackInverseMapOn = true; 
-				}
-				if (invItem is invulnerableStr) {
+				} else if (invItem is invulnerableStr) {
 					if (!pow.Colormap && !pow.GetBlend() && !globals.isPB_Loaded) {
 						isVanillaInvulernabilityOn = true;
 						if (pow.isBlinking()) {
 							isVanillaInvulernabilityBlinking = true;
 						}
+					}
+				} else if (globals.isPB_Loaded) {
+					if (invItem.GetClassName() == PB_SpeedPowerupStr) {
+						powerupBlendColors.Push(Color(80, 255, 255, 25));
+					}  
+					if (invItem.GetClassName() == PB_QuadDamagePowerupStr) {
+						powerupBlendColors.Push(Color(80, 64, 0, 127));
 					}
 				}
 			}
