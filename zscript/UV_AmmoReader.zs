@@ -10,6 +10,8 @@ class UV_AmmoReader : Object {
 		if (!currentWeapon)
 			return amData;
 		amData.weaponClassName = currentWeapon.GetClassName();
+		if (globals.isPB_Loaded && amData.weaponClassName == "PBX_RideableCaco")
+			return amData;
 // 		console.printf("weaponClassName: " .. amData.weaponClassName);
 		Ammo am1 = Ammo(playerinf.mo.FindInventory(currentWeapon.ammotype1));
 		if (am1) {
