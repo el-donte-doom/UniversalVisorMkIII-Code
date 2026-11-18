@@ -40,12 +40,11 @@ class UV_HudVisorDraw : EventHandler
 	bool isLastPowerupColomapped;
 	Color combPlayerBlendAndPowerupBlendColor;
 	double effectiveBlendAlpha;
-	double dLightsBrightnessWeighted;
-	Vector3 dLightsFullColorWeighted;
 	double prevCombinedBrightnessScale;
 	double combinedBrightnessScale;
 	Vector3 prevCombinedFullColorScale;
 	Vector3 combinedFullColorScale;
+	bool doingHelmetEquipAnim;
 	
 	
 	///// UI CONTEXT VARS /////
@@ -323,8 +322,9 @@ class UV_HudVisorDraw : EventHandler
 	bool hideGlassIfEmptyArmorPlayContext;
 	bool transparencyEffectWhenInvis;
 	bool isDemonPlayer;
-	String PB_NightVisionStr;
-	String NVNightVisionInverseMapStr;
+	string PB_NightVisionStr;
+	string NVNightVisionInverseMapStr;
+	string PB_HelmetAnimStr;
 	Array<Color> powerupBlendColors;
 	static const string isDemonPlayerFlags[] = {
 		"isDemonPlayer", // using only this one isn't reliable cause it's not set if two nearby demon powerups picked up very quickly
@@ -674,7 +674,10 @@ class UV_HudVisorDraw : EventHandler
 			// needsTextureWarmUp: draw fullscreen textures with alpha 0 to avoid stutter when they're firstly drawn midgame
 			// Usually when player firstly gets armor and glass, cracks, grid, tactical lines appear
 		}
-
+		
+		if (doingHelmetEquipAnim)
+			return;
+		
 		if (prevGametic != gametic || Menu.GetCurrentMenu() != null || consolestate || !initialUIInitDone) {
 			// Calculations which better be in UI context to instantly update hud when changing options in the menu
 			// (e.g. gameplay color steps)
@@ -1975,6 +1978,7 @@ class UV_HudVisorDraw : EventHandler
 		heavyMachinegunStr = "PowerHeavyMachinegunSwitch";
 		PB_NightVisionStr = "PB_PowerLightAmp";
 		NVNightVisionInverseMapStr = "NVNightVisionInverseMap";
+		PB_HelmetAnimStr = "DoingHelmetAnim";
 		startupTicker = STARTUP_TICKS;
 		paramsForIsVisible.minDist = 1; // prevent false positives (for our case), which apparently happen when minDist is 0
 		globals = UV_HudVisorStaticGlobals.Get();
@@ -1997,7 +2001,7 @@ class UV_HudVisorDraw : EventHandler
 		if (gamestate != GS_LEVEL) {
             return;  // Prevent drawing helmet in main menu with mods overriding Titlemap
 		}
-		
+
 		if (wasMenuOpened || globals.isSavegameJustLoaded || !initialPlayInitDone) {
 			globals.isSavegameJustLoaded = false;
 			wasMenuOpened = false;
@@ -2005,10 +2009,14 @@ class UV_HudVisorDraw : EventHandler
 			initialPlayInitDone = true;
 		}
 		
+		CheckPowersAndVehicles();
+		if (doingHelmetEquipAnim) {
+			return;
+		}
+		
 		if (startupAnimEnabled && startupVolume > 0 && level.time == STARTUP_BLACK_SOLID_TICKS - 8) {
 			S_StartSound("uvisor_startup", CHAN_AUTO, volume: startupVolume);
 		}
-		CheckPowersAndVehicles();
 		UpdateLightState(playerinf.mo.pos, playerinf.mo.Angle, playerinf.mo.Pitch);
 		SetPlayerBlendColorAndAlpha();
 		SetStoredHealthArmor();
@@ -2113,10 +2121,9 @@ class UV_HudVisorDraw : EventHandler
 		prevCracksBasis = cracksBasis;
 		initalCracksUpdateDone = true;
 		
-		wasArmorGridShown = isArmorGridShownVar;
-		
 		wasInVehicle = inVehicle;
 		wasInMachineGun = inMachineGun;
+		wasArmorGridShown = isArmorGridShownVar;
 		
 		if (pulseActive) {
 			pulseTime += pulseSpeed * 2; // Needed for color calculation when drawing texture, bigger value for faster pulse
@@ -2413,12 +2420,11 @@ class UV_HudVisorDraw : EventHandler
 		isDemonPlayer = false;
 		inMachineGun = false;
 		inVehicle = false;
+		doingHelmetEquipAnim = false;
 		isLastPowerupColomapped = false;
 		lastColormappedPowerup = "";
 		powerupBlendColors.Clear();
 		effectiveBlendAlpha = 0.0;
-		string invulnerableStr;
-		string nightVisionStr;
 		if (globals.isPB_Loaded) {
 			invulnerableStr = "PB_PowerInvul"; // check specifically this one to avoid grid highlight when doing melee groly kills
 		} 
@@ -2474,7 +2480,10 @@ class UV_HudVisorDraw : EventHandler
 				invulnerabilityOn = true;
 			} else if (IsDemonPlayerFlag(invItem)) { 	// BD demon morphs
 				isDemonPlayer = true;
-			} else if (invItem is heavyMachinegunStr) { // BD and UMES machine gun
+			} else if (globals.isPB_Loaded && invItem.GetClassName() == PB_HelmetAnimStr) {
+				doingHelmetEquipAnim = true;
+			}
+			else if (invItem is heavyMachinegunStr) { // BD and UMES machine gun
 				inMachineGun = true;
 			} else if (!inVehicle) {  					// BD and UMES vehicles except machine gun
 				for (int i = 0; i < vehicleInvNames.Size(); i++) {
@@ -2506,7 +2515,7 @@ class UV_HudVisorDraw : EventHandler
 		}
 		
 		SetDynamicLightContribution(point, playerViewYaw, playerViewPitch);
-		// 		console.printf("^ playerinf.mo.cursector.lightlevel: %f", playerinf.mo.cursector.lightlevel);
+// 		console.printf("^ playerinf.mo.cursector.lightlevel: %f", playerinf.mo.cursector.lightlevel);
 // 		console.printf("  dLightsBrightnessWeighted: %.1f", dLightsBrightnessWeighted);
 // 		console.printf("  dLightsFullColorWeighted: (%.1f, %.1f, %.1f)",
 // 			dLightsFullColorWeighted.x,
@@ -3552,8 +3561,8 @@ class UV_HudVisorDraw : EventHandler
 		if (warningVolume <= 0 || playerinf.mo.IsActorPlayingSound(warningSoundChannel) || playerinf.health <= 0 || (level.time < 1)) {
 			return;
 		} else if (inVehicle) {
-            return;
-        } else if ((warningSoundBasis == 0 && playerinf.health < 30)
+			return;
+		} else if ((warningSoundBasis == 0 && playerinf.health < 30)
 				|| (warningSoundBasis == 1 && totalArmor < 30)
 				|| ((warningSoundBasis == 2 && warningAmmo1Active) || (warningSoundBasis == 3 && warningAmmo2Active))) {
 			playerinf.mo.A_StartSound("uvisor_warn", warningSoundChannel, volume: warningVolume, attenuation: ATTN_STATIC);
