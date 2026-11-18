@@ -549,6 +549,7 @@ class UV_HudVisorDraw : EventHandler
 	double lastBobTime;
 
 	UV_HudVisorStaticGlobals globals;
+	UV_PersistentData pData;
 	
 	// Helmet shaking vars
 	bool helmetShaking;
@@ -557,14 +558,10 @@ class UV_HudVisorDraw : EventHandler
 	double ShakeOffsetY;
 	double ShakeIntensity;
 	
-	// Visor cracks
+	// Visor cracks (more data in UV_PersistentData)
 	int cracksBasis;
 	int prevCracksBasis;
-	int cracksLevel; // 1-5
-	int prevCracksLevel;
-	int cracksTexturePatternId;
 	const CRACKS_MAX_PATTERN_ID = 6;
-	double cracksTextureRotationDegrees;
 	bool initalCracksUpdateDone; // to prevent crack's sound at level start when small health/armor
 	const CRACKS_FADE_TICKS = 5;
 	int cracksFadeTicker;
@@ -572,7 +569,6 @@ class UV_HudVisorDraw : EventHandler
 	double f_InCracksAlpha;
 	double prevF_OutCracksAlpha;
 	double f_OutCracksAlpha;
-	int fInCracksTexId;
 	int fOutCracksTexId;
 	bool hideFadingOutCracks;
 		
@@ -826,9 +822,9 @@ class UV_HudVisorDraw : EventHandler
 		
 		if (showGlass && showGlassCracks) {
 			DrawGlassCracks();
-		} else if (needsTextureWarmup && cracksLevel > 0) {
+		} else if (needsTextureWarmup && pData.cracksLevel > 0) {
 			TextureID newCracksTex = TexMan.CheckForTexture(
-				cracksBasePath .. "Pattern_" .. cracksTexturePatternId .. "/glass_cracks_" .. fInCracksTexId .. ".png"
+				cracksBasePath .. "Pattern_" .. pData.cracksTexturePatternId .. "/glass_cracks_" .. pData.fInCracksTexId .. ".png"
 			);
 			DrawFullScreenTexture(newCracksTex, 0, colorGlassCracks);
 		}
@@ -1378,20 +1374,20 @@ class UV_HudVisorDraw : EventHandler
 		offsetY -= Screen.GetHeight() * 0.1;
 		if (cracksFadeTicker > 0) {
 			TextureID oldCracksTex = TexMan.CheckForTexture(
-				cracksBasePath .. "Pattern_" .. cracksTexturePatternId .. "/glass_cracks_" .. fOutCracksTexId .. ".png"
+				cracksBasePath .. "Pattern_" .. pData.cracksTexturePatternId .. "/glass_cracks_" .. fOutCracksTexId .. ".png"
 			);
 			double f_OutCracksAlphaInter = alphaCracks * InterpolateValue(prevF_OutCracksAlpha, f_OutCracksAlpha, FracTicGlobal);
 			DrawFullScreenTexture(oldCracksTex, f_OutCracksAlphaInter, colorGlassCracks, 
-				sizeMult: sizeMult, offsetX: offsetX, offsetY: offsetY, degree: cracksTextureRotationDegrees
+				sizeMult: sizeMult, offsetX: offsetX, offsetY: offsetY, degree: pData.cracksTextureRotationDegrees
 			);
 			f_InCracksAlphaInter *= InterpolateValue(prevF_InCracksAlpha, f_InCracksAlpha, FracTicGlobal);
 		}
-		if (cracksLevel > 0) {
+		if (pData.cracksLevel > 0) {
 			TextureID newCracksTex = TexMan.CheckForTexture(
-				cracksBasePath .. "Pattern_" .. cracksTexturePatternId .. "/glass_cracks_" .. fInCracksTexId .. ".png"
+				cracksBasePath .. "Pattern_" .. pData.cracksTexturePatternId .. "/glass_cracks_" .. pData.fInCracksTexId .. ".png"
 			);
 			DrawFullScreenTexture(newCracksTex, f_InCracksAlphaInter, colorGlassCracks, 
-				sizeMult: sizeMult, offsetX: offsetX, offsetY: offsetY, degree: cracksTextureRotationDegrees
+				sizeMult: sizeMult, offsetX: offsetX, offsetY: offsetY, degree: pData.cracksTextureRotationDegrees
 			);
 		}
 	}
@@ -2012,6 +2008,10 @@ class UV_HudVisorDraw : EventHandler
             return;  // Prevent drawing helmet in main menu with mods overriding Titlemap
 		}
 		
+		if (!pData) {
+			pData = globals.pData;
+		}
+		
 		UpdateLightState(playerinf.mo.pos, playerinf.mo.Angle, playerinf.mo.Pitch);
 		
 		if (wasMenuOpened || globals.isSavegameJustLoaded || !initialPlayInitDone) {
@@ -2121,9 +2121,9 @@ class UV_HudVisorDraw : EventHandler
 			OldSwayOffY = 0;
 		}
 		
-		if (cracksLevel > prevCracksLevel && showGlassCracksPlayContext 
+		if (pData.cracksLevel > pData.prevCracksLevel && showGlassCracksPlayContext 
 				&& cracksVolume > 0 && initalCracksUpdateDone && (prevCracksBasis == cracksBasis)) {
-			if (cracksLevel == 5) {
+			if (pData.cracksLevel == 5) {
 				if (! (cracksBasis == 1 && !hideGlassIfEmptyArmorPlayContext) ) {
 					S_StartSound("uvisor_glass_2", CHAN_AUTO, volume: cracksVolume);
 				}
@@ -2738,7 +2738,7 @@ class UV_HudVisorDraw : EventHandler
 	}
 	
 	void UpdateCracksStatus() {
-		prevCracksLevel = cracksLevel;
+		pData.prevCracksLevel = pData.cracksLevel;
 		
 		if (machineGunEnterLeaveTicker == 0 || playerinf.health <= 0) { // additional checks, actually we almost always go into this block
 			int currentHealthOrArmor = cracksBasis == 0 ? playerinf.health : totalArmor;
@@ -2746,24 +2746,24 @@ class UV_HudVisorDraw : EventHandler
 				currentHealthOrArmor = cracksBasis == 0 ? storedHealthInsideVehicle : storedArmorInsideVehicle;
 			}
 			if (currentHealthOrArmor <= 0) {
-				cracksLevel = 5;
+				pData.cracksLevel = 5;
 			} else if (currentHealthOrArmor <= 15) {
-				cracksLevel = 4;
+				pData.cracksLevel = 4;
 			} else if (currentHealthOrArmor <= 30) {
-				cracksLevel = 3;
+				pData.cracksLevel = 3;
 			} else if (currentHealthOrArmor <= 50) {
-				cracksLevel = 2;
+				pData.cracksLevel = 2;
 			} else if (currentHealthOrArmor <= 70) {
-				cracksLevel = 1;
+				pData.cracksLevel = 1;
 			} else {
-				cracksLevel = 0;
+				pData.cracksLevel = 0;
 			}
 		}
-		if (cracksLevel != prevCracksLevel) {
+		if (pData.cracksLevel != pData.prevCracksLevel) {
 			if (prevCracksBasis == cracksBasis) { // check prevents fading out 5th level cracks bug if switched cracks basis
-				cracksFadeTicker = cracksLevel > prevCracksLevel ? (CRACKS_FADE_TICKS - 2) : CRACKS_FADE_TICKS;
+				cracksFadeTicker = pData.cracksLevel > pData.prevCracksLevel ? (CRACKS_FADE_TICKS - 2) : CRACKS_FADE_TICKS;
 			}
-			if (cracksBasis == 1 && prevCracksLevel == 5) { 
+			if (cracksBasis == 1 && pData.prevCracksLevel == 5) { 
 				hideFadingOutCracks = true; // prevent fading out 5th level is armor-based cracks as well
 				prevF_OutCracksAlpha = 0.0;
 				f_OutCracksAlpha = 0.0;
@@ -2773,14 +2773,14 @@ class UV_HudVisorDraw : EventHandler
 			}
 			f_InCracksAlpha = 1 - double(cracksFadeTicker) / CRACKS_FADE_TICKS;
 			prevF_InCracksAlpha = 0.0;
-			fInCracksTexId = cracksLevel;
+			pData.fInCracksTexId = pData.cracksLevel;
 			if (cracksBasis == 1) {
-				fInCracksTexId = clamp(fInCracksTexId, 0, 4); // don't draw the most broken glass (5th level) when armor based
+				pData.fInCracksTexId = clamp(pData.fInCracksTexId, 0, 4); // don't draw the most broken glass (5th level) when armor based
 			}
-			fOutCracksTexId = prevCracksLevel;
-			if (prevCracksLevel == 0) {
-				cracksTexturePatternId = random(1, CRACKS_MAX_PATTERN_ID);
-				cracksTextureRotationDegrees = random(-8, 8);
+			fOutCracksTexId = pData.prevCracksLevel;
+			if (pData.prevCracksLevel == 0) {
+				pData.cracksTexturePatternId = random(1, CRACKS_MAX_PATTERN_ID);
+				pData.cracksTextureRotationDegrees = random(-8, 8);
 			}
 		} else if (cracksFadeTicker > 0) {
 			cracksFadeTicker--;

@@ -15,22 +15,25 @@ class UV_HudVisorStaticGlobals: StaticEventHandler {
 	bool isNightVisionPackLoaded;
 	double bloodDefaultSaturationMultiplier;
 	
+	UV_PersistentData pData;
+	
 	static UV_HudVisorStaticGlobals Get() {
         let handler = StaticEventHandler.Find("UV_HudVisorStaticGlobals");
         return UV_HudVisorStaticGlobals(handler);
     }
 	
-	// Called when a savegame is loaded
-    override void WorldLoaded(WorldEvent e)
-    {
-        if (e.IsSaveGame)
-        {
+	// Called when new game or a savegame loaded
+    override void WorldLoaded(WorldEvent e) {
+        if (e.IsSaveGame) {
 			PlayerInfo playerinf = players[consoleplayer];
 			if (!playerinf.mo)
 				return;
 			isSavegameJustLoaded = true;
 			EventHandler.SendInterfaceEvent(consoleplayer, "UV_SavegameLoaded");
         }
+		if (!pData) {
+			pData = UV_PersistentData.Get();
+		}
     }
 	
 	// Check here to do it only once, not every level start
