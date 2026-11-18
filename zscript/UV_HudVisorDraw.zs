@@ -1396,18 +1396,18 @@ class UV_HudVisorDraw : EventHandler
 		h *= scaleFactorHeight;
 		double ratioInterpolated = InterpolateValue(prevClipRatioInverted, clipRatioInverted, FracTicGlobal);
 		double x = Screen.GetWidth() - (Screen.GetWidth() + w) * ratioInterpolated;
-		double y = 0;
+		x += uiSwayOffX + ShakeOffsetX;
 		Color wiperColor = FULL_WHITE_COLOR;
 		wiperColor = BlendColorWithEnvironmentAndPowerups(wiperColor, UV_HudVisorDraw.SCREEN_WIPER);
 		Screen.DrawTexture(
 			texScreenWiper, false,
-			x + uiSwayOffX + ShakeOffsetX,
-			y + uiSwayOffY + ShakeOffsetY,
+			x,
+			uiSwayOffY + ShakeOffsetY,
 			DTA_DestWidthF, w,
 			DTA_DestHeightF, h,
 			DTA_Color, wiperColor
 		);
-		Screen.SetClipRect(0, 0, Screen.GetWidth() - Screen.GetWidth() * ratioInterpolated, Screen.GetHeight());
+		Screen.SetClipRect(0, 0, max(x + w/3, 0), Screen.GetHeight());
 	}
 	
 	ui void DrawBloodTextures() {		
