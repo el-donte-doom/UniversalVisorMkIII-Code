@@ -1068,7 +1068,7 @@ class UV_HudVisorDraw : EventHandler
 			uiScaledMaxSwayX = scaledMaxSwayX;
 			uiScaledMaxSwayY = scaledMaxSwayY;
 		}
-		
+
 		uiSwayOffX_ArmorGrid = uiSwayOffX * 0.7; // to make it feel like an outer shell or something like that
 		uiSwayOffY_ArmorGrid = uiSwayOffY * 0.7;
 	}
@@ -1363,15 +1363,12 @@ class UV_HudVisorDraw : EventHandler
 	
 	ui void DrawGlassCracks() {
 		double f_InCracksAlphaInter = alphaCracks;
-		// smaller size and coords for Space Marine helmet
-		double sizeMult = styleTop == 5 ? 0.8 : 1.0; 
-		double offsetX = styleTop == 5 ? Screen.GetWidth() / 7.0 : 0;
-		double offsetY = styleTop == 5 ? Screen.GetHeight() / 7.0 : 0;
+
 		// adjust size and offsets to draw texture a bit outside of screen edges 
 		// so that more cracks "start" from visor edges for a bit more realism and to compensate the random rotation
-		sizeMult *= 1.2; 
-		offsetX -= Screen.GetWidth() * 0.1;
-		offsetY -= Screen.GetHeight() * 0.1;
+		double sizeMult = styleTop == 5 ? 0.95 : 1.1; // smaller size and coords for Space Marine helmet
+		double offsetX = Screen.GetWidth() * (1 - sizeMult) / 2;
+		double offsetY = Screen.GetHeight() * (1 - sizeMult) / 2;
 		if (cracksFadeTicker > 0) {
 			TextureID oldCracksTex = TexMan.CheckForTexture(
 				cracksBasePath .. "Pattern_" .. pData.cracksTexturePatternId .. "/glass_cracks_" .. fOutCracksTexId .. ".png"
@@ -2780,7 +2777,7 @@ class UV_HudVisorDraw : EventHandler
 			fOutCracksTexId = pData.prevCracksLevel;
 			if (pData.prevCracksLevel == 0) {
 				pData.cracksTexturePatternId = random(1, CRACKS_MAX_PATTERN_ID);
-				pData.cracksTextureRotationDegrees = random(-8, 8);
+				pData.cracksTextureRotationDegrees = frandom(-7, 7);
 			}
 		} else if (cracksFadeTicker > 0) {
 			cracksFadeTicker--;
