@@ -560,7 +560,7 @@ class UV_HudVisorDraw : EventHandler
 	int prevCracksLevel;
 	int cracksTexturePatternId;
 	const CRACKS_MAX_PATTERN_ID = 6;
-	double cracksTextureRotationDegree;
+	double cracksTextureRotationDegrees;
 	bool initalCracksUpdateDone; // to prevent crack's sound at level start when small health/armor
 	const CRACKS_FADE_TICKS = 5;
 	int cracksFadeTicker;
@@ -1378,7 +1378,7 @@ class UV_HudVisorDraw : EventHandler
 			);
 			double f_OutCracksAlphaInter = alphaCracks * InterpolateValue(prevF_OutCracksAlpha, f_OutCracksAlpha, FracTicGlobal);
 			DrawFullScreenTexture(oldCracksTex, f_OutCracksAlphaInter, colorGlassCracks, 
-				sizeMult: sizeMult, offsetX: offsetX, offsetY: offsetY, degree: cracksTextureRotationDegree
+				sizeMult: sizeMult, offsetX: offsetX, offsetY: offsetY, degree: cracksTextureRotationDegrees
 			);
 			f_InCracksAlphaInter *= InterpolateValue(prevF_InCracksAlpha, f_InCracksAlpha, FracTicGlobal);
 		}
@@ -1387,7 +1387,7 @@ class UV_HudVisorDraw : EventHandler
 				cracksBasePath .. "Pattern_" .. cracksTexturePatternId .. "/glass_cracks_" .. fInCracksTexId .. ".png"
 			);
 			DrawFullScreenTexture(newCracksTex, f_InCracksAlphaInter, colorGlassCracks, 
-				sizeMult: sizeMult, offsetX: offsetX, offsetY: offsetY, degree: cracksTextureRotationDegree
+				sizeMult: sizeMult, offsetX: offsetX, offsetY: offsetY, degree: cracksTextureRotationDegrees
 			);
 		}
 	}
@@ -2769,7 +2769,7 @@ class UV_HudVisorDraw : EventHandler
 			fOutCracksTexId = prevCracksLevel;
 			if (prevCracksLevel == 0) {
 				cracksTexturePatternId = random(1, CRACKS_MAX_PATTERN_ID);
-				cracksTextureRotationDegree = random(-15, 15);
+				cracksTextureRotationDegrees = random(-8, 8);
 			}
 		} else if (cracksFadeTicker > 0) {
 			cracksFadeTicker--;
