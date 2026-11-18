@@ -641,6 +641,10 @@ class UV_HudVisorDraw : EventHandler
 	int lowAmmo2Ticker;
 	bool lowAmmo2Active;
 	UV_AmmoReaderFactory ammoReaderFactory;
+	
+	// Dynamic lights
+	double dLightsBrightnessWeighted;
+	Vector3 dLightsFullColorWeighted;
 		
 	
 	
@@ -2001,11 +2005,15 @@ class UV_HudVisorDraw : EventHandler
 		if (gamestate != GS_LEVEL) {
             return;  // Prevent drawing helmet in main menu with mods overriding Titlemap
 		}
-
+		
+		UpdateLightState(playerinf.mo.pos, playerinf.mo.Angle, playerinf.mo.Pitch);
+		
 		if (wasMenuOpened || globals.isSavegameJustLoaded || !initialPlayInitDone) {
 			globals.isSavegameJustLoaded = false;
 			wasMenuOpened = false;
 			InitPlayVars();
+			prevCombinedBrightnessScale = combinedBrightnessScale;
+			prevCombinedFullColorScale = combinedFullColorScale;
 			initialPlayInitDone = true;
 		}
 		
@@ -2017,7 +2025,7 @@ class UV_HudVisorDraw : EventHandler
 		if (startupAnimEnabled && startupVolume > 0 && level.time == STARTUP_BLACK_SOLID_TICKS - 8) {
 			S_StartSound("uvisor_startup", CHAN_AUTO, volume: startupVolume);
 		}
-		UpdateLightState(playerinf.mo.pos, playerinf.mo.Angle, playerinf.mo.Pitch);
+		
 		SetPlayerBlendColorAndAlpha();
 		SetStoredHealthArmor();
 		
@@ -3528,8 +3536,8 @@ class UV_HudVisorDraw : EventHandler
 	
 	void DoBreathingSound() {
 		if (prevBreathSoundChannel != breathSoundChannel
-        				|| prevBreathVolume != breathVolume
-        				|| prevBreathVoice != breathVoice) {
+				|| prevBreathVolume != breathVolume
+				|| prevBreathVoice != breathVoice) {
 			playerinf.mo.A_StopSound(prevBreathSoundChannel);  // restart to immediately see the difference
 		}
 		if (breathVolume <= 0
