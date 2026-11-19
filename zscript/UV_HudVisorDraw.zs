@@ -312,6 +312,7 @@ class UV_HudVisorDraw : EventHandler
 	ui double hudExpansionY;
 	ui double uiScaledMaxSwayX;
 	ui double uiScaledMaxSwayY;
+	ui bool isLessIntenseGridSway;
 	
 	ui int warningSoundBasisUIContext;
 	ui bool isGL_EnhancedNV;
@@ -1044,6 +1045,8 @@ class UV_HudVisorDraw : EventHandler
 		isGL_EnhancedNV = Cvar.GetCvar("gl_enhanced_nightvision", playerinf).GetBool();
 		
 		texScreenWiper = TexMan.CheckForTexture(commonGraphicsPath .. "screen_wiper.png");
+		
+		isLessIntenseGridSway = Cvar.GetCVar("uvisor_less_intense_grid_sway", playerinf).GetBool();
 	}
 	
 	ui String GetArmorGridTexturesPath() {
@@ -1073,9 +1076,14 @@ class UV_HudVisorDraw : EventHandler
 			uiScaledMaxSwayX = scaledMaxSwayX;
 			uiScaledMaxSwayY = scaledMaxSwayY;
 		}
-
-		uiSwayOffX_ArmorGrid = uiSwayOffX * 0.7; // to make it feel like an outer shell or something like that
-		uiSwayOffY_ArmorGrid = uiSwayOffY * 0.7;
+		
+		if (isLessIntenseGridSway) {
+			uiSwayOffX_ArmorGrid = uiSwayOffX * 0.7; // to make it feel like an outer shell or something like that
+			uiSwayOffY_ArmorGrid = uiSwayOffY * 0.7;
+		} else {
+			uiSwayOffX_ArmorGrid = uiSwayOffX;
+			uiSwayOffY_ArmorGrid = uiSwayOffY;
+		}
 	}
 	
 	ui void DrawStartupFade() {

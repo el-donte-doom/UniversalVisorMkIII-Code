@@ -356,10 +356,13 @@ OptionMenu "UV_SWAY_SHAKE" {
 	StaticText " "
 	Slider "$UVISOR_MAX_HORIZONTAL_SWAY_SHAKE", "uvisor_maxsway_x", 0, 15, 1, 0
 	Slider "$UVISOR_MAX_VERTICAL_SWAY_SHAKE", "uvisor_maxsway_y", 0, 15, 1, 0
+	UV_Tooltip ""
+	Option "$UVISOR_LESS_INTENSE_GRID_SWAY", "uvisor_less_intense_grid_sway", "OnOff"
+	UV_Tooltip "$UVISOR_LESS_INTENSE_GRID_SWAY_TIP"
 	StaticText " "
 	StaticText "$UVISOR_SWAYING_SUBTITLE", LightBlue
 	Option "$UVISOR_ENABLED", "uvisor_swaying", "OnOff"
-	Slider "$UVISOR_SWAY_SENSITIVITY", "uvisor_sway_sensitivity", 1.0, 2.0, 0.1, 1, "uvisor_swaying"
+	Slider "$UVISOR_SWAY_SENSITIVITY", "uvisor_sway_sensitivity", 1.0, 2.0, 0.1, 1, "uvisor_swaying"	
 	StaticText "-----", LightBlue
 	Slider "$UVISOR_CAMERA_SWAY_MULT_X", "uvisor_camera_sway_mult_x", 0.0, 2.0, 0.1, 1, "uvisor_swaying"
 	Slider "$UVISOR_CAMERA_SWAY_MULT_Y", "uvisor_camera_sway_mult_y", 0.0, 2.0, 0.1, 1, "uvisor_swaying"

@@ -129,6 +129,7 @@ user int uvisor_blood_detection_mode = 0;
 user bool uvisor_swaying = true;
 user float uvisor_maxsway_x = 15.0;
 user float uvisor_maxsway_y = 10.0;
+user bool uvisor_less_intense_grid_sway = false;
 
 user float uvisor_sway_sensitivity = 1.5;
 user float uvisor_camera_sway_mult_x = 1.0;

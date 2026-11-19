@@ -233,8 +233,10 @@ UVISOR_BLOOD_DETECTION_MODE_2 = "Blood-based";
 // Swaying and Shaking
 UVISOR_MENU_SWAY_SHAKE = "Swaying and Shaking";
 UVISOR_MENU_SWAY_SHAKE_INNER = "\nSwaying and Shaking";
-UVISOR_MAX_HORIZONTAL_SWAY_SHAKE = "Max Horizontal Sway or Shake";
-UVISOR_MAX_VERTICAL_SWAY_SHAKE = "Max Vertical Sway or Shake";
+UVISOR_MAX_HORIZONTAL_SWAY_SHAKE = "Max Horizontal Sway/Shake";
+UVISOR_MAX_VERTICAL_SWAY_SHAKE = "Max Vertical Sway/Shake";
+UVISOR_LESS_INTENSE_GRID_SWAY = "Less Intense Armor Grid Sway/Shake ⓘ";
+UVISOR_LESS_INTENSE_GRID_SWAY_TIP = "To make it feel like an outer shell";
 UVISOR_SWAYING_SUBTITLE = "----- Swaying -----";
 UVISOR_SWAY_SENSITIVITY = "Overall Sensitivity";
 UVISOR_CAMERA_SWAY_MULT_X = "Camera Sway X Multiplier";
@@ -246,7 +248,7 @@ UVISOR_MOVEMENT_SWAY_MULT_BOB = "Bob Sway Multiplier";
 UVISOR_BOB_SWAY_MODE = "Bob Sway Mode ⓘ";
 UVISOR_BOB_SWAY_MODE_0 = "Simulated With Controlled Frequency";
 UVISOR_BOB_SWAY_MODE_1 = "Controlled By Vanilla Bob";
-UVISOR_BOB_SWAY_MODE_TIP = "Simulated (default) can usually achieve slower paced bob. Vanilla bob sway depends on game bob amount (which works differently in mods)";
+UVISOR_BOB_SWAY_MODE_TIP = "Simulated (default) can usually achieve more subtle bob. Vanilla bob sway depends on game bob amount (which works differently in mods)";
 UVISOR_SIMULATED_BOB_FREQ = "Simulated Bob Frequency";
 UVISOR_RELATED_ZDOOM_OPTION = "ZDoom option related to Vanilla Bob:";
 UVISOR_CROUCH_SWAY = "Crouch Sway";
@@ -372,7 +374,7 @@ UVISOR_SHAPE_RECTANGULAR_SMALL = "Прямоугольная Малая";
 UVISOR_SHAPE_RECTANGULAR_BIG = "Прямоугольная Большая";
 UVISOR_SHAPE_RECTANGULAR_BIGGEST = "Прямоугольная Самая Большая";
 UVISOR_GRID_IDLE_ANIM_ENABLE = "Анимация Сетки Брони В Простое ⓘ";
-UVISOR_GRID_IDLE_ANIM_TIP = "Появляется случайно каждые 7-42 сек. Может уменьшить фпс (1-2 на слабом железе) в эти моменты";
+UVISOR_GRID_IDLE_ANIM_TIP = "Появляется случайно каждые 7-35 сек. Может уменьшить фпс (1-2 на слабом железе) в эти моменты";
 
 
 // Colors and Transparency
@@ -525,8 +527,10 @@ UVISOR_BLOOD_DETECTION_MODE_2 = "На Основе Крови";
 // Swaying and Shaking
 UVISOR_MENU_SWAY_SHAKE = "Покачивание и Тряска Шлема";
 UVISOR_MENU_SWAY_SHAKE_INNER = "\nПокачивание и Тряска Шлема";
-UVISOR_MAX_HORIZONTAL_SWAY_SHAKE = "Макс. Гориз. Покачивание и Тряска";
-UVISOR_MAX_VERTICAL_SWAY_SHAKE = "Макс. Верт. Покачивание и Тряска";
+UVISOR_MAX_HORIZONTAL_SWAY_SHAKE = "Макс. Гориз. Покачивание/Тряска";
+UVISOR_MAX_VERTICAL_SWAY_SHAKE = "Макс. Верт. Покачивание/Тряска";
+UVISOR_LESS_INTENSE_GRID_SWAY = "Менее Интенсивно Для Сетки Брони ⓘ";
+UVISOR_LESS_INTENSE_GRID_SWAY_TIP = "Чтобы она ощущалась как внешняя оболочка";
 UVISOR_SWAYING_SUBTITLE = "----- Покачивание -----";
 UVISOR_SWAY_SENSITIVITY = "Общая Чувствительность";
 UVISOR_CAMERA_SWAY_MULT_X = "Множитель Гориз. Покачивания Для Камеры";
@@ -538,7 +542,7 @@ UVISOR_MOVEMENT_SWAY_MULT_BOB = "Общий Множитель При Движе
 UVISOR_BOB_SWAY_MODE = "Режим Покачивания при Движении ⓘ";
 UVISOR_BOB_SWAY_MODE_0 = "Симуляция Движения с Настройкой Частоты";
 UVISOR_BOB_SWAY_MODE_1 = "На Основе Стандартного Движения Zdoom";
-UVISOR_BOB_SWAY_MODE_TIP = "Симуляция (дефолтный режим) обычно позволяет добиться более размеренного покачивания. 'На Основе Стандартного' зависит от Bob игры (ведёт себя по-разному в модах)";
+UVISOR_BOB_SWAY_MODE_TIP = "Симуляция (дефолтный режим) обычно позволяет добиться более аккуратного покачивания. 'На Основе Стандартного' зависит от Bob игры (ведёт себя по-разному в модах)";
 UVISOR_SIMULATED_BOB_FREQ = "Частота Для Симуляции";
 UVISOR_RELATED_ZDOOM_OPTION = "Настройка ZDoom, влияющая на Bob игры:";
 UVISOR_CROUCH_SWAY = "Покачивание от Приседания";
