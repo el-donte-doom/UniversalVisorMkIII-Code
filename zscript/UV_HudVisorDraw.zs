@@ -2402,7 +2402,7 @@ class UV_HudVisorDraw : EventHandler
 			invulnerableStr = "PowerInvulnerable";
 		}
 		if (globals.isDD_Loaded) {
-			nightVisionStr = "NightVision";
+			nightVisionStr = "PowerNightVisionMode";
 		} else {
 			nightVisionStr = "PowerLightamp";
 		}
