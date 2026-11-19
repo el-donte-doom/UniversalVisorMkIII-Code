@@ -34,7 +34,6 @@ class UV_HudVisorDraw : EventHandler
 	bool NV_PackInverseMapOn;
 	bool invulnerabilityOn;
 	bool isVanillaInvulernabilityOn;
-	bool isVanillaInvulernabilityBlinking;
 	String lastColormappedPowerup;
 	bool isLastColormappedPowerupBlinking;
 	bool isLastPowerupColomapped;
@@ -1699,7 +1698,7 @@ class UV_HudVisorDraw : EventHandler
 	}
 	
 	ui bool ShouldUseStencilStyle(UV_TextureTypes texType = -1) {
-		return (isVanillaInvulernabilityOn && !isVanillaInvulernabilityBlinking)
+		return (isVanillaInvulernabilityOn)
 			|| 
 			(NV_PackInverseMapOn 
 				&& !isLastPowerupColomapped 
@@ -2220,6 +2219,7 @@ class UV_HudVisorDraw : EventHandler
 		} else if (showBloodSplashesPlayContext && bloodDetectionMode == 0 && e.Thing.bIsMonster) {
 			if (!IsActorInLineOfSightAndNear(e.thing)) return;
 			if (isGlassDestroyed) return;
+			if (inVehicle) return;
 			string enemyClassName = e.thing.GetClassName();
 			if (e.thing.bloodColor == UNSET_COLOR && (e.thing.bNOBLOOD || e.thing.bNOBLOODDECALS)) {
 				if (!(globals.isDD_Loaded && enemyClassName.IndexOf("CYBORG") != -1) // Don't return if BD64 (except Lost Souls) or some enemies in DD
@@ -2387,7 +2387,6 @@ class UV_HudVisorDraw : EventHandler
 		NV_PackInverseMapOn = false;
 		invulnerabilityOn = false;
 		isVanillaInvulernabilityOn = false;
-		isVanillaInvulernabilityBlinking = false;
 		isDemonPlayer = false;
 		inMachineGun = false;
 		inVehicle = false;
@@ -2421,19 +2420,22 @@ class UV_HudVisorDraw : EventHandler
 					if (pow.isBlinking()) {
 						isLastColormappedPowerupBlinking = true;
 					}
-// 					console.printf("===== pow.Colormap: " .. pow.Colormap);
-// 					console.printf("lastColormappedPowerup: " .. lastColormappedPowerup);
 					isLastPowerupColomapped = true; // gets reset if not last
 				}
 				if (globals.isNightVisionPackLoaded && invItem is NVNightVisionInverseMapStr) {
 					NV_PackInverseMapOn = true; 
-				} else if (invItem is invulnerableStr) {
+				} else if (invItem is invulnerableStr && !pow.isBlinking()) {
+					invulnerabilityOn = true;
 					if (!pow.Colormap && !pow.GetBlend() && !globals.isPB_Loaded) {
 						isVanillaInvulernabilityOn = true;
-						if (pow.isBlinking()) {
-							isVanillaInvulernabilityBlinking = true;
-						}
 					}
+				} else if (invItem is "PowerInvisibility") {
+					invisEffectOn = true;
+				} else if (invItem is nightVisionStr) { // Night vision
+					nightVisionOn = true;
+					if (invItem is PB_NightVisionStr) {
+						PB_NightVisionOn = true;
+					} 
 				} else if (globals.isPB_Loaded) {
 					if (invItem.GetClassName() == PB_SpeedPowerupStr) {
 						powerupBlendColors.Push(Color(80, 255, 255, 25));
@@ -2441,36 +2443,28 @@ class UV_HudVisorDraw : EventHandler
 					if (invItem.GetClassName() == PB_QuadDamagePowerupStr) {
 						powerupBlendColors.Push(Color(80, 64, 0, 127));
 					}
+				} else if (invItem is heavyMachinegunStr) { // BD and UMES machine gun
+					inMachineGun = true;
+				} else if (!inVehicle) {  					// BD and UMES vehicles except machine gun
+					for (int i = 0; i < vehicleInvNames.Size(); i++) {
+						if (invItem is vehicleInvNames[i]) {
+							inVehicle = true;
+							break;
+						}
+					}
 				}
-			}
-			if (invItem is "PowerInvisibility") { // "is" means items extending this power, so mods are compatible
-				invisEffectOn = true;
-			} else if (invItem is "PowerIronfeet") { 	// Radsuits
+			} 
+			// Non-powerups (except radsuit for now)
+			else if (invItem is "PowerIronfeet") { // Radsuits
 				radSuitOn = true;
-			} else if (invItem is nightVisionStr) { 	// Night vision
-				nightVisionOn = true;
-				if (invItem is PB_NightVisionStr) {
-					PB_NightVisionOn = true;
-				} 
-			} else if (invItem is invulnerableStr) {
-				invulnerabilityOn = true;
-			} else if (IsDemonPlayerFlag(invItem)) { 	// BD demon morphs
+			} else if (IsDemonPlayerFlag(invItem)) { // BD demon morphs
 				isDemonPlayer = true;
 			} else if (globals.isPB_Loaded && invItem.GetClassName() == PB_HelmetAnimStr) {
 				doingHelmetEquipAnim = true;
-			}
-			else if (invItem is heavyMachinegunStr) { // BD and UMES machine gun
-				inMachineGun = true;
-			} else if (!inVehicle) {  					// BD and UMES vehicles except machine gun
-				for (int i = 0; i < vehicleInvNames.Size(); i++) {
-					if (invItem is vehicleInvNames[i]) {
-						inVehicle = true;
-						break;
-					}
-				}
-			}
+			} 
 			invItem = invItem.Inv; // Move to the next item
 		}
+		
 		invisEffectOn = invisEffectOn && transparencyEffectWhenInvis;
 		
 		if (isEnteringOrLeavingMachineGun()) {
@@ -2940,6 +2934,7 @@ class UV_HudVisorDraw : EventHandler
 		// Trigger enemy blood splash in based on blood actor mode
 		if (Cvar.GetCvar("uvisor_mod_enabled", playerinf).GetBool() == 0) return;
 		if (isGlassDestroyed) return;
+		if (inVehicle) return;
 		if (!showBloodSplashesPlayContext || bloodDetectionMode != 1 || !e.thing || e.thing.target == playerinf.mo ) return;
 		
 		bool isBlood = false;
