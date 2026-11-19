@@ -2926,7 +2926,7 @@ class UV_HudVisorDraw : EventHandler
 		prevGridIdleAlphaImage_2 = gridIdleAlphaImage_2;
 		// Select tick for the very first time
 		if (gridIdleNextTriggerTick <= 0) {
-			gridIdleNextTriggerTick = random(GRID_IDLE_CYCLE_TICKS, GRID_IDLE_CYCLE_TICKS * 6); // 7-42 sec
+			gridIdleNextTriggerTick = random(GRID_IDLE_CYCLE_TICKS, GRID_IDLE_CYCLE_TICKS * 5); // 7-35 sec
 		}
         if (gridIdleTimer >= gridIdleNextTriggerTick) {
             gridIdleTimer = 0;
