@@ -57,17 +57,17 @@ OptionMenu "UV_MENU_MAIN_TOGGLES" {
 	Title "$UVISOR_MENU_MAIN_TOGGLES_INNER"
 	StaticText " "
 	StaticText " "
-	Option "$UVISOR_SHOW_HELMET_PIECES", "uvisor_show_pieces", "OnOff"
-	Option "$UVISOR_SHOW_GLOW", "uvisor_show_glow", "OnOff"
-	Option "$UVISOR_SHOW_GLASS", "uvisor_show_glass", "OnOff"
-	Option "$UVISOR_SHOW_TACTICAL_OVERLAY", "uvisor_show_tactical_overlay", "OnOff"
-	Option "$UVISOR_SHOW_TACTICAL_MARKS", "uvisor_show_tactical_marks", "OnOff"
-	Option "$UVISOR_SHOW_ARMOR_GRID", "uvisor_show_armor_grid", "OnOff"
-	Option "$UVISOR_SHOW_VISOR_CRACKS", "uvisor_show_glass_cracks", "OnOff"
+	FlagOption "$UVISOR_SHOW_HELMET_PIECES", "uvisor_main_toggles_flags", "OnOff", 0
+	FlagOption "$UVISOR_SHOW_GLOW", "uvisor_main_toggles_flags", "OnOff", 1
+	FlagOption "$UVISOR_SHOW_GLASS", "uvisor_main_toggles_flags", "OnOff", 2
+	FlagOption "$UVISOR_SHOW_TACTICAL_OVERLAY", "uvisor_main_toggles_flags", "OnOff", 3
+	FlagOption "$UVISOR_SHOW_TACTICAL_MARKS", "uvisor_main_toggles_flags", "OnOff", 4
+	FlagOption "$UVISOR_SHOW_ARMOR_GRID", "uvisor_main_toggles_flags", "OnOff", 5
+	FlagOption "$UVISOR_SHOW_VISOR_CRACKS", "uvisor_main_toggles_flags", "OnOff", 6
 	UV_Tooltip ""
-	Option "$UVISOR_SHOW_SPLASHES", "uvisor_show_blood_splashes", "OnOff"
+	FlagOption "$UVISOR_SHOW_SPLASHES", "uvisor_main_toggles_flags", "OnOff", 7
 	UV_Tooltip "$UVISOR_SHOW_SPLASHES_TIP"
-	Option "$UVISOR_STARTUP_ENABLED", "uvisor_startup_anim_enabled", "OnOff"
+	FlagOption "$UVISOR_STARTUP_ENABLED", "uvisor_main_toggles_flags", "OnOff", 8
 	UV_Tooltip "$UVISOR_STARTUP_TIP"
 	StaticText " "
 	StaticText "-------------------------", LightBlue
@@ -224,22 +224,22 @@ OptionMenu "UV_MENU_TOGGLES" {
 	StaticText " "
 	StaticText " "
 	StaticText "$UVISOR_TOP_PART_SUBTITLE", LightBlue
-	Option "$UVISOR_HELMET_PIECE", "uvisor_show_part_top", "OnOff"
-	Option "$UVISOR_GLOW", "uvisor_show_glow_top", "OnOff"
-	Option "$UVISOR_GLASS", "uvisor_show_glass_top", "OnOff"
+	FlagOption "$UVISOR_HELMET_PIECE", "uvisor_separate_toggles_flags", "OnOff", 0
+	FlagOption "$UVISOR_GLOW", "uvisor_separate_toggles_flags", "OnOff", 1
+	FlagOption "$UVISOR_GLASS", "uvisor_separate_toggles_flags", "OnOff", 2
 	StaticText " "
 	StaticText "$UVISOR_BOTTOM_MIDDLE_PART_SUBTITLE", LightBlue
-	Option "$UVISOR_HELMET_PIECE", "uvisor_show_part_bottom", "OnOff"
-	Option "$UVISOR_GLOW", "uvisor_show_glow_bottom", "OnOff"
-	Option "$UVISOR_GLASS", "uvisor_show_glass_bottom", "OnOff"
+	FlagOption "$UVISOR_HELMET_PIECE", "uvisor_separate_toggles_flags", "OnOff", 3
+	FlagOption "$UVISOR_GLOW", "uvisor_separate_toggles_flags", "OnOff", 4
+	FlagOption "$UVISOR_GLASS", "uvisor_separate_toggles_flags", "OnOff", 5
 	StaticText " "
 	StaticText "$UVISOR_GLASS_SIDES_SUBTITLE", LightBlue
-	Option "$UVISOR_ENABLED", "uvisor_show_glass_sides", "YesNo"
+	FlagOption "$UVISOR_ENABLED", "uvisor_separate_toggles_flags", "OnOff", 6
 	StaticText " "
-	StaticText "$UVISOR_BOTTOM_CORNERS_PART_SUBTITLE", LightBlue
-	Option "$UVISOR_HELMET_PIECE", "uvisor_show_part_corners", "OnOff"
-	Option "$UVISOR_GLOW", "uvisor_show_glow_corners", "OnOff"
-	Option "$UVISOR_GLASS", "uvisor_show_glass_corners", "OnOff"
+ 	StaticText "$UVISOR_BOTTOM_CORNERS_PART_SUBTITLE", LightBlue
+	FlagOption "$UVISOR_HELMET_PIECE", "uvisor_separate_toggles_flags", "OnOff", 7
+	FlagOption "$UVISOR_GLOW", "uvisor_separate_toggles_flags", "OnOff", 8
+	FlagOption "$UVISOR_GLASS", "uvisor_separate_toggles_flags", "OnOff", 9
 	UV_Tooltip ""
 	StaticText "-----", LightBlue
 	Option "$UVISOR_AUTO_HIDE_CORNERS", "uvisor_auto_hide_corners_mode", "AutoHideCorners"

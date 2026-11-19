@@ -277,15 +277,7 @@ class UV_PresetHandler : StaticEventHandler
 			//  Keeping commented out gameplay cvars just in case
 // 		addCVarData('uvisor_mod_enabled');
 // 		addCVarData('uvisor_tex_res');
-		addCVarData('uvisor_show_pieces');
-		addCVarData('uvisor_show_glow');
-		addCVarData('uvisor_show_glass');
-		addCVarData('uvisor_show_tactical_overlay');
-		addCVarData('uvisor_show_tactical_marks');
-		addCVarData('uvisor_show_armor_grid');
-		addCVarData('uvisor_show_glass_cracks');
-		addCVarData('uvisor_show_blood_splashes');
-// 		addCVarData('uvisor_startup_anim_enabled');
+		addCVarData('uvisor_main_toggles_flags');
 		addCVarData('uvisor_style_helmet_top');
 		addCVarData('uvisor_style_helmet_bottom');
 		addCVarData('uvisor_style_helmet_corners');
@@ -319,16 +311,7 @@ class UV_PresetHandler : StaticEventHandler
 		addCVarData('uvisor_alpha_part_bottom');
 		addCVarData('uvisor_alpha_glow_bottom');
 		addCVarData('uvisor_alpha_glass_bottom');
-		addCVarData('uvisor_show_part_top');
-		addCVarData('uvisor_show_glow_top');
-		addCVarData('uvisor_show_glass_top');
-		addCVarData('uvisor_show_part_bottom');
-		addCVarData('uvisor_show_glow_bottom');
-		addCVarData('uvisor_show_glass_bottom');
-		addCVarData('uvisor_show_glass_sides');
-		addCVarData('uvisor_show_part_corners');
-		addCVarData('uvisor_show_glow_corners');
-		addCVarData('uvisor_show_glass_corners');
+		addCVarData('uvisor_separate_toggles_flags');
 // 		addCVarData('uvisor_auto_hide_corners_mode');
 // 		addCVarData('uvisor_auto_hide_corners_screensize');
 		addCVarData('uvisor_offset_top');

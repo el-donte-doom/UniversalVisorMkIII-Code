@@ -3,6 +3,33 @@
 // El Donte - total rewrite with much more functionality (Universal Visor Mk III)
 // generic name guy, Agent_Ash, CHEEKIBREEKI - original mod (Universal Visor Mk II)
 
+enum UV_MainTogglesFlags
+{
+    UV_ShowPieces          = 1 << 0,
+    UV_ShowGlow            = 1 << 1,
+    UV_ShowGlass		   = 1 << 2,
+    UV_ShowTacticalOverlay = 1 << 3,
+    UV_ShowTacticalMarks   = 1 << 4,
+    UV_ShowArmorGrid       = 1 << 5,
+    UV_ShowGlassCracks     = 1 << 6,
+    UV_ShowBloodSplashes   = 1 << 7,
+	UV_StartupAnimEnabled  = 1 << 8
+}
+
+enum UV_SeparateTogglesFlags
+{
+    UV_ShowPartTop		= 1 << 0,
+    UV_ShowGlowTop		= 1 << 1,
+    UV_ShowGlassTop		= 1 << 2,
+	UV_ShowPartBottom	= 1 << 3,
+    UV_ShowGlowBottom	= 1 << 4,
+    UV_ShowGlassBottom	= 1 << 5,
+	UV_ShowGlassSides	= 1 << 6,
+	UV_ShowPartCorners	= 1 << 7,
+    UV_ShowGlowCorners	= 1 << 8,
+    UV_ShowGlassCorners = 1 << 9
+}
+
 class UV_HudVisorDraw : EventHandler
 {	
 	///// COMMON VARS /////
@@ -20,7 +47,6 @@ class UV_HudVisorDraw : EventHandler
 	int previousHealth;
 	int bloodMaxCount;
 
-	bool startupAnimEnabled;
 	const STARTUP_BLACK_TICKS = 60;
 	const STARTUP_BLACK_SOLID_TICKS = 35;
 	
@@ -229,15 +255,7 @@ class UV_HudVisorDraw : EventHandler
 	ui float alphaGlassBottom;
 	ui float baseAlphaGlassBottom;
 	
-	ui bool showPartTop;
-	ui bool showGlowTop;
-	ui bool showGlassTop;
-	ui bool showPartBottom;
-	ui bool showGlowBottom;
-	ui bool showGlassBottom;
-	ui bool showPartCorners;
-	ui bool showGlowCorners;
-	ui bool showGlassCorners;
+	ui int separateTogglesFlags;
 	ui int autoHideCornersMode;
 	ui int autoHideCornersScreenSize;
 	ui bool showGlassSides;
@@ -324,6 +342,7 @@ class UV_HudVisorDraw : EventHandler
 	bool wasMenuOpened;
 	double scaleFactorWidthPlay;
 	double scaleFactorHeightPlay;
+	int mainTogglesFlagsPlay;
 	bool isGlassDestroyed;
 	bool hideGlassIfEmptyArmorPlayContext;
 	bool transparencyEffectWhenInvis;
@@ -494,7 +513,6 @@ class UV_HudVisorDraw : EventHandler
 	double prevGridIdleAlphaImage_2;
 	double gridIdleAlphaImage_2;
 	
-	bool showArmorGridPlay;
 	bool isArmorGridShownVar;
 	bool gridIdleAnimEnabled;
 	int armorGridDisplayModePlay;
@@ -584,7 +602,6 @@ class UV_HudVisorDraw : EventHandler
 	const BLOOD_MAX_TEXTURE_ID = 30;
 	int TexResPlayContext;
 	string CommonGraphicsPathPlayContext;
-	bool showBloodSplashesPlayContext;
 	int bloodFreq;
 	int bloodMaxInitDistance;
 	float bloodLifetime;
@@ -618,7 +635,6 @@ class UV_HudVisorDraw : EventHandler
 	int warningSoundChannel;
 	bool warningAmmo1Active;
 	bool warningAmmo2Active;
-	bool showGlassCracksPlayContext;
 	double cracksVolume;
 	double hitVolume;
 	double armorDepletedVolume;
@@ -794,7 +810,7 @@ class UV_HudVisorDraw : EventHandler
 			);
 		}
 
-		if (startupAnimEnabled && level.time <= STARTUP_BLACK_TICKS) {
+		if ((mainTogglesFlagsPlay & UV_StartupAnimEnabled) && level.time <= STARTUP_BLACK_TICKS) {
 			DrawStartupFade();
 		}
 	
@@ -880,18 +896,19 @@ class UV_HudVisorDraw : EventHandler
 		// Manual scaling and positioning, because we're not extending BaseStatusBar (to draw along with existing HUDs)
 		scaleFactorHeight = double(Screen.GetHeight()) / BASE_SCREEN_HEIGHT;
 		
-		showPieces = Cvar.GetCvar("uvisor_show_pieces", playerinf).GetBool();
-		showGlow = Cvar.GetCvar("uvisor_show_glow", playerinf).GetBool();
+		int mainTogglesFlagsUI = Cvar.GetCvar("uvisor_main_toggles_flags", playerinf).GetInt();
+		showPieces = mainTogglesFlagsUI & UV_ShowPieces;
+		showGlow = mainTogglesFlagsUI & UV_ShowGlow;
 		baseShowGlow = showGlow; // used to restore glow if it's hidden when no armor
-		showGlass = Cvar.GetCvar("uvisor_show_glass", playerinf).GetBool();
+		showGlass = mainTogglesFlagsUI & UV_ShowGlass;
 		baseShowGlass = showGlass;
-		showTacticalOverlay = Cvar.GetCvar("uvisor_show_tactical_overlay", playerinf).GetBool();
+		showTacticalOverlay = mainTogglesFlagsUI & UV_ShowTacticalOverlay;
 		baseShowTacticalOverlay = showTacticalOverlay;
-		showTacticalMarks = Cvar.GetCvar("uvisor_show_tactical_marks", playerinf).GetBool();
+		showTacticalMarks = mainTogglesFlagsUI & UV_ShowTacticalMarks;
 		baseShowTacticalMarks = showTacticalMarks;
-		showArmorGrid = Cvar.GetCvar("uvisor_show_armor_grid", playerinf).GetBool();
-		showGlassCracks = Cvar.GetCvar("uvisor_show_glass_cracks", playerinf).GetBool();
-		showBloodSplashes = Cvar.GetCvar("uvisor_show_blood_splashes", playerinf).GetBool();
+		showArmorGrid = mainTogglesFlagsUI & UV_ShowArmorGrid;
+		showGlassCracks = mainTogglesFlagsUI & UV_ShowGlassCracks;
+		showBloodSplashes = mainTogglesFlagsUI & UV_ShowBloodSplashes;
 		
 		styleTop = Cvar.GetCvar("uvisor_style_helmet_top", playerinf).GetInt();
 		styleBottom = Cvar.GetCvar("uvisor_style_helmet_bottom", playerinf).GetInt();
@@ -953,18 +970,9 @@ class UV_HudVisorDraw : EventHandler
 		alphaGlassBottom = Cvar.GetCvar("uvisor_alpha_glass_bottom", playerinf).GetFloat();
 		baseAlphaGlassBottom = alphaGlassBottom;
 		
-		showPartTop = Cvar.GetCvar("uvisor_show_part_top", playerinf).GetBool();
-		showGlowTop = Cvar.GetCvar("uvisor_show_glow_top", playerinf).GetBool();
-		showGlassTop = Cvar.GetCvar("uvisor_show_glass_top", playerinf).GetBool();
-		showPartBottom = Cvar.GetCvar("uvisor_show_part_bottom", playerinf).GetBool();
-		showGlowBottom = Cvar.GetCvar("uvisor_show_glow_bottom", playerinf).GetBool();
-		showGlassBottom = Cvar.GetCvar("uvisor_show_glass_bottom", playerinf).GetBool();
-		showPartCorners = Cvar.GetCvar("uvisor_show_part_corners", playerinf).GetBool();
-		showGlowCorners = Cvar.GetCvar("uvisor_show_glow_corners", playerinf).GetBool();
-		showGlassCorners = Cvar.GetCvar("uvisor_show_glass_corners", playerinf).GetBool();
+		separateTogglesFlags = Cvar.GetCvar("uvisor_separate_toggles_flags", playerinf).GetInt();
 		autoHideCornersMode = Cvar.GetCvar("uvisor_auto_hide_corners_mode", playerinf).GetInt(); 
 		autoHideCornersScreenSize = Cvar.GetCvar("uvisor_auto_hide_corners_screensize", playerinf).GetInt(); 
-		showGlassSides = Cvar.GetCvar("uvisor_show_glass_sides", playerinf).GetBool();
 
 		offsetTop = Cvar.GetCvar("uvisor_offset_top", playerinf).GetInt();
 		offsetBottom = Cvar.GetCvar("uvisor_offset_bottom", playerinf).GetInt();
@@ -1144,7 +1152,7 @@ class UV_HudVisorDraw : EventHandler
 		Color texColor = BlendColorWithEnvironmentAndPowerups(colorGlass, UV_HudVisorDraw.GLASS);
 		double texAlpha = alphaGlass;
 		double texAlphaBottom = overrideAlphaBottom ? alphaGlassBottom : alphaGlass;
-		if (showGlassSides && styleSideGlass != 0) {
+		if (separateTogglesFlags & UV_ShowGlassSides && styleSideGlass != 0) {
 			DrawHelmetTextureCustom(
 				UV_HudVisorDraw.GLASS,
 				texGlassSideLeft,
@@ -1162,7 +1170,7 @@ class UV_HudVisorDraw : EventHandler
 				alphaOverride: texAlpha
 			);
 		}
-		if (showGlassTop && styleTop != 0) {
+		if (separateTogglesFlags & UV_ShowGlassTop && styleTop != 0) {
 			DrawHelmetTextureCustom(
 				UV_HudVisorDraw.GLASS,
 				texGlassTop,
@@ -1172,7 +1180,7 @@ class UV_HudVisorDraw : EventHandler
 				alphaOverride: texAlpha
 			);
 		}
-		if (showGlassBottom && styleBottom != 0) {
+		if (separateTogglesFlags & UV_ShowGlassBottom && styleBottom != 0) {
 			DrawHelmetTextureCustom(
 				UV_HudVisorDraw.GLASS,
 				texGlassBottom,
@@ -1183,9 +1191,9 @@ class UV_HudVisorDraw : EventHandler
 				alphaOverride: texAlphaBottom
 			);
 		}
-		bool showPartCornersGlass = showGlassCorners && styleCorners != 0
+		bool showGlassCornersFinal = separateTogglesFlags & UV_ShowGlassCorners && styleCorners != 0
 			&& !(autoHideCornersMode == 2 && autoHideCornersScreenSize == screenSize);
-		if (showPartCornersGlass) {
+		if (showGlassCornersFinal) {
 			DrawHelmetTextureCustom(
 				UV_HudVisorDraw.GLASS,
 				texGlassCornerLeft, 
@@ -1255,7 +1263,7 @@ class UV_HudVisorDraw : EventHandler
 				);
 			}
 		}
-		if (showGlowTop && styleTop != 9 && styleTop != 0) { // if not Plain_Glass or None
+		if (separateTogglesFlags & UV_ShowGlowTop && styleTop != 9 && styleTop != 0) { // if not Plain_Glass or None
 			DrawHelmetTextureCustom(
 				UV_HudVisorDraw.GLOW,
 				texGlowTop, 
@@ -1265,7 +1273,7 @@ class UV_HudVisorDraw : EventHandler
 				alphaOverride: texAlpha
 			);
 		}
-		if (showGlowBottom && styleBottom != 7  && styleBottom != 0) { // if not Plain_Glass or None
+		if (separateTogglesFlags & UV_ShowGlowBottom && styleBottom != 7  && styleBottom != 0) { // if not Plain_Glass or None
 			DrawHelmetTextureCustom(
 				UV_HudVisorDraw.GLOW,
 				texGlowBottom, 
@@ -1276,9 +1284,9 @@ class UV_HudVisorDraw : EventHandler
 				alphaOverride: texAlphaBottom
 			);
 		}
-		bool showPartCornersGlow = showGlowCorners && styleCorners != 0
+		bool showGlowCornersFinal = (separateTogglesFlags & UV_ShowGlowCorners) && styleCorners != 0
 			&& !(autoHideCornersMode > 0 && autoHideCornersScreenSize == screenSize);
-		if (showPartCornersGlow) {
+		if (showGlowCornersFinal) {
 			DrawHelmetTextureCustom(
 				UV_HudVisorDraw.GLOW,
 				texGlowCornerLeft, 
@@ -1330,7 +1338,7 @@ class UV_HudVisorDraw : EventHandler
 				);
 			}
 		}
-		if (showPartTop && styleTop != 9 && styleTop != 0) { // if not Plain_Glass or None
+		if (separateTogglesFlags & UV_ShowPartTop && styleTop != 9 && styleTop != 0) { // if not Plain_Glass or None
 			DrawHelmetTextureCustom(
 				UV_HudVisorDraw.PART_TOP,
 				texPartTop, 
@@ -1339,7 +1347,7 @@ class UV_HudVisorDraw : EventHandler
 				offsetY: offsetTop
 			);
 		}
-		if (showPartBottom && styleBottom != 7 && styleBottom != 0) { // if not Plain_Glass or None
+		if (separateTogglesFlags & UV_ShowPartBottom && styleBottom != 7 && styleBottom != 0) { // if not Plain_Glass or None
 			Color texColorBottom = BlendColorWithEnvironmentAndPowerups(colorPartBottom, UV_HudVisorDraw.PART_BOTTOM);
 			DrawHelmetTextureCustom(
 				UV_HudVisorDraw.PART_BOTTOM,
@@ -1351,7 +1359,7 @@ class UV_HudVisorDraw : EventHandler
 				alphaOverride: overrideAlphaBottom ? alphaPartBottom : alphaParts
 			);
 		}
-		if (showPartCorners && styleCorners != 0) {
+		if (separateTogglesFlags & UV_ShowPartCorners && styleCorners != 0) {
 			Color texColorCorners = BlendColorWithEnvironmentAndPowerups(colorPartCorners, UV_HudVisorDraw.PART_CORNER);
 			DrawHelmetTextureCustom(
 				UV_HudVisorDraw.PART_CORNER,
@@ -1996,7 +2004,7 @@ class UV_HudVisorDraw : EventHandler
 			return;
 		}
 		
-		if (startupAnimEnabled && startupVolume > 0 && level.time == STARTUP_BLACK_SOLID_TICKS - 8) {
+		if ((mainTogglesFlagsPlay & UV_StartupAnimEnabled) && startupVolume > 0 && level.time == STARTUP_BLACK_SOLID_TICKS - 8) {
 			S_StartSound("uvisor_startup", CHAN_AUTO, volume: startupVolume);
 		}
 		
@@ -2005,7 +2013,7 @@ class UV_HudVisorDraw : EventHandler
 		
 		SetStoredHealthArmor();
 		
-		if (showBloodSplashesPlayContext) {
+		if (mainTogglesFlagsPlay & UV_ShowBloodSplashes) {
 			UpdateBloodSplashesData();
 		}
 		if (screenWiperAnimTicker > 0) {
@@ -2091,7 +2099,7 @@ class UV_HudVisorDraw : EventHandler
 			OldSwayOffY = 0;
 		}
 		
-		if (pData.cracksLevel > pData.prevCracksLevel && showGlassCracksPlayContext 
+		if (pData.cracksLevel > pData.prevCracksLevel && (mainTogglesFlagsPlay & UV_ShowGlassCracks)
 				&& cracksVolume > 0 && initalCracksUpdateDone && (prevCracksBasis == cracksBasis)) {
 			if (pData.cracksLevel == 5) {
 				if (! (cracksBasis == 1 && !hideGlassIfEmptyArmorPlayContext) ) {
@@ -2121,7 +2129,7 @@ class UV_HudVisorDraw : EventHandler
 	}
 	
 	void InitPlayVars() {
-		startupAnimEnabled = Cvar.GetCvar("uvisor_startup_anim_enabled", playerinf).GetBool();
+		mainTogglesFlagsPlay = Cvar.GetCvar("uvisor_main_toggles_flags", playerinf).GetInt();
 		helmetSwaying = Cvar.GetCvar("uvisor_swaying", playerinf).GetBool();
 		MaxSwayX = Clamp(Cvar.GetCVar("uvisor_maxsway_x", playerinf).GetFloat(), 0, 15);
 		MaxSwayY = Clamp(Cvar.GetCVar("uvisor_maxsway_y", playerinf).GetFloat(), 0, 15);
@@ -2157,7 +2165,6 @@ class UV_HudVisorDraw : EventHandler
 		pulseMode = Cvar.GetCvar("uvisor_glow_pulse_mode", playerinf).GetInt();
 		pulseSpeed = Cvar.GetCvar("uvisor_glow_pulse_speed", playerinf).GetFloat();
 		
-		showBloodSplashesPlayContext = Cvar.GetCvar("uvisor_show_blood_splashes", playerinf).GetBool();
 		bloodFreq = Cvar.GetCVar("uvisor_blood_freq", playerinf).GetInt();
 		bloodMaxInitDistance = Cvar.GetCVar("uvisor_blood_max_init_distance", playerinf).GetInt();
 		bloodLifetime = Cvar.GetCVar("uvisor_blood_lifetime", playerinf).GetFloat();
@@ -2172,8 +2179,6 @@ class UV_HudVisorDraw : EventHandler
 		paramsForIsVisible.maxDist = bloodMaxInitDistance + playerinf.mo.Radius;
 		
 		hideHelmetInThirdPerson = Cvar.GetCvar("uvisor_hide_helmet_in_third_person", playerinf).GetBool();
-			
-		showGlassCracksPlayContext = Cvar.GetCVar("uvisor_show_glass_cracks", playerinf).GetBool();
 		
 		warningSoundBasis = Cvar.GetCvar("uvisor_warning_sound_mode", playerinf).GetInt();
 		warningVolume = Cvar.GetCVar("uvisor_warning_volume", playerinf).GetFloat();
@@ -2190,7 +2195,6 @@ class UV_HudVisorDraw : EventHandler
 		
 		hideGlassIfEmptyArmorPlayContext = Cvar.GetCvar("uvisor_hide_glass_if_empty_armor", playerinf).GetBool();
 		
-		showArmorGridPlay = Cvar.GetCvar("uvisor_show_armor_grid", playerinf).GetInt();
 		gridIdleAnimEnabled = Cvar.GetCvar("uvisor_grid_idle_anim_enabled", playerinf).GetBool();
 		armorGridDisplayModePlay = Cvar.GetCvar("uvisor_armor_grid_display_mode", playerinf).GetInt();
 		armorGridDisableWhenOtherOverlay = Cvar.GetCVar("uvisor_grid_disable_when_radsuit_nightvis", playerinf).GetBool();
@@ -2230,7 +2234,7 @@ class UV_HudVisorDraw : EventHandler
 			if (totalDamage > 20 && IsShakingDamageType(e) || totalDamage > 40) {
 				ShakeIntensity = clamp(ShakeIntensity + totalDamage * ShakeSensitivity, 0.0, 24.0);
 			}
-		} else if (showBloodSplashesPlayContext && bloodDetectionMode == 0 && e.Thing.bIsMonster) {
+		} else if ((mainTogglesFlagsPlay & UV_ShowBloodSplashes) && bloodDetectionMode == 0 && e.Thing.bIsMonster) {
 			if (!IsActorInLineOfSightAndNear(e.thing)) return;
 			if (isGlassDestroyed) return;
 			if (inVehicle) return;
@@ -2818,7 +2822,7 @@ class UV_HudVisorDraw : EventHandler
 	}
 	
 	void SetArmorGridShownVar() {
-		isArmorGridShownVar = showArmorGridPlay && (
+		isArmorGridShownVar = (mainTogglesFlagsPlay & UV_ShowArmorGrid) && (
 					armorGridDisplayModePlay == 3 // "Always" mode
 						|| (armorGridDisplayModePlay == 0 && totalArmor > 0) 				// "When Armor > 0"
 						|| (armorGridDisplayModePlay == 1 && radSuitOn) 	 				// "When Radiation Suit Is On"
@@ -2954,7 +2958,8 @@ class UV_HudVisorDraw : EventHandler
 		if (Cvar.GetCvar("uvisor_mod_enabled", playerinf).GetBool() == 0) return;
 		if (isGlassDestroyed) return;
 		if (inVehicle) return;
-		if (!showBloodSplashesPlayContext || bloodDetectionMode != 1 || !e.thing || e.thing.target == playerinf.mo ) return;
+		if (!(mainTogglesFlagsPlay & UV_ShowBloodSplashes)) return;
+		if (bloodDetectionMode != 1 || !e.thing || e.thing.target == playerinf.mo ) return;
 		
 		bool isBlood = false;
 		for (int i = 0; i < bloodBaseTypes.Size(); i++) {

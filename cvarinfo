@@ -7,15 +7,7 @@ user int uvisor_tex_res = 0;
 //// Submenus
 
 // Main Toggles
-user bool uvisor_show_pieces = true;
-user bool uvisor_show_glow = true;
-user bool uvisor_show_glass = true;
-user bool uvisor_show_tactical_overlay = true;
-user bool uvisor_show_tactical_marks = true;
-user bool uvisor_show_armor_grid = true;
-user bool uvisor_show_glass_cracks = true;
-user bool uvisor_show_blood_splashes = true;
-user bool uvisor_startup_anim_enabled = true;
+user int uvisor_main_toggles_flags = 511;
 
 
 // Presets and Backup
@@ -32,6 +24,7 @@ user int uvisor_style_tactical_overlay_1 = 1;
 user int uvisor_style_tactical_overlay_2 = 0;
 user int uvisor_armor_grid_cell_type = 0;
 user int uvisor_armor_grid_shape_type = 0;
+user bool uvisor_grid_idle_anim_enabled = true;
 
 
 // Colors and Transparency
@@ -75,19 +68,9 @@ user float uvisor_width_scale_corners = 1.0;
 
 
 // Separate Toggles
-user bool uvisor_show_part_top = true;
-user bool uvisor_show_glow_top = true;
-user bool uvisor_show_glass_top = true;
-user bool uvisor_show_part_bottom = true;
-user bool uvisor_show_glow_bottom = true;
-user bool uvisor_show_glass_bottom = true;
-user bool uvisor_show_glass_sides = true;
-user bool uvisor_show_part_corners = true;
-user bool uvisor_show_glow_corners = true;
-user bool uvisor_show_glass_corners = true;
+user int uvisor_separate_toggles_flags = 1023;
 user int uvisor_auto_hide_corners_mode = 0;
 user int uvisor_auto_hide_corners_screensize = 11;
-user bool uvisor_grid_idle_anim_enabled = true;
 
 
 // Gameplay
