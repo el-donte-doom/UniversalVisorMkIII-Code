@@ -25,6 +25,9 @@ This project includes code from the following MIT-licensed mods:
 - [**UniversalFlexibleHUD (FlexiHUD)**](https://github.com/jekyllgrim/UniversalFlexibleHUD) by jekyllgrim  
   Copyright (c) 2023 jekyllgrim
 
+- [**libtooltipmenu**](https://github.com/ToxicFrog/doom-mods/tree/main/libtooltipmenu) by ToxicFrog  
+  Copyright (c) 2022 ToxicFrog
+
 ## Full Mod Download
 
 **[Universal Visor Mk III mod for Doom - ModDB](https://www.moddb.com/mods/universal-visor-mk-iii)**

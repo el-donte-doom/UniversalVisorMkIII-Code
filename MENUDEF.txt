@@ -51,6 +51,10 @@ OptionMenu "VisorOptions"
 
 // Main Toggles
 OptionMenu "UV_MENU_MAIN_TOGGLES" {
+	class UV_TooltipOptionMenu
+	UV_TooltipGeometry 0.028, 0.25, 0.18, 1.2, 0.6 // X, Y, width, horizontal margin, vertical margin, scale
+	UV_TooltipAppearance "", "", "uv_tt_bg"
+	DefaultSelection 4
 	Title "$UVISOR_MENU_MAIN_TOGGLES_INNER"
 	StaticText " "
 	StaticText " "
@@ -61,9 +65,11 @@ OptionMenu "UV_MENU_MAIN_TOGGLES" {
 	Option "$UVISOR_SHOW_TACTICAL_MARKS", "uvisor_show_tactical_marks", "OnOff"
 	Option "$UVISOR_SHOW_ARMOR_GRID", "uvisor_show_armor_grid", "OnOff"
 	Option "$UVISOR_SHOW_VISOR_CRACKS", "uvisor_show_glass_cracks", "OnOff"
+	UV_Tooltip ""
 	Option "$UVISOR_SHOW_SPLASHES", "uvisor_show_blood_splashes", "OnOff"
-	StaticText "$UVISOR_SHOW_SPLASHES_TIP", DarkGray	
+	UV_Tooltip "$UVISOR_SHOW_SPLASHES_TIP"
 	Option "$UVISOR_STARTUP_ENABLED", "uvisor_startup_anim_enabled", "OnOff"
+	UV_Tooltip "$UVISOR_STARTUP_TIP"
 	StaticText " "
 	StaticText "-------------------------", LightBlue
 	SafeCommand "$UVISOR_RESET_SUBMENU", uvisor_reset_main_toggles_menu, "$UVISOR_RESET_SUBMENU_PROMPT"
@@ -71,6 +77,9 @@ OptionMenu "UV_MENU_MAIN_TOGGLES" {
 
 // Presets and Backup
 OptionMenu "UV_MENU_PRESETS" {
+	class UV_TooltipOptionMenu
+	UV_TooltipGeometry 0.028, 0.38, 0.18, 1.2, 0.6
+	UV_TooltipAppearance "", "", "uv_tt_bg"
 	Title "$UVISOR_MENU_PRESETS_INNER"
 	StaticText " "
 	StaticText " "
@@ -100,6 +109,9 @@ OptionMenu "UV_MENU_PRESETS" {
 
 // Style Options
 OptionMenu "UV_MENU_STYLE" {
+	class UV_TooltipOptionMenu
+	UV_TooltipGeometry 0.028, 0.38, 0.18, 1.2, 0.6
+	UV_TooltipAppearance "", "", "uv_tt_bg"
 	Title "$UVISOR_MENU_STYLE_INNER"
 	StaticText " "
 	StaticText " "
@@ -116,8 +128,9 @@ OptionMenu "UV_MENU_STYLE" {
 	StaticText " "
 	Option "$UVISOR_ARMOR_GRID_CELL_TYPE", "uvisor_armor_grid_cell_type", "ArmorGridCellTypes"
 	Option "$UVISOR_ARMOR_GRID_SHAPE_TYPE", "uvisor_armor_grid_shape_type", "ArmorGridShapeTypes"
+	UV_Tooltip ""
 	Option "$UVISOR_GRID_IDLE_ANIM_ENABLE", "uvisor_grid_idle_anim_enabled", "OnOff"
-	StaticText "$UVISOR_GRID_IDLE_ANIM_TIP", DarkGray
+	UV_Tooltip "$UVISOR_GRID_IDLE_ANIM_TIP"
 	StaticText " "
 	StaticText "-------------------------", LightBlue
 	SafeCommand "$UVISOR_RESET_SUBMENU", uvisor_reset_style_menu, "$UVISOR_RESET_SUBMENU_PROMPT"
@@ -125,6 +138,9 @@ OptionMenu "UV_MENU_STYLE" {
 
 // Colors and Transparency
 OptionMenu "UV_MENU_COLORS" {
+	class UV_TooltipOptionMenu
+	UV_TooltipGeometry 0.028, 0.38, 0.18, 1.2, 0.6
+	UV_TooltipAppearance "", "", "uv_tt_bg"
 	Title "$UVISOR_MENU_COLORS_INNER"
 	StaticText " "
 	StaticText " "
@@ -137,8 +153,9 @@ OptionMenu "UV_MENU_COLORS" {
 	ColorPicker "$UVISOR_COLOR_PART_CORNERS", "uvisor_color_part_corners"
 	StaticText "-----", LightBlue
 	ColorPicker "$UVISOR_GLOW", "uvisor_color_glow"
+	UV_Tooltip ""
 	Option "$UVISOR_GLOW_RENDER_STYLE", "uvisor_translucent_glow_style", "GlowRenderStyles"
-	StaticText "$UVISOR_GLOW_RENDER_TIP", DarkGray
+	UV_Tooltip "$UVISOR_GLOW_RENDER_TIP"
 	Option "$UVISOR_SYNC_GLOW_GLASS", "uvisor_sync_glow_glass", "YesNo"
 	StaticText "-----", LightBlue
 	ColorPicker "$UVISOR_GLASS", "uvisor_color_glass"
@@ -165,15 +182,14 @@ OptionMenu "UV_MENU_COLORS" {
 	Slider "$UVISOR_BOTTOM_MIDDLE_PIECE", "uvisor_alpha_part_bottom", 0.0, 1.0, 0.05, 2, "uvisor_override_alpha_bottom"
 	Slider "$UVISOR_BOTTOM_MIDDLE_GLOW", "uvisor_alpha_glow_bottom", 0.0, 1.0, 0.05, 2, "uvisor_override_alpha_bottom"
 	Slider "$UVISOR_BOTTOM_MIDDLE_GLASS", "uvisor_alpha_glass_bottom", 0.0, 1.0, 0.05, 2, "uvisor_override_alpha_bottom"
+	UV_Tooltip ""
 	StaticText " "
 	StaticText "$UVISOR_GAMEPLAY_COLORS_SUBTITLE", LightBlue
-	StaticText "$UVISOR_GAMEPLAY_COLORS_TIP_1", DarkGray
-	StaticText "$UVISOR_GAMEPLAY_COLORS_TIP_2", DarkGray
-	StaticText "$UVISOR_GAMEPLAY_COLORS_TIP_3", DarkGray
 	ColorPicker "$UVISOR_GAMEPLAY_COLORS_STEP_1", "uvisor_gameplay_color_step_1"
 	ColorPicker "$UVISOR_GAMEPLAY_COLORS_STEP_2", "uvisor_gameplay_color_step_2"
 	ColorPicker "$UVISOR_GAMEPLAY_COLORS_STEP_3", "uvisor_gameplay_color_step_3"
 	ColorPicker "$UVISOR_GAMEPLAY_COLORS_STEP_4", "uvisor_gameplay_color_step_4"
+	UV_Tooltip "$UVISOR_GAMEPLAY_COLORS_TIP"
 	StaticText " "
 	StaticText "-------------------------", LightBlue
 	SafeCommand "$UVISOR_RESET_SUBMENU", uvisor_reset_colors_menu, "$UVISOR_RESET_SUBMENU_PROMPT"
@@ -181,6 +197,9 @@ OptionMenu "UV_MENU_COLORS" {
 
 // Offsets, Scaling
 OptionMenu "UV_MENU_OFFSETS_SIZES" {
+	class UV_TooltipOptionMenu
+	UV_TooltipGeometry 0.028, 0.38, 0.18, 1.2, 0.6
+	UV_TooltipAppearance "", "", "uv_tt_bg"
 	Title "$UVISOR_MENU_OFFSETS_SIZES_INNER"
 	StaticText " "
 	StaticText " "
@@ -202,6 +221,9 @@ OptionMenu "UV_MENU_OFFSETS_SIZES" {
 
 // Separate Toggles
 OptionMenu "UV_MENU_TOGGLES" {
+	class UV_TooltipOptionMenu
+	UV_TooltipGeometry 0.028, 0.38, 0.18, 1.2, 0.6
+	UV_TooltipAppearance "", "", "uv_tt_bg"
 	Title "$UVISOR_MENU_TOGGLES_INNER"
 	StaticText " "
 	StaticText " "
@@ -222,11 +244,12 @@ OptionMenu "UV_MENU_TOGGLES" {
 	Option "$UVISOR_HELMET_PIECE", "uvisor_show_part_corners", "OnOff"
 	Option "$UVISOR_GLOW", "uvisor_show_glow_corners", "OnOff"
 	Option "$UVISOR_GLASS", "uvisor_show_glass_corners", "OnOff"
+	UV_Tooltip ""
 	StaticText "-----", LightBlue
 	Option "$UVISOR_AUTO_HIDE_CORNERS", "uvisor_auto_hide_corners_mode", "AutoHideCorners"
+	UV_Tooltip "$UVISOR_AUTO_HIDE_CORNERS_TIP"
 	Slider "$UVISOR_SCREENSIZE_CORNERS", "uvisor_auto_hide_corners_screensize", 3, 12, 1, 0
-	StaticText "$UVISOR_AUTO_HIDE_CORNERS_TIP", DarkGray
-	StaticText "$UVISOR_SCREENSIZE_TIP", DarkGray
+	UV_Tooltip "$UVISOR_SCREENSIZE_TIP"
 	StaticText "$UVISOR_RELATED_ZDOOM_OPTIONS", DarkGray
 	Slider "$DSPLYMNU_SCREENSIZE", "screenblocks", 3.0, 12.0, 1.0, 0
 	Control    "$CNTRLMNU_DISPLAY_INC"     , "sizeup"
@@ -238,6 +261,9 @@ OptionMenu "UV_MENU_TOGGLES" {
 
 // Gameplay
 OptionMenu "UV_GAMEPLAY" {
+	class UV_TooltipOptionMenu
+	UV_TooltipGeometry 0.028, 0.38, 0.18, 1.2, 0.9
+	UV_TooltipAppearance "", "", "uv_tt_bg"
 	Title "$UVISOR_MENU_GAMEPLAY_INNER"
 	StaticText " "
 	StaticText " "
@@ -245,26 +271,22 @@ OptionMenu "UV_GAMEPLAY" {
 
 	StaticText " "
 	StaticText "$UVISOR_GLOW_GLASS_BASIS_SUBTITLE", LightBlue
-	StaticText "$UVISOR_GLOW_GLASS_BASIS_TIP_1", DarkGray
-	Option "$UVISOR_GLOW", "uvisor_gameplay_color_basis_glow", "GameplayColorBasis"
-	StaticText "$UVISOR_GLOW_GLASS_BASIS_TIP_2", DarkGray
-	Option "$UVISOR_GLASS", "uvisor_gameplay_color_basis_glass", "GameplayColorBasis"
-	StaticText "$UVISOR_AMMO_TYPE_TIP_1", DarkGray
-	StaticText "$UVISOR_AMMO_TYPE_TIP_2", DarkGray
-	StaticText "$UVISOR_AMMO_TYPE_TIP_3", DarkGray
-	StaticText "$UVISOR_AMMO_TYPE_TIP_4", DarkGray
-	StaticText "$UVISOR_AMMO_TYPE_TIP_5", DarkGray
+	Option "$UVISOR_GLOW_WITH_TIP", "uvisor_gameplay_color_basis_glow", "GameplayColorBasis"
+	Option "$UVISOR_GLASS_WITH_TIP", "uvisor_gameplay_color_basis_glass", "GameplayColorBasis"
+	UV_Tooltip "$UVISOR_GLOW_GLASS_BASIS_TIP"
+	UV_Tooltip " "
+	UV_Tooltip "$UVISOR_AMMO_TYPES_TIP"
 	StaticText " "
 	StaticText "$UVISOR_VISOR_CRACKS_SUBTITLE", LightBlue
-	Option "$UVISOR_BASIS", "uvisor_cracks_basis", "VisorCracksBasis"
-	StaticText "$UVISOR_VISOR_CRACKS_STEPS_TIP", DarkGray
+	Option "$UVISOR_BASIS_WITH_TIP", "uvisor_cracks_basis", "VisorCracksBasis"
+	UV_Tooltip "$UVISOR_VISOR_CRACKS_STEPS_TIP"
 	StaticText " "
 	StaticText "$UVISOR_GLASS_GLOW_DESTR_SUBTITLE", LightBlue
 	Option "$UVISOR_HIDE_GLOW_NO_ARMOR", "uvisor_hide_glow_if_empty_armor", "YesNo"
 	Option "$UVISOR_HIDE_GLASS_NO_ARMOR", "uvisor_hide_glass_if_empty_armor", "YesNo"
+	UV_Tooltip ""
 	Option "$UVISOR_ANIMATED_GLASS_DESTR", "uvisor_hitfeedback_if_empty_armor", "YesNo", "uvisor_hide_glass_if_empty_armor"
-	StaticText "$UVISOR_ANIMATED_GLASS_DESTR_TIP_1", DarkGray
-	StaticText "$UVISOR_ANIMATED_GLASS_DESTR_TIP_2", DarkGray
+	UV_Tooltip "$UVISOR_ANIMATED_GLASS_DESTR_TIP"
 	StaticText " "
 	StaticText "$UVISOR_GLOW_PULSE_SUBTITLE", LightBlue
 	Option "$UVISOR_MODE", "uvisor_glow_pulse_mode", "PulseModes"
@@ -273,13 +295,13 @@ OptionMenu "UV_GAMEPLAY" {
 	StaticText "$UVISOR_ARMOR_GRID_SUBTITLE", LightBlue
 	Option "$UVISOR_DISPLAY_MODE", "uvisor_armor_grid_display_mode", "ArmorGridDisplayModes"
 	Option "$UVISOR_GRID_COLOR_BASIS", "uvisor_gameplay_color_basis_armor_grid", "ArmorGridColorBasis"
+	UV_Tooltip ""
 	Option "$UVISOR_POWERS_OVERRIDE_GRID_COLOR", "uvisor_powers_overrides_grid_color_mode", "PowersOverrideColorMode"
-	StaticText "$UVISOR_POWERS_OVERRIDE_GRID_COLOR_TIP", DarkGray
+	UV_Tooltip "$UVISOR_POWERS_OVERRIDE_GRID_COLOR_TIP"
 	Option "$UVISOR_GRID_TRANSPARENCY_BASIS", "uvisor_gameplay_alpha_basis_armor_grid", "ArmorGridAlphaBasis"
-	StaticText "$UVISOR_GRID_TRANSPARENCY_BASIS_TIP_1", DarkGray
-	StaticText "$UVISOR_GRID_TRANSPARENCY_BASIS_TIP_2", DarkGray
-	Option "$UVISOR_GRID_DISABLE_WHEN_RADSUIT_NIGHTVISION", "uvisor_grid_disable_when_radsuit_nightvis", "YesNo"
-	StaticText "$UVISOR_GRID_DISABLE_WHEN_RADSUIT_NIGHTVISION_TIP", DarkGray
+	UV_Tooltip "$UVISOR_GRID_TRANSPARENCY_BASIS_TIP"
+	Option "$UVISOR_GRID_DISABLE_WHEN_RADSUIT_NV", "uvisor_grid_disable_when_radsuit_nightvis", "YesNo"
+	UV_Tooltip "$UVISOR_GRID_DISABLE_WHEN_RADSUIT_NV_TIP"
 	StaticText " "
 	StaticText "$UVISOR_OTHER_SUBTITLE", LightBlue
 	Control "$UVISOR_HOTKEY_TO_ENABLE_DISABLE_MOD", "uvisor_enable_disable"
@@ -292,6 +314,9 @@ OptionMenu "UV_GAMEPLAY" {
 
 // Blood On Visor
 OptionMenu "UV_BLOOD_SPLASHES" {
+	class UV_TooltipOptionMenu
+	UV_TooltipGeometry 0.028, 0.38, 0.18, 1.2, 0.6
+	UV_TooltipAppearance "", "", "uv_tt_bg"
 	Title "$UVISOR_MENU_BLOOD_SPLASHES_INNER"
 	StaticText " "
 	StaticText " "
@@ -299,28 +324,27 @@ OptionMenu "UV_BLOOD_SPLASHES" {
 	StaticText "$UVISOR_SPLASHES_DISABLED_TIP", DarkGray
 	StaticText " "
 	Slider "$UVISOR_SPLASHES_TRIGGER_CHANCE", "uvisor_blood_freq", 10, 300, 10, 0
-	StaticText "$UVISOR_SPLASHES_TRIGGER_CHANCE_TIP", DarkGray
+	UV_Tooltip "$UVISOR_SPLASHES_TRIGGER_CHANCE_TIP"
 	Slider "$UVISOR_SPLASHES_MAX_DISTANCE", "uvisor_blood_max_init_distance", 60, 180, 5, 1
-	StaticText "$UVISOR_SPLASHES_MAX_DISTANCE_TIP", DarkGray
+	UV_Tooltip "$UVISOR_SPLASHES_MAX_DISTANCE_TIP"
 	Slider "$UVISOR_SPLASHES_SIZE", "uvisor_blood_size", 0.1, 2.0, 0.1, 1
-	StaticText "$UVISOR_SPLASHES_SIZE_TIP", DarkGray
+	UV_Tooltip "$UVISOR_SPLASHES_SIZE_TIP"
 	Slider "$UVISOR_MAX_BLOOD_TEXTURES", "uvisor_blood_max_count", 5, 50, 1, 0
-	StaticText "$UVISOR_MAX_BLOOD_TEXTURES_TIP", DarkGray
+	UV_Tooltip "$UVISOR_MAX_BLOOD_TEXTURES_TIP"
 	Slider "$UVISOR_SPLASHES_LIFETIME", "uvisor_blood_lifetime", 0, 60, 0.5, 1
-	StaticText "$UVISOR_SPLASHES_LIFETIME_0_TIP", DarkGray
+	UV_Tooltip "$UVISOR_SPLASHES_LIFETIME_0_TIP"
 	Option "$UVISOR_SPLASHES_VANISH", "uvisor_blood_vanishes", "YesNo"
-	StaticText "$UVISOR_SPLASHES_VANISH_TIP", DarkGray
+	UV_Tooltip "$UVISOR_SPLASHES_VANISH_TIP"
 	Option "$UVISOR_WIPER_MODE", "uvisor_screen_wiper_mode", "AutoScreenWiperModes"
-	StaticText "$UVISOR_WIPER_MODE_TIP", DarkGray
+	UV_Tooltip "$UVISOR_WIPER_MODE_TIP"
 	Control "$UVISOR_WIPER_HOTKEY", "uvisor_start_screen_wiper"
+	UV_Tooltip ""
 	Slider "$UVISOR_BLOOD_DEFAULT_SATURATION_SHIFT", "uvisor_blood_default_saturation_shift", -100, 100, 5, 0
-	StaticText "$UVISOR_BLOOD_DEFAULT_SATURATION_SHIFT_TIP_1", DarkGray
-	StaticText "$UVISOR_BLOOD_DEFAULT_SATURATION_SHIFT_TIP_2", DarkGray
+	UV_Tooltip "$UVISOR_BLOOD_DEFAULT_SATURATION_SHIFT_TIP"
 	Option "$UVISOR_FAMILY_FRIENDLY_BLOOD_COLORS", "uvisor_blood_family_friendly_colors", "OnOff"
+	UV_Tooltip ""
 	Option "$UVISOR_BLOOD_DETECTION_MODE", "uvisor_blood_detection_mode", "BloodDetectionModes"
-	StaticText "$UVISOR_BLOOD_DETECTION_MODE_TIP_1", DarkGray
-	StaticText "$UVISOR_BLOOD_DETECTION_MODE_TIP_2", DarkGray
-	StaticText "$UVISOR_BLOOD_DETECTION_MODE_TIP_3", DarkGray
+	UV_Tooltip "$UVISOR_BLOOD_DETECTION_MODE_TIP"
 	StaticText " "
 	StaticText "-------------------------", LightBlue
 	SafeCommand "$UVISOR_RESET_SUBMENU", uvisor_reset_blood_menu, "$UVISOR_RESET_SUBMENU_PROMPT"
@@ -328,6 +352,9 @@ OptionMenu "UV_BLOOD_SPLASHES" {
 
 // Swaying and Shaking
 OptionMenu "UV_SWAY_SHAKE" {
+	class UV_TooltipOptionMenu
+	UV_TooltipGeometry 0.028, 0.38, 0.18, 1.2, 0.6
+	UV_TooltipAppearance "", "", "uv_tt_bg"
 	Title "$UVISOR_MENU_SWAY_SHAKE_INNER"
 	StaticText " "
 	StaticText " "
@@ -345,9 +372,10 @@ OptionMenu "UV_SWAY_SHAKE" {
 	Slider "$UVISOR_MOVEMENT_SWAY_MULT_X", "uvisor_movement_sway_mult_x", 0, 0.6, 0.05, 2, "uvisor_swaying"
 	Slider "$UVISOR_MOVEMENT_SWAY_MULT_Y", "uvisor_movement_sway_mult_y", 0, 0.4, 0.05, 2, "uvisor_swaying"
 	Slider "$UVISOR_MOVEMENT_SWAY_MULT_BOB", "uvisor_movement_sway_mult_bob", 0, 1.0, 0.05, 2, "uvisor_swaying"
+	UV_Tooltip ""
 	Option "$UVISOR_BOB_SWAY_MODE", "uvisor_bob_sway_mode", "BobModes", "uvisor_swaying"
+	UV_Tooltip "$UVISOR_BOB_SWAY_MODE_TIP"
 	Slider "$UVISOR_SIMULATED_BOB_FREQ", "uvisor_bob_sway_freq", 0.1, 3.0, 0.05, 2, "uvisor_swaying"
-	StaticText "$UVISOR_VANILLA_BOB_TIP", DarkGray
 	StaticText "$UVISOR_RELATED_ZDOOM_OPTION", DarkGray
 	Slider "$DSPLYMNU_MOVEBOB",			"movebob", 0, 1.0, 0.05, 2
 	StaticText "-----", LightBlue
@@ -356,10 +384,11 @@ OptionMenu "UV_SWAY_SHAKE" {
 	StaticText "-----", LightBlue
 	Option "$UVISOR_JUMP_SWAY", "uvisor_jump_sway", "OnOff", "uvisor_swaying"
 	Slider "$UVISOR_JUMP_SWAY_MULT", "uvisor_jump_sway_intensity", 0.1, 1.0, 0.1, 1, "uvisor_swaying"
+	UV_Tooltip ""
 	StaticText ""
 	StaticText "$UVISOR_SHAKING_SUBTITLE", LightBlue
-	Option "$UVISOR_ENABLED", "uvisor_shaking", "OnOff"
-	StaticText "$UVISOR_SHAKING_TIP", DarkGray
+	Option "$UVISOR_ENABLED_WITH_TIP", "uvisor_shaking", "OnOff"
+	UV_Tooltip "$UVISOR_SHAKING_TIP"
 	Slider "$UVISOR_SENSITIVITY", "uvisor_shaking_sensitivity", 0.1, 0.5, 0.1, 1, "uvisor_shaking"
 	StaticText " "
 	StaticText "-------------------------", LightBlue
@@ -368,6 +397,9 @@ OptionMenu "UV_SWAY_SHAKE" {
 
 // Sounds
 OptionMenu "UV_SOUNDS" {
+	class UV_TooltipOptionMenu
+	UV_TooltipGeometry 0.028, 0.38, 0.18, 1.2, 0.6
+	UV_TooltipAppearance "", "", "uv_tt_bg"
 	Title "$UVISOR_SOUNDS_INNER"
 	StaticText " "
 	StaticText " "
@@ -379,16 +411,18 @@ OptionMenu "UV_SOUNDS" {
 	Option "$UVISOR_DISABLE_WHEN_NO_GLASS", "uvisor_breath_disable_if_no_glass", "YesNo"
 	Option "$UVISOR_BREATH_VOICE_TYPE", "uvisor_breath_voice", "BreathVoices"
 	Slider "$UVISOR_VOLUME", "uvisor_breath_volume", 0, 1.0, 0.1, 1
+	UV_Tooltip ""
 	Slider "$UVISOR_SOUND_CHANNEL", "uvisor_breath_sound_channel", 20, 255, 1, 0
-	StaticText "$UVISOR_SOUND_CHANNEL_TIP", DarkGray
+	UV_Tooltip "$UVISOR_SOUND_CHANNEL_TIP"
 	StaticText " "
 	StaticText "$UVISOR_WARNING_SOUND_SUBTITLE", LightBlue
-	StaticText "$UVISOR_WARNING_SOUND_TIP_1", DarkGray
-	StaticText "$UVISOR_WARNING_SOUND_TIP_2", DarkGray
-	Option "$UVISOR_BASIS", "uvisor_warning_sound_mode", "WarningBasis"
+	StaticText "$UVISOR_WARNING_SOUND_TIP", DarkGray
+	Option "$UVISOR_BASIS_WITH_TIP", "uvisor_warning_sound_mode", "WarningBasis"
+	UV_Tooltip "$UVISOR_AMMO_TYPES_TIP"
 	Slider "$UVISOR_VOLUME", "uvisor_warning_volume", 0, 1.0, 0.1, 1
+	UV_Tooltip ""
 	Slider "$UVISOR_SOUND_CHANNEL", "uvisor_warning_sound_channel", 20, 255, 1, 0
-	StaticText "$UVISOR_SOUND_CHANNEL_TIP", DarkGray
+	UV_Tooltip "$UVISOR_SOUND_CHANNEL_TIP"
 	StaticText " "
 	StaticText "$UVISOR_DEPLETED_ARMOR_SUBTITLE", LightBlue
 	StaticText "$UVISOR_DEPLETED_ARMOR_SOUND_TIP", DarkGray
