@@ -54,7 +54,6 @@ OptionMenu "UV_MENU_MAIN_TOGGLES" {
 	class UV_TooltipOptionMenu
 	UV_TooltipGeometry 0.028, 0.25, 0.18, 1.2, 0.6 // X, Y, width, horizontal margin, vertical margin, scale
 	UV_TooltipAppearance "", "", "uv_tt_bg"
-	DefaultSelection 4
 	Title "$UVISOR_MENU_MAIN_TOGGLES_INNER"
 	StaticText " "
 	StaticText " "
@@ -77,9 +76,6 @@ OptionMenu "UV_MENU_MAIN_TOGGLES" {
 
 // Presets and Backup
 OptionMenu "UV_MENU_PRESETS" {
-	class UV_TooltipOptionMenu
-	UV_TooltipGeometry 0.028, 0.38, 0.18, 1.2, 0.6
-	UV_TooltipAppearance "", "", "uv_tt_bg"
 	Title "$UVISOR_MENU_PRESETS_INNER"
 	StaticText " "
 	StaticText " "
