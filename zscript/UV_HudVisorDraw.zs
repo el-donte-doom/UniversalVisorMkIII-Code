@@ -35,6 +35,7 @@ class UV_HudVisorDraw : EventHandler
 	bool invulnerabilityOn;
 	bool isVanillaInvulernabilityOn;
 	String lastColormappedPowerup;
+	Color radsuitColor;
 	bool isLastColormappedPowerupBlinking;
 	bool isLastPowerupColomapped;
 	bool isKnownColormapActive;
@@ -1788,6 +1789,11 @@ class UV_HudVisorDraw : EventHandler
 		if (combPlayerBlendAndPowerupBlendColor && effectiveBlendAlpha) { // if Powerup.Color or A_SetBlend()
 			newColor = BlendColors(newColor, combPlayerBlendAndPowerupBlendColor, effectiveBlendAlpha);
 		}
+		if (radsuitOn && radsuitColor && 
+			(texType == -1 || texType == UV_HudVisorDraw.ARMOR_GRID || texType == UV_HudVisorDraw.SCREEN_WIPER)) {
+			// only blood, armor grid, screen wiper
+			newColor = BlendColors(newColor, radsuitColor, double(radsuitColor.a) / 255);
+		}
 		
 		if (!isAffectedByEnvironment) {
 			return newColor;
@@ -2393,6 +2399,7 @@ class UV_HudVisorDraw : EventHandler
 		doingHelmetEquipAnim = false;
 		isLastPowerupColomapped = false;
 		lastColormappedPowerup = "";
+		radsuitColor = UNSET_COLOR;
 		powerupBlendColors.Clear();
 		effectiveBlendAlpha = 0.0;
 		if (globals.isPB_Loaded) {
@@ -2406,12 +2413,16 @@ class UV_HudVisorDraw : EventHandler
 			nightVisionStr = "PowerLightamp";
 		}
 		while (invItem != null) {
-			if (invItem is "Powerup" && !(invItem is "PowerIronfeet")) { // not radsuit
+			if (invItem is "Powerup") { // not radsuit
 				isLastPowerupColomapped = false;
 				isLastColormappedPowerupBlinking = false;
 				Powerup pow = Powerup(invItem);
 				if (pow.GetBlend()) { // Powerup.Color actor property
-					powerupBlendColors.Push(pow.GetBlend());
+					if (invItem is "PowerIronfeet") {
+						radsuitColor = pow.GetBlend();
+					} else {
+						powerupBlendColors.Push(pow.GetBlend());
+					}
 				}
 				if (pow.Colormap && pow.Colormap != -1) { 
 					// Based on Powerup.Colormap actor property, but we can get only its dynamic id here (unreliable if multiple mods loaded)
@@ -2429,6 +2440,8 @@ class UV_HudVisorDraw : EventHandler
 					if (!pow.Colormap && !pow.GetBlend() && !globals.isPB_Loaded) {
 						isVanillaInvulernabilityOn = true;
 					}
+				} else if (invItem is "PowerIronfeet") { // Radsuits
+					radSuitOn = true;
 				} else if (invItem is "PowerInvisibility") {
 					invisEffectOn = true;
 				} else if (invItem is nightVisionStr) { // Night vision
@@ -2454,10 +2467,8 @@ class UV_HudVisorDraw : EventHandler
 					}
 				}
 			} 
-			// Non-powerups (except radsuit for now)
-			else if (invItem is "PowerIronfeet") { // Radsuits
-				radSuitOn = true;
-			} else if (IsDemonPlayerFlag(invItem)) { // BD demon morphs
+			// Non-powerups
+			else if (IsDemonPlayerFlag(invItem)) { // BD demon morphs
 				isDemonPlayer = true;
 			} else if (globals.isPB_Loaded && invItem.GetClassName() == PB_HelmetAnimStr) {
 				doingHelmetEquipAnim = true;
