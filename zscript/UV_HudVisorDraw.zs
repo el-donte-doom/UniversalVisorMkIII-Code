@@ -38,6 +38,11 @@ class UV_HudVisorDraw : EventHandler
 	String lastColormappedPowerup;
 	bool isLastColormappedPowerupBlinking;
 	bool isLastPowerupColomapped;
+	bool isKnownColormapActive;
+	bool applyColormapToGlow;
+	bool blendColormap; // Night vision pack and other mods with nv
+	Vector3 colormapMultRGB;
+	Vector3 colormapAddRGB;
 	Color combPlayerBlendAndPowerupBlendColor;
 	double effectiveBlendAlpha;
 	double prevCombinedBrightnessScale;
@@ -1771,13 +1776,14 @@ class UV_HudVisorDraw : EventHandler
 				}
 			} else {
 				// Light Amplification mode (vanilla / NV Pack default mode / other mods)
+				// Special color is set using UpdateColormappedPowerupState() and BlendColorWithColormappedPowerup()
 				newColor = BrightenColor(originalColor, 1.1);
 			}
 			isAffectedByEnvironment = false;
 		}
 		
 		if (lastColormappedPowerup && !isLastColormappedPowerupBlinking) { // last name of a powerup with Powerup.Colormap (false if empty string, i.e. no such powerup)
-			newColor = BlendColorWithColormappedPowerup(newColor, lastColormappedPowerup, texType);
+			newColor = BlendColorWithColormappedPowerup(newColor, texType);
 			isAffectedByEnvironment = false;
 		}
 		if (combPlayerBlendAndPowerupBlendColor && effectiveBlendAlpha) { // if Powerup.Color or A_SetBlend()
@@ -1791,70 +1797,21 @@ class UV_HudVisorDraw : EventHandler
 		return BlendColorWithEnvironment(newColor, texType);
 	}
 	
-	ui Color BlendColorWithColormappedPowerup(Color originalColor, String powerupName, UV_TextureTypes texType = -1) {
-		// Can't read actual Colormap colors, so hardcode for names
-	
-		if (powerupName == "PowerInvulnerable") {
-			if (globals.isBD_Loaded) {
-				int grayscaleAmount = CalculateGrayscaleAmount(originalColor);
-				return Color(255, grayscaleAmount, grayscaleAmount, grayscaleAmount);
-			} else if (globals.isHellriderLoaded) {
-				int grayscaleAmount = CalculateGrayscaleAmount(originalColor) * 3.5;
-				int r = int(grayscaleAmount * 0.35);
-				int g = int(grayscaleAmount * 0.25);
-				return Color(255, r, g, grayscaleAmount);
-			} else if (globals.isHellriderVengefulLoaded) {
-				int grayscaleAmount = CalculateGrayscaleAmount(originalColor);
-				return Color(255, 10, grayscaleAmount + 65, grayscaleAmount + 10);
-			}
-		}
-		
-		// Night vision mods
-		
-		if (texType == UV_HudVisorDraw.GLOW) {
+	ui Color BlendColorWithColormappedPowerup(Color originalColor, UV_TextureTypes texType = -1) {
+		if (!isKnownColormapActive
+			|| texType == UV_HudVisorDraw.GLOW && !applyColormapToGlow) {
 			return originalColor;
 		}
-		bool _nightVisionOn = false;
-		Color newColor = originalColor;
-		if (globals.isNightVisionPackLoaded) { 
-			// Night Vision Pack
-			int grayscaleAmount = CalculateGrayscaleAmount(originalColor);
-			
-			// Inverse Map mode is handled separately using NV_PackInverseMapOn cause we change render style for it
-			
-			if (powerupName == "NVNightVision") { // Night Vision (green)
-				_nightVisionOn = true;
-				newColor = Color(255, 0, grayscaleAmount + 35, 0);
-			}
-			if (powerupName == "NVNightVisionProto") { // Prototype (blue-green)
-				_nightVisionOn = true;
-				newColor = Color(255, 0, grayscaleAmount + 20, grayscaleAmount + 20);
-			}
-			if (powerupName == "NVNightVisionGoldMap") { // GoldMap
-				_nightVisionOn = true;
-				newColor = Color(255, grayscaleAmount + 55, grayscaleAmount + 10, 0);
-			}
-			if (powerupName == "NVNightVisionGreenMap") { // GreenMap (yellow-green)
-				_nightVisionOn = true;
-				newColor = Color(255, grayscaleAmount + 30, grayscaleAmount + 40, grayscaleAmount + 10);
-			}
-			if (powerupName == "NVNightVisionRedMap") { // RedMap
-				_nightVisionOn = true;
-				newColor = Color(255, grayscaleAmount + 50, int(grayscaleAmount * 0.3), int(grayscaleAmount * 0.3));
-			}
-			if (powerupName == "NVNightVisionWhite") { // White (bright grayscale)
-				_nightVisionOn = true;
-				newColor = Color(255, grayscaleAmount + 20, grayscaleAmount + 20, grayscaleAmount + 20);
-			}
-		}
-
-		if (globals.isDD_Loaded && powerupName == "PowerNightVisionMode") { // DD goggles (green)
-			_nightVisionOn = true;
-			newColor = Color(255, 0, CalculateGrayscaleAmount(originalColor) + 35, 0);
-		}
-		if (_nightVisionOn && texType > -1 && texType != UV_HudVisorDraw.ARMOR_GRID && texType != UV_HudVisorDraw.SCREEN_WIPER) {
-			// Simulate light reflection for helmet parts except armor grid and wiper (and glow, but we don't get to this line with glow)
-			newColor = BlendColors(originalColor, newColor, 0.2); 
+		int grayscale = CalculateGrayscaleAmount(originalColor);
+		int r = Clamp(int(grayscale * colormapMultRGB.X + colormapAddRGB.X), 0, 255);
+		int g = Clamp(int(grayscale * colormapMultRGB.Y + colormapAddRGB.Y), 0, 255);
+		int b = Clamp(int(grayscale * colormapMultRGB.Z + colormapAddRGB.Z), 0, 255);
+		Color newColor = Color(255, r, g, b);
+		// Simulate light reflection for helmet parts except armor grid and wiper (we don't get to this line with glow)
+		if (blendColormap && texType > -1
+				&& texType != UV_HudVisorDraw.ARMOR_GRID
+				&& texType != UV_HudVisorDraw.SCREEN_WIPER) {
+			newColor = BlendColors(originalColor, newColor, 0.2);
 		}
 		return newColor;
 	}
@@ -2021,6 +1978,7 @@ class UV_HudVisorDraw : EventHandler
 		}
 		
 		CheckPowersAndVehicles();
+		
 		if (doingHelmetEquipAnim) {
 			return;
 		}
@@ -2029,7 +1987,9 @@ class UV_HudVisorDraw : EventHandler
 			S_StartSound("uvisor_startup", CHAN_AUTO, volume: startupVolume);
 		}
 		
+		UpdateColormappedPowerupState();
 		SetPlayerBlendColorAndAlpha();
+		
 		SetStoredHealthArmor();
 		
 		if (showBloodSplashesPlayContext) {
@@ -2704,6 +2664,60 @@ class UV_HudVisorDraw : EventHandler
 		} else {
 			combPlayerBlendAndPowerupBlendColor = UNSET_COLOR;
 		}
+	}
+	
+	// Can't read actual Colormap colors, so hardcode for common powerups with Colormap
+	void UpdateColormappedPowerupState() {
+		isKnownColormapActive = false;
+		applyColormapToGlow = false; // PowerInvulnerable, etc. applies even to glow
+		blendColormap = false; // to blend actual helmet metal pieces with night vision colors
+		if (!lastColormappedPowerup || isLastColormappedPowerupBlinking) { // last name of a powerup with Powerup.Colormap (false if empty string, i.e. no such powerup)
+			return;
+		}
+		
+		if (lastColormappedPowerup == "PowerInvulnerable") {
+			if (globals.isBD_Loaded) {
+				SetColormapState(1, 1, 1, 0, 0, 0, true, false);
+			} else if (globals.isHellriderLoaded) {
+				SetColormapState(1.225, 0.875, 3.5, 0, 0, 0, true, false);
+			} else if (globals.isHellriderVengefulLoaded) {
+				SetColormapState(0, 1, 1, 10, 65, 10, true, false);
+			}
+			if (isKnownColormapActive) return;
+		}
+
+		// Night Vision Pack
+		if (globals.isNightVisionPackLoaded) {
+			if (lastColormappedPowerup == "NVNightVision") {
+				SetColormapState(0, 1, 0, 0, 35, 0, false, true);
+			} else if (lastColormappedPowerup == "NVNightVisionProto") {
+				SetColormapState(0, 1, 1, 0, 20, 20, false, true);
+			} else if (lastColormappedPowerup == "NVNightVisionGoldMap") {
+				SetColormapState(1, 1, 0, 55, 10, 0, false, true);
+			} else if (lastColormappedPowerup == "NVNightVisionGreenMap") {
+				SetColormapState(1, 1, 1, 30, 40, 10, false, true);
+			} else if (lastColormappedPowerup == "NVNightVisionRedMap") {
+				SetColormapState(1, 0.3, 0.3, 50, 0, 0, false, true);
+			} else if (lastColormappedPowerup == "NVNightVisionWhite") {
+				SetColormapState(1, 1, 1, 20, 20, 20, false, true);
+			}
+		}
+
+		if (globals.isDD_Loaded && lastColormappedPowerup == "PowerNightVisionMode") {
+			SetColormapState(0, 1, 0, 0, 35, 0, false, true);
+		}
+	}
+
+	// Still better than comparing colormapped powerup names in ui context
+	// Values passed here were mostly found by trial and error and eyes
+	void SetColormapState(double mR, double mG, double mB,
+						  int aR, int aG, int aB,
+						  bool applyToGlow, bool applyBlend) {
+		isKnownColormapActive = true;
+		applyColormapToGlow = applyToGlow;
+		blendColormap = applyBlend;
+		colormapMultRGB = (mR, mG, mB);
+		colormapAddRGB = (aR, aG, aB);
 	}
 	
 	bool IsDemonPlayerFlag(Inventory invItem) {
