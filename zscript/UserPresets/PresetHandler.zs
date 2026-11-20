@@ -330,6 +330,8 @@ class UV_PresetHandler : StaticEventHandler
 		addCVarData('uvisor_gameplay_color_step_3');
 		addCVarData('uvisor_gameplay_color_step_4');
 // 		addCVarData('uvisor_cracks_basis');
+// 		addCVarData('uvisor_cracks_health_offset');
+// 		addCVarData('uvisor_cracks_max_level');
 // 		addCVarData('uvisor_hide_glow_if_empty_armor');
 // 		addCVarData('uvisor_hide_glass_if_empty_armor');
 // 		addCVarData('uvisor_hitfeedback_if_empty_armor');
@@ -339,6 +341,7 @@ class UV_PresetHandler : StaticEventHandler
 // 		addCVarData('uvisor_gameplay_alpha_basis_armor_grid');
 // 		addCVarData('uvisor_powers_overrides_grid_color_mode');
 // 		addCVarData('uvisor_grid_disable_when_radsuit_nightvis');
+// 		addCVarData('uvisor_grid_damage_feedback');
 // 		addCVarData('uvisor_transparency_on_invis');
 // 		addCVarData('uvisor_hide_helmet_in_third_person');
 // 		addCVarData('uvisor_blood_freq');

@@ -592,6 +592,8 @@ class UV_HudVisorDraw : EventHandler
 	int cracksBasis;
 	int prevCracksBasis;
 	const CRACKS_MAX_PATTERN_ID = 6;
+	int cracksHP_Offset;
+	int cracksMaxLevel;
 	bool initalCracksUpdateDone; // to prevent crack's sound at level start when small health/armor
 	const CRACKS_FADE_TICKS = 5;
 	int cracksFadeTicker;
@@ -2164,6 +2166,8 @@ class UV_HudVisorDraw : EventHandler
 		}
 		
 		cracksBasis = Cvar.GetCvar("uvisor_cracks_basis", playerinf).GetInt();
+		cracksHP_Offset = Cvar.GetCvar("uvisor_cracks_health_offset", playerinf).GetInt();
+		cracksMaxLevel = Cvar.GetCvar("uvisor_cracks_max_level", playerinf).GetInt();
 		
 		pulseMode = Cvar.GetCvar("uvisor_glow_pulse_mode", playerinf).GetInt();
 		pulseSpeed = Cvar.GetCvar("uvisor_glow_pulse_speed", playerinf).GetFloat();
@@ -2777,20 +2781,21 @@ class UV_HudVisorDraw : EventHandler
 			if (inVehicle || (!inVehicle && wasInVehicle)) {
 				currentHealthOrArmor = cracksBasis == 0 ? storedHealthInsideVehicle : storedArmorInsideVehicle;
 			}
-			if (currentHealthOrArmor <= 0) {
+			if (currentHealthOrArmor <= 0 + cracksHP_Offset) {
 				pData.cracksLevel = 5;
-			} else if (currentHealthOrArmor <= 15) {
+			} else if (currentHealthOrArmor <= 15 + cracksHP_Offset) {
 				pData.cracksLevel = 4;
-			} else if (currentHealthOrArmor <= 30) {
+			} else if (currentHealthOrArmor <= 30 + cracksHP_Offset) {
 				pData.cracksLevel = 3;
-			} else if (currentHealthOrArmor <= 50) {
+			} else if (currentHealthOrArmor <= 50 + cracksHP_Offset) {
 				pData.cracksLevel = 2;
-			} else if (currentHealthOrArmor <= 70) {
+			} else if (currentHealthOrArmor <= 70 + cracksHP_Offset) {
 				pData.cracksLevel = 1;
 			} else {
 				pData.cracksLevel = 0;
 			}
 		}
+		pData.cracksLevel = min(pData.cracksLevel, cracksMaxLevel);
 		if (pData.cracksLevel != pData.prevCracksLevel) {
 			if (prevCracksBasis == cracksBasis) { // check prevents fading out 5th level cracks bug if switched cracks basis
 				cracksFadeTicker = pData.cracksLevel > pData.prevCracksLevel ? (CRACKS_FADE_TICKS - 2) : CRACKS_FADE_TICKS;

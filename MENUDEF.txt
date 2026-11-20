@@ -276,6 +276,10 @@ OptionMenu "UV_GAMEPLAY" {
 	StaticText "$UVISOR_VISOR_CRACKS_SUBTITLE", LightBlue
 	Option "$UVISOR_BASIS_WITH_TIP", "uvisor_cracks_basis", "VisorCracksBasis"
 	UV_Tooltip "$UVISOR_VISOR_CRACKS_STEPS_TIP"
+	Slider "$UVISOR_CRACKS_HEALTH_OFFSET", "uvisor_cracks_health_offset", -70, 130, 5, 0
+	UV_Tooltip "$UVISOR_CRACKS_HEALTH_OFFSET_TIP"
+	Slider "$UVISOR_CRACKS_MAX_LEVEL", "uvisor_cracks_max_level", 1, 5, 1, 0
+	UV_Tooltip "$UVISOR_CRACKS_MAX_LEVEL_TIP"
 	StaticText " "
 	StaticText "$UVISOR_GLASS_GLOW_DESTR_SUBTITLE", LightBlue
 	Option "$UVISOR_HIDE_GLOW_NO_ARMOR", "uvisor_hide_glow_if_empty_armor", "YesNo"
