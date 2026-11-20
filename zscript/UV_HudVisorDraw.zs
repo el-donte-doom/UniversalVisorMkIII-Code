@@ -2559,6 +2559,11 @@ class UV_HudVisorDraw : EventHandler
 	}
 
 	void SetDynamicLightContribution(Vector3 point, double playerViewYaw, double playerViewPitch) {
+		if (dLightsContributionMult <= 0) {
+			dLightsBrightnessWeighted = 0;
+			dLightsFullColorWeighted.x = dLightsFullColorWeighted.y = dLightsFullColorWeighted.z = 0;
+			return;
+		}
 		double totalBrightness = 0.0;
 		double rSum = 0.0;
 		double gSum = 0.0;

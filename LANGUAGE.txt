@@ -205,7 +205,7 @@ UVISOR_HIDE_HELMET_3RD_PERSON = "Hide Helmet in Third Person (Chase Camera)";
 UVISOR_SECTOR_BR_CONTRIB_MULT = "Sector Brightness Contribution ⓘ";
 UVISOR_SECTOR_BR_CONTRIB_MULT_TIP = "Usual brightness mechanics in most maps. The more the value - the more it affects helmet (so in a dark sector the helmet will be even darker). (!) Close menu to see difference";
 UVISOR_D_LIGHTS_CONTRIB_MULT = "Dynamic Lights Contrubition  ⓘ";
-UVISOR_D_LIGHTS_CONTRIB_MULT_TIP = "Dynamic lights are used in some advanced maps (for ceiling/wall lamps, etc.) and mods. The more the value, the more these lights affect helmet brightness and color. Also it depends on view angle (inner parts shouldn't reflect all lights like player hands). UV doesn't support, at least for now, small attached lights like floor lamps in some mods. (!) Close menu to see difference";
+UVISOR_D_LIGHTS_CONTRIB_MULT_TIP = "Dynamic lights are used in advanced maps for ceiling/wall lamps, etc. (or in mods). The more the value, the more they affect helmet brightness and color. Also it depends on view angle (inner parts shouldn't reflect all lights like player hands). '0' on the slider completely disables the contribution. UV doesn't support, at least for now, small attached lights like floor lamps in some mods. (!) Close menu to see difference";
 
 
 // Blood On Visor
@@ -508,7 +508,7 @@ UVISOR_HIDE_HELMET_3RD_PERSON = "Скрывать Шлем При Виде от 
 UVISOR_SECTOR_BR_CONTRIB_MULT = "Влияние Яркости Сектора Карты ⓘ";
 UVISOR_SECTOR_BR_CONTRIB_MULT_TIP = "Обычная механика яркости почти на всех картах. Чем больше значение слайдера - тем больше влияние (т.е. в тёмном месте шлем станет ещё темнее). (!) Закройте меню, чтобы увидеть результат";
 UVISOR_D_LIGHTS_CONTRIB_MULT = "Влияние Динамического Света  ⓘ";
-UVISOR_D_LIGHTS_CONTRIB_MULT_TIP = "Дин. свет используется в некоторых продвинутых картах (для потолочных/настенных ламп и т.д.) и модах. Чем больше значение, тем больше этот свет влияет на яркость и цвет шлема. Также это зависит от угла обзора (внутренние части не должны отражать свет так же, как руки игрока). UV на данный момент не поддерживает т.н. attached lights по типу небольших напольных ламп в разных модах. (!) Закройте меню, чтобы увидеть результат";
+UVISOR_D_LIGHTS_CONTRIB_MULT_TIP = "Дин. свет используется в продвинутых картах для потолочных ламп и т.д. (и в модах). Чем больше значение, тем больше влияния на яркость и цвет шлема. Также это зависит от угла обзора (внутренние части не должны отражать свет так же, как руки игрока). '0' на слайдере полностью отключает влияние. UV на данный момент не поддерживает т.н. attached lights по типу небольших напольных ламп в разных модах. (!) Закройте меню, чтобы увидеть результат";
 
 
 // Blood On Visor
