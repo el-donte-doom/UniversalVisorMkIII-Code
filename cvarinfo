@@ -22,8 +22,8 @@ nosave int uvisor_style_helmet_corners = 1;
 nosave int uvisor_style_side_glass = 1;
 nosave int uvisor_style_tactical_overlay_1 = 1;
 nosave int uvisor_style_tactical_overlay_2 = 0;
-nosave int uvisor_armor_grid_cell_type = 0;
-nosave int uvisor_armor_grid_shape_type = 0;
+nosave int uvisor_armor_grid_cell_type = 1;
+nosave int uvisor_armor_grid_shape_type = 1;
 nosave bool uvisor_grid_idle_anim_enabled = true;
 
 
@@ -39,7 +39,7 @@ nosave color uvisor_color_glass = "00 d2 aa";
 nosave bool uvisor_sync_glass_tactical_overlay = false;
 nosave color uvisor_color_tactical_overlay_1 = "FF FF FF";
 nosave color uvisor_color_tactical_overlay_2 = "BB BB BB";
-nosave color uvisor_color_armor_grid = "03 16 2f";
+nosave color uvisor_color_armor_grid = "81 81 9f";
 nosave color uvisor_color_glass_cracks = "e1 e1 e1";
 
 nosave float uvisor_alpha_parts = 1.0;
@@ -47,8 +47,8 @@ nosave float uvisor_alpha_glow = 1.0;
 nosave float uvisor_alpha_glass = 0.6;
 nosave float uvisor_alpha_tactical_1 = 0.7;
 nosave float uvisor_alpha_tactical_2 = 0.7;
-nosave float uvisor_alpha_armor_grid = 0.7;
-nosave float uvisor_alpha_cracks = 0.8;
+nosave float uvisor_alpha_armor_grid = 0.75;
+nosave float uvisor_alpha_cracks = 0.75;
 nosave float uvisor_alpha_blood = 1.0;
 nosave bool uvisor_override_alpha_bottom = false;
 nosave float uvisor_alpha_part_bottom = 0.5;
@@ -58,7 +58,7 @@ nosave float uvisor_alpha_glass_bottom = 0.7;
 
 // Offsets, Scaling
 nosave int uvisor_offset_top = 8;
-nosave int uvisor_offset_bottom = 45;
+nosave int uvisor_offset_bottom = 55;
 nosave int uvisor_offset_corners_x = 18;
 nosave int uvisor_offset_corners_y = 18;
 nosave int uvisor_offset_sides_glass = 30;
@@ -96,12 +96,12 @@ nosave bool uvisor_hide_helmet_in_third_person = true;
 
 
 // Blood On Visor
-nosave int uvisor_blood_freq = 80;
+nosave int uvisor_blood_freq = 70;
 nosave int uvisor_blood_max_init_distance = 90;
 nosave float uvisor_blood_size = 1.0;
 nosave int uvisor_blood_max_count = 20;
-nosave float uvisor_blood_lifetime = 3;
-nosave bool uvisor_blood_vanishes = true;
+nosave float uvisor_blood_lifetime = 0.5;
+nosave bool uvisor_blood_vanishes = false;
 nosave int uvisor_screen_wiper_mode = 1;
 nosave int uvisor_blood_default_saturation_shift = 0;
 nosave bool uvisor_blood_family_friendly_colors = false;
