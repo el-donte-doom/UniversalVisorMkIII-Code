@@ -511,6 +511,7 @@ class UV_HudVisorDraw : EventHandler
 	double prevDamageArmorGridAlpha;
 	double damageArmorGridAlpha;
 	bool armorGridDisableWhenOtherOverlay;
+	bool gridDamageFeedbackEnabled;
 	
 	const GRID_IDLE_CYCLE_TICKS = 245;
     const GRID_IDLE_FADE_TICKS = 35;
@@ -1129,7 +1130,7 @@ class UV_HudVisorDraw : EventHandler
 			gridImage_2_AlphaInter *= alphaArmorGridMult;
 		}
 		Color texColor = BlendColorWithEnvironmentAndPowerups(colorArmorGrid, UV_HudVisorDraw.ARMOR_GRID);
-		if (armorGridDamageAnimTicker > 0) {
+		if (armorGridDamageAnimTicker > 0 && gridDamageFeedbackEnabled) {
 			// Calc alpha ratio for usual grid (may be a combo of two idle textures) and damage grid 
 			double usualGridAlphaInterpolated 
 				= alphaArmorGrid * InterpolateValue(prevUsualArmorGridAlpha, usualArmorGridAlpha, FracTicGlobal);
@@ -2200,6 +2201,7 @@ class UV_HudVisorDraw : EventHandler
 		gridIdleAnimEnabled = Cvar.GetCvar("uvisor_grid_idle_anim_enabled", playerinf).GetBool();
 		armorGridDisplayModePlay = Cvar.GetCvar("uvisor_armor_grid_display_mode", playerinf).GetInt();
 		armorGridDisableWhenOtherOverlay = Cvar.GetCVar("uvisor_grid_disable_when_radsuit_nightvis", playerinf).GetBool();
+		gridDamageFeedbackEnabled = Cvar.GetCVar("uvisor_grid_damage_feedback", playerinf).GetBool();
 		
 		transparencyEffectWhenInvis = Cvar.GetCVar("uvisor_transparency_on_invis", playerinf).GetBool();
 		

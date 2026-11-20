@@ -298,6 +298,7 @@ OptionMenu "UV_GAMEPLAY" {
 	UV_Tooltip "$UVISOR_GRID_TRANSPARENCY_BASIS_TIP"
 	Option "$UVISOR_GRID_DISABLE_WHEN_RADSUIT_NV", "uvisor_grid_disable_when_radsuit_nightvis", "YesNo"
 	UV_Tooltip "$UVISOR_GRID_DISABLE_WHEN_RADSUIT_NV_TIP"
+	Option "$UVISOR_GRID_DAMAGE_FEEDBACK", "uvisor_grid_damage_feedback", "YesNo"
 	StaticText " "
 	StaticText "$UVISOR_OTHER_SUBTITLE", LightBlue
 	Control "$UVISOR_HOTKEY_TO_ENABLE_DISABLE_MOD", "uvisor_enable_disable"
