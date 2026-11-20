@@ -354,6 +354,7 @@ class UV_HudVisorDraw : EventHandler
 	bool isGlassDestroyed;
 	bool hideGlassIfEmptyArmorPlayContext;
 	bool transparencyEffectWhenInvis;
+	double sectorBrightnessContributionMult;
 	bool isDemonPlayer;
 	string PB_NightVisionStr;
 	string NVNightVisionInverseMapStr;
@@ -2207,6 +2208,7 @@ class UV_HudVisorDraw : EventHandler
 		armorGridDisableWhenOtherOverlay = Cvar.GetCVar("uvisor_grid_disable_when_radsuit_nightvis", playerinf).GetBool();
 		gridDamageFeedbackEnabled = Cvar.GetCVar("uvisor_grid_damage_feedback", playerinf).GetBool();
 		
+		sectorBrightnessContributionMult = Cvar.GetCvar("uvisor_sector_br_contrib_mult", playerinf).GetFloat();
 		transparencyEffectWhenInvis = Cvar.GetCVar("uvisor_transparency_on_invis", playerinf).GetBool();
 		
 		int texRes = Cvar.GetCvar("uvisor_tex_res", playerinf).GetInt();
@@ -2516,7 +2518,8 @@ class UV_HudVisorDraw : EventHandler
 		double sectorBrightnessScale = 1.0;
 		if (playerinf.mo.cursector) {
 			double raw = double(playerinf.mo.cursector.lightlevel) / 255.0;
-			sectorBrightnessScale = 0.3 + 0.7 * raw; // makes it never too dark even in darkest sectors
+			double rawAdjustedBySlider = 1.0 - sectorBrightnessContributionMult * 0.7 * (1.0 - raw);
+			sectorBrightnessScale = clamp(rawAdjustedBySlider, 0.05, 1.0);
 		}
 		
 		SetDynamicLightContribution(point, playerViewYaw, playerViewPitch);

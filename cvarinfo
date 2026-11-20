@@ -96,6 +96,7 @@ nosave bool uvisor_grid_disable_when_radsuit_nightvis = false;
 nosave bool uvisor_grid_damage_feedback = true;
 nosave bool uvisor_transparency_on_invis = true;
 nosave bool uvisor_hide_helmet_in_third_person = true;
+nosave float uvisor_sector_br_contrib_mult = 1.0;
 
 
 // Blood On Visor

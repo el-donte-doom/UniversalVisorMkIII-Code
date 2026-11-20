@@ -202,6 +202,8 @@ UVISOR_OTHER_SUBTITLE = "----- Other -----";
 UVISOR_HOTKEY_TO_ENABLE_DISABLE_MOD = "Hotkey to Enable/Disable Mod";
 UVISOR_TRANSPARENCY_WITH_INVISIBILITY = "Transparency Effect With Invisibility Items";
 UVISOR_HIDE_HELMET_3RD_PERSON = "Hide Helmet in Third Person (Chase Camera)";
+UVISOR_SECTOR_BR_CONTRIB_MULT = "Sector Brightness Contribution ⓘ";
+UVISOR_SECTOR_BR_CONTRIB_MULT_TIP = "Usual brightness level used in most maps. The more the value - the more it affects helmet (so in a dark sector the helmet will be even darker). Requires closed menu to see difference";
 
 
 // Blood On Visor
@@ -501,6 +503,8 @@ UVISOR_OTHER_SUBTITLE = "----- Прочее -----";
 UVISOR_HOTKEY_TO_ENABLE_DISABLE_MOD = "Горячая Клавиша для Вкл./Откл. Мода";
 UVISOR_TRANSPARENCY_WITH_INVISIBILITY = "Эффект Прозрачности для Невидимости и т.д.";
 UVISOR_HIDE_HELMET_3RD_PERSON = "Скрывать Шлем При Виде от 3 Лица (Chase Camera)";
+UVISOR_SECTOR_BR_CONTRIB_MULT = "Влияние Яркости Сектора Карты ⓘ";
+UVISOR_SECTOR_BR_CONTRIB_MULT_TIP = "Обычный уровень яркости, используемый почти на всех картах. Чем больше значение слайдера - тем больше влияние (т.е. в тёмном месте шлем станет ещё темнее). Требуется закрыть меню, чтобы увидеть результат";
 
 
 // Blood On Visor
