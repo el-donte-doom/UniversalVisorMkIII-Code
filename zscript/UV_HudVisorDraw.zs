@@ -542,7 +542,7 @@ class UV_HudVisorDraw : EventHandler
 	double pulseTime;
 	
 	// Sway menu options
-	bool helmetSwaying;
+	bool helmetSwayEnabled;
 	double MaxSwayX; // Also used for shaking max X offset
 	double MaxSwayY; // Also used for shaking max Y offset
 	float swaySensitivity;
@@ -582,7 +582,7 @@ class UV_HudVisorDraw : EventHandler
 	UV_PersistentData pData;
 	
 	// Helmet shaking vars
-	bool helmetShaking;
+	bool helmetShakeEnabled;
 	double ShakeSensitivity;
 	double ShakeOffsetX;
 	double ShakeOffsetY;
@@ -1488,7 +1488,7 @@ class UV_HudVisorDraw : EventHandler
 		double texWidth = ceil(origWidth * scaleFactorWidth); // without ceil it could be 1559.9996 instead of 1600 which will not pass next check
 		texWidth *= optionalWidthScale;
 		double diffSwayTex = Screen.GetWidth() + uiScaledMaxSwayX * 2 - texWidth;
-		if ((helmetSwaying || helmetShaking)
+		if ((helmetSwayEnabled || helmetShakeEnabled)
 				&& diffSwayTex <= uiScaledMaxSwayX * 2 // if scaled texture width equals screenwidth or is a bit bigger (but not bigger than uiScaledMaxSwayX * 2)
 				&& diffSwayTex > 0 // and if not already big enough
 				&& (anchor == UV_HudVisorDraw.TOP_MIDDLE || anchor == UV_HudVisorDraw.BOTTOM_MIDDLE)) {
@@ -1497,7 +1497,7 @@ class UV_HudVisorDraw : EventHandler
 		double texHeight = ceil(origHeight * scaleFactorHeight);
 		texHeight *= optionalHeightScale;
 		diffSwayTex = Screen.GetHeight() + uiScaledMaxSwayY * 2 - texHeight;
-		if ((helmetSwaying || helmetShaking) 
+		if ((helmetSwayEnabled || helmetShakeEnabled) 
 				&& diffSwayTex <= uiScaledMaxSwayY * 2
 				&& diffSwayTex > 0
 				&& (anchor == UV_HudVisorDraw.MIDDLE_LEFT || anchor == UV_HudVisorDraw.MIDDLE_RIGHT)) {
@@ -1595,69 +1595,69 @@ class UV_HudVisorDraw : EventHandler
 		switch (anchor) {
 			case TOP_LEFT:
 				x = 0 - offsetX;
-				if (helmetSwaying || helmetShaking) {
+				if (helmetSwayEnabled || helmetShakeEnabled) {
 					x -= uiScaledMaxSwayX;
 				}
 				y = 0 - offsetY;
-				if (helmetSwaying || helmetShaking) {
+				if (helmetSwayEnabled || helmetShakeEnabled) {
 					y -= uiScaledMaxSwayY;
 				}
 				break;
 			case TOP_MIDDLE:
 				x = Screen.GetWidth() / 2.0 - texWidth / 2.0;
 				y = 0 - offsetY;
-				if (helmetSwaying || helmetShaking) {
+				if (helmetSwayEnabled || helmetShakeEnabled) {
 					y -= uiScaledMaxSwayY;
 				}
 				break;
 			case TOP_RIGHT:
 				x = Screen.GetWidth() - texWidth + offsetX;
-				if (helmetSwaying || helmetShaking) {
+				if (helmetSwayEnabled || helmetShakeEnabled) {
 					x += uiScaledMaxSwayX;
 				}
 				y = 0 - offsetY;
-				if (helmetSwaying || helmetShaking) {
+				if (helmetSwayEnabled || helmetShakeEnabled) {
 					y -= uiScaledMaxSwayY;
 				}
 				break;
 			case MIDDLE_LEFT:
 				x = 0 - offsetX;
-				if (helmetSwaying || helmetShaking) {
+				if (helmetSwayEnabled || helmetShakeEnabled) {
 					x -= uiScaledMaxSwayX;
 				}
 				y = Screen.GetHeight() / 2.0 - texHeight / 2.0;
 				break;
 			case MIDDLE_RIGHT:
 				x = Screen.GetWidth() - texWidth + offsetX;
-				if (helmetSwaying || helmetShaking) {
+				if (helmetSwayEnabled || helmetShakeEnabled) {
 					x += uiScaledMaxSwayX;
 				}
 				y = Screen.GetHeight() / 2.0 - texHeight / 2.0;
 				break;
 			case BOTTOM_LEFT:
 				x = 0 - offsetX;
-				if (helmetSwaying || helmetShaking) {
+				if (helmetSwayEnabled || helmetShakeEnabled) {
 					x -= uiScaledMaxSwayX;
 				}
 				y = Screen.GetHeight() - texHeight + offsetY;
-				if (helmetSwaying || helmetShaking) {
+				if (helmetSwayEnabled || helmetShakeEnabled) {
 					y += uiScaledMaxSwayY;
 				}
 				break;
 			case BOTTOM_MIDDLE:
 				x = Screen.GetWidth() / 2.0 - texWidth / 2.0;
 				y = Screen.GetHeight() - texHeight + offsetY;
-				if (helmetSwaying || helmetShaking) {
+				if (helmetSwayEnabled || helmetShakeEnabled) {
 					y += uiScaledMaxSwayY;
 				}
 				break;
 			case BOTTOM_RIGHT:
 				x = Screen.GetWidth() - texWidth + offsetX;
-				if (helmetSwaying || helmetShaking) {
+				if (helmetSwayEnabled || helmetShakeEnabled) {
 					x += uiScaledMaxSwayX;
 				}
 				y = Screen.GetHeight() - texHeight + offsetY;
-				if (helmetSwaying || helmetShaking) {
+				if (helmetSwayEnabled || helmetShakeEnabled) {
 					y += uiScaledMaxSwayY;
 				}
 				break;
@@ -2089,7 +2089,7 @@ class UV_HudVisorDraw : EventHandler
 		prevBreathVolume = breathVolume;
 		prevBreathVoice = breathVoice;
 		
-		if (helmetShaking) {
+		if (helmetShakeEnabled) {
 			DoHelmetShaking();
 		} else {
 			ShakeIntensity = 0;
@@ -2097,7 +2097,7 @@ class UV_HudVisorDraw : EventHandler
 			ShakeOffsetY = 0;
 		}
 		
-		if (helmetSwaying) {
+		if (helmetSwayEnabled) {
 			DoHelmetSwaying();
 		} else {
 			SwayOffX = 0;
@@ -2137,7 +2137,7 @@ class UV_HudVisorDraw : EventHandler
 	
 	void InitPlayVars() {
 		mainTogglesFlagsPlay = Cvar.GetCvar("uvisor_main_toggles_flags", playerinf).GetInt();
-		helmetSwaying = Cvar.GetCvar("uvisor_swaying", playerinf).GetBool();
+		helmetSwayEnabled = Cvar.GetCvar("uvisor_swaying", playerinf).GetBool();
 		swayFlags = Cvar.GetCvar("uvisor_swaying_flags", playerinf).GetInt();
 		MaxSwayX = Clamp(Cvar.GetCVar("uvisor_maxsway_x", playerinf).GetFloat(), 0, 15);
 		MaxSwayY = Clamp(Cvar.GetCVar("uvisor_maxsway_y", playerinf).GetFloat(), 0, 15);
@@ -2151,11 +2151,11 @@ class UV_HudVisorDraw : EventHandler
 		SwayBobFreq = Cvar.GetCVar("uvisor_bob_sway_freq", playerinf).GetFloat();
 		CrouchSwayIntensity = Cvar.GetCVar("uvisor_crouch_sway_intensity", playerinf).GetFloat();
 		JumpSwayIntensity = Cvar.GetCVar("uvisor_jump_sway_intensity", playerinf).GetFloat();
-		helmetShaking = Cvar.GetCvar("uvisor_shaking", playerinf).GetBool();
+		helmetShakeEnabled = Cvar.GetCvar("uvisor_shaking", playerinf).GetBool();
 		ShakeSensitivity = Cvar.GetCVar("uvisor_shaking_sensitivity", playerinf).GetFloat();
 		scaleFactorWidthPlay = double(Screen.GetWidth()) / BASE_SCREEN_WIDTH;
 		scaleFactorHeightPlay = double(Screen.GetHeight()) / BASE_SCREEN_HEIGHT;
-		if (helmetSwaying || helmetShaking) {
+		if (helmetSwayEnabled || helmetShakeEnabled) {
 			scaledMaxSwayX = MaxSwayX * scaleFactorWidthPlay;
 			scaledMaxSwayY = MaxSwayY * scaleFactorHeightPlay;
 		} else {
@@ -2240,6 +2240,8 @@ class UV_HudVisorDraw : EventHandler
 				S_StartSound("uvisor_hit", CHAN_AUTO, volume: hitVolume);
 			}
 			if (totalDamage > 20 && IsShakingDamageType(e) || totalDamage > 40) {
+				if (machineGunEnterLeaveTicker > 0)
+					return; // prevent extreme shaking when entering or leaving machine gun due to health change
 				ShakeIntensity = clamp(ShakeIntensity + totalDamage * ShakeSensitivity, 0.0, 24.0);
 			}
 		} else if ((mainTogglesFlagsPlay & UV_ShowBloodSplashes) && bloodDetectionMode == 0 && e.Thing.bIsMonster) {
@@ -2378,6 +2380,8 @@ class UV_HudVisorDraw : EventHandler
 		int totalDamage = previousArmor - totalArmor;
 		
 		if (totalDamage > 30) { // can't check damage type here
+			if (machineGunEnterLeaveTicker > 0)
+					return; // prevent extreme shaking when entering or leaving machine gun due to health change
 			ShakeIntensity = clamp(ShakeIntensity + totalDamage * ShakeSensitivity, 0.0, 24.0);
 		}
 	}
@@ -3512,7 +3516,7 @@ class UV_HudVisorDraw : EventHandler
 			SwayOffY = 0;
 		}
 
-		if (helmetShaking) {
+		if (helmetShakeEnabled) {
 			double totalX = SwayOffX + ShakeOffsetX;
 			double totalY = SwayOffY + ShakeOffsetY;
 			if (abs(totalX) > scaledMaxSwayX && scaledMaxSwayX > 0) {
