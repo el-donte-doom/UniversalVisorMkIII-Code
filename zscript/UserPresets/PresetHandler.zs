@@ -344,6 +344,8 @@ class UV_PresetHandler : StaticEventHandler
 // 		addCVarData('uvisor_grid_damage_feedback');
 // 		addCVarData('uvisor_transparency_on_invis');
 // 		addCVarData('uvisor_hide_helmet_in_third_person');
+// 		addCVarData('uvisor_sector_br_contrib_mult');
+// 		addCVarData('uvisor_d_lights_contrib_mult');
 // 		addCVarData('uvisor_blood_freq');
 // 		addCVarData('uvisor_blood_max_init_distance');
 // 		addCVarData('uvisor_blood_size');

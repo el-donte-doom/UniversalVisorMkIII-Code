@@ -310,6 +310,8 @@ OptionMenu "UV_GAMEPLAY" {
 	Option "$UVISOR_HIDE_HELMET_3RD_PERSON", "uvisor_hide_helmet_in_third_person", "YesNo"
 	Slider "$UVISOR_SECTOR_BR_CONTRIB_MULT", "uvisor_sector_br_contrib_mult", 0.0, 2.0, 0.1
 	UV_Tooltip "$UVISOR_SECTOR_BR_CONTRIB_MULT_TIP"
+	Slider "$UVISOR_D_LIGHTS_CONTRIB_MULT", "uvisor_d_lights_contrib_mult", 0.0, 2.0, 0.1
+	UV_Tooltip "$UVISOR_D_LIGHTS_CONTRIB_MULT_TIP"
 	StaticText " "
 	StaticText "-------------------------", LightBlue
 	SafeCommand "$UVISOR_RESET_SUBMENU", uvisor_reset_gameplay_menu, "$UVISOR_RESET_SUBMENU_PROMPT"

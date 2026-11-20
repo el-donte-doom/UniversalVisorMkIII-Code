@@ -295,6 +295,7 @@ class UV_HudVisorDraw : EventHandler
 	const INVULN_GRID_COLOR = Color(255, 0, 255, 0); 	 // green
 	const GODMODE_GRID_COLOR = Color(255, 255, 143, 59); // gold
 	const FULL_WHITE_COLOR = Color(255, 255, 255, 255);
+	float dLightsContributionMult;
 	
 	ui string cracksBasePath;
 	ui string CommonGraphicsPath;
@@ -1871,7 +1872,7 @@ class UV_HudVisorDraw : EventHandler
 			double colB = interFullColorScale.Z;
 			double rawBrightness = (colR + colG + colB) / 3.0;
 			double softenedBrightness = ApplyInfluence(rawBrightness, overallEnvInfluence);
-			double colorInfluence = 0.6; // separate color influence control, seems to be a good balance
+			double colorInfluence = 0.6; // 0.6 seems to be a good balance
 			dynScaleR = softenedBrightness + (colR - rawBrightness) * colorInfluence;
 			dynScaleG = softenedBrightness + (colG - rawBrightness) * colorInfluence;
 			dynScaleB = softenedBrightness + (colB - rawBrightness) * colorInfluence;
@@ -1994,12 +1995,15 @@ class UV_HudVisorDraw : EventHandler
 			pData = globals.pData;
 		}
 		
-		UpdateLightState(playerinf.mo.pos, playerinf.mo.Angle, playerinf.mo.Pitch);
+		if (initialPlayInitDone) { // prevent double call on first tick where we have to call it after InitPlayVars()
+			UpdateLightState(playerinf.mo.pos, playerinf.mo.Angle, playerinf.mo.Pitch);
+		}
 		
 		if (wasMenuOpened || globals.isSavegameJustLoaded || !initialPlayInitDone) {
 			globals.isSavegameJustLoaded = false;
 			wasMenuOpened = false;
 			InitPlayVars();
+			UpdateLightState(playerinf.mo.pos, playerinf.mo.Angle, playerinf.mo.Pitch);
 			prevCombinedBrightnessScale = combinedBrightnessScale;
 			prevCombinedFullColorScale = combinedFullColorScale;
 			initialPlayInitDone = true;
@@ -2209,6 +2213,7 @@ class UV_HudVisorDraw : EventHandler
 		gridDamageFeedbackEnabled = Cvar.GetCVar("uvisor_grid_damage_feedback", playerinf).GetBool();
 		
 		sectorBrightnessContributionMult = Cvar.GetCvar("uvisor_sector_br_contrib_mult", playerinf).GetFloat();
+		dLightsContributionMult = Cvar.GetCvar("uvisor_d_lights_contrib_mult", playerinf).GetFloat();
 		transparencyEffectWhenInvis = Cvar.GetCVar("uvisor_transparency_on_invis", playerinf).GetBool();
 		
 		int texRes = Cvar.GetCvar("uvisor_tex_res", playerinf).GetInt();
@@ -2608,12 +2613,11 @@ class UV_HudVisorDraw : EventHandler
 			bSum += bChannel * finalAttenuation * colorFacing;
 		}
 
-		// 0.4 and 0.9 seem to give good balance
-		dLightsBrightnessWeighted = Clamp(totalBrightness / 255.0 * 0.4, 0.0, 1.0);
+		dLightsBrightnessWeighted = Clamp(totalBrightness / 255.0 * 0.5 * dLightsContributionMult, 0.0, 1.0);
 		dLightsFullColorWeighted = (
-			Clamp(rSum / 255.0 * 0.9, 0.0, 1.0),
-			Clamp(gSum / 255.0 * 0.9, 0.0, 1.0),
-			Clamp(bSum / 255.0 * 0.9, 0.0, 1.0)
+			Clamp(rSum / 255.0 * 0.9 * dLightsContributionMult, 0.0, 1.0),
+			Clamp(gSum / 255.0 * 0.9 * dLightsContributionMult, 0.0, 1.0),
+			Clamp(bSum / 255.0 * 0.9 * dLightsContributionMult, 0.0, 1.0)
 		);
 	}
 	
