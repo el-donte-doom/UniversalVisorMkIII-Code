@@ -30,6 +30,14 @@ enum UV_SeparateTogglesFlags
     UV_ShowGlassCorners = 1 << 9
 }
 
+enum UV_SwayFlags
+{
+	UV_LessIntenseGridSway 	= 1 << 0,
+    UV_MovementSway			= 1 << 1,
+    UV_CrouchSway			= 1 << 2,
+	UV_JumpSway				= 1 << 3,
+}
+
 class UV_HudVisorDraw : EventHandler
 {	
 	///// COMMON VARS /////
@@ -76,6 +84,7 @@ class UV_HudVisorDraw : EventHandler
 	Vector3 prevCombinedFullColorScale;
 	Vector3 combinedFullColorScale;
 	bool doingHelmetEquipAnim;
+	int swayFlags;
 	
 	
 	///// UI CONTEXT VARS /////
@@ -330,7 +339,6 @@ class UV_HudVisorDraw : EventHandler
 	ui double hudExpansionY;
 	ui double uiScaledMaxSwayX;
 	ui double uiScaledMaxSwayY;
-	ui bool isLessIntenseGridSway;
 	
 	ui int warningSoundBasisUIContext;
 	ui bool isGL_EnhancedNV;
@@ -539,15 +547,12 @@ class UV_HudVisorDraw : EventHandler
 	float swaySensitivity;
 	float cameraSwayMultX;
 	float cameraSwayMultY;
-	bool MovementSway;
 	double MovementSwayMultX;
 	double MovementSwayMultY;
 	double MovementSwayMultBob;
 	int SwayBobMode;
 	double SwayBobFreq;
-	bool CrouchSway;
 	double CrouchSwayIntensity;
-	bool JumpSway;
 	double JumpSwayIntensity;
 	
 	// Helper sway vars
@@ -1053,8 +1058,6 @@ class UV_HudVisorDraw : EventHandler
 		isGL_EnhancedNV = Cvar.GetCvar("gl_enhanced_nightvision", playerinf).GetBool();
 		
 		texScreenWiper = TexMan.CheckForTexture(commonGraphicsPath .. "screen_wiper.png");
-		
-		isLessIntenseGridSway = Cvar.GetCVar("uvisor_less_intense_grid_sway", playerinf).GetBool();
 	}
 	
 	ui String GetArmorGridTexturesPath() {
@@ -1085,7 +1088,7 @@ class UV_HudVisorDraw : EventHandler
 			uiScaledMaxSwayY = scaledMaxSwayY;
 		}
 		
-		if (isLessIntenseGridSway) {
+		if (swayFlags & UV_LessIntenseGridSway) {
 			uiSwayOffX_ArmorGrid = uiSwayOffX * 0.7; // to make it feel like an outer shell or something like that
 			uiSwayOffY_ArmorGrid = uiSwayOffY * 0.7;
 		} else {
@@ -2086,6 +2089,7 @@ class UV_HudVisorDraw : EventHandler
 		if (helmetShaking) {
 			DoHelmetShaking();
 		} else {
+			ShakeIntensity = 0;
 			ShakeOffsetX = 0;
 			ShakeOffsetY = 0;
 		}
@@ -2131,20 +2135,18 @@ class UV_HudVisorDraw : EventHandler
 	void InitPlayVars() {
 		mainTogglesFlagsPlay = Cvar.GetCvar("uvisor_main_toggles_flags", playerinf).GetInt();
 		helmetSwaying = Cvar.GetCvar("uvisor_swaying", playerinf).GetBool();
+		swayFlags = Cvar.GetCvar("uvisor_swaying_flags", playerinf).GetInt();
 		MaxSwayX = Clamp(Cvar.GetCVar("uvisor_maxsway_x", playerinf).GetFloat(), 0, 15);
 		MaxSwayY = Clamp(Cvar.GetCVar("uvisor_maxsway_y", playerinf).GetFloat(), 0, 15);
 		swaySensitivity = Cvar.GetCVar("uvisor_sway_sensitivity", playerinf).GetFloat();
 		cameraSwayMultX = Cvar.GetCVar("uvisor_camera_sway_mult_x", playerinf).GetFloat();
 		cameraSwayMultY = Cvar.GetCVar("uvisor_camera_sway_mult_y", playerinf).GetFloat();
-		MovementSway = Cvar.GetCVar("uvisor_movement_sway", playerinf).GetBool();
 		MovementSwayMultX = Cvar.GetCVar("uvisor_movement_sway_mult_x", playerinf).GetFloat();
 		MovementSwayMultY = Cvar.GetCVar("uvisor_movement_sway_mult_y", playerinf).GetFloat();
 		MovementSwayMultBob = Cvar.GetCVar("uvisor_movement_sway_mult_bob", playerinf).GetFloat();
 		SwayBobMode = Cvar.GetCVar("uvisor_bob_sway_mode", playerinf).GetInt();
 		SwayBobFreq = Cvar.GetCVar("uvisor_bob_sway_freq", playerinf).GetFloat();
-		CrouchSway = Cvar.GetCvar("uvisor_crouch_sway", playerinf).GetBool();
 		CrouchSwayIntensity = Cvar.GetCVar("uvisor_crouch_sway_intensity", playerinf).GetFloat();
-		JumpSway = Cvar.GetCvar("uvisor_jump_sway", playerinf).GetBool();
 		JumpSwayIntensity = Cvar.GetCVar("uvisor_jump_sway_intensity", playerinf).GetFloat();
 		helmetShaking = Cvar.GetCvar("uvisor_shaking", playerinf).GetBool();
 		ShakeSensitivity = Cvar.GetCVar("uvisor_shaking_sensitivity", playerinf).GetFloat();
@@ -3352,7 +3354,7 @@ class UV_HudVisorDraw : EventHandler
 		bool justJumped = wasGrounded && !IsGrounded;
 		
 		//// Movement offset ////
-		if (MovementSway) {
+		if (swayFlags & UV_MovementSway) {
 			relVel = Actor.RotateVector(playerinf.mo.vel.xy, -playerinf.mo.angle);
 			// Strafe contributes to horizontal sway
 			rawSwayX += relVel.y * MovementSwayMultX;
@@ -3408,7 +3410,7 @@ class UV_HudVisorDraw : EventHandler
 			}
 		}
 		
-		if (JumpSway) {
+		if (swayFlags & UV_JumpSway) {
 			//// Jumping start offset ////
 			if (justJumped && playerinf.mo.vel.z > 0) {
 				mJumpOffset = 8.0 * JumpSwayIntensity;
@@ -3461,7 +3463,7 @@ class UV_HudVisorDraw : EventHandler
 		// Impulse on start
 		double crouchStartOffset = 0;
 		double crouchfactor = playerinf.crouchfactor;
-		if (CrouchSway) {
+		if (swayFlags & UV_CrouchSway) {
 			double crouchChange = crouchfactor - PrevCrouchFactor;
 			if (abs(crouchChange) > 0.001) {
 				double bounceStrength = crouchChange * 60;   // scale
@@ -3471,7 +3473,7 @@ class UV_HudVisorDraw : EventHandler
 		}
 		// Static offset when fully crouched
 		double crouchStaticOffset = 0;
-		if (CrouchSway) {
+		if (swayFlags & UV_CrouchSway) {
 			bool isCrouching = (crouchfactor < 0.55);
 			crouchStaticOffset = isCrouching ? 5.0 * CrouchSwayIntensity : 0.0;
 		}

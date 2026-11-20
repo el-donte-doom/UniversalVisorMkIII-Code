@@ -357,17 +357,17 @@ OptionMenu "UV_SWAY_SHAKE" {
 	Slider "$UVISOR_MAX_HORIZONTAL_SWAY_SHAKE", "uvisor_maxsway_x", 0, 15, 1, 0
 	Slider "$UVISOR_MAX_VERTICAL_SWAY_SHAKE", "uvisor_maxsway_y", 0, 15, 1, 0
 	UV_Tooltip ""
-	Option "$UVISOR_LESS_INTENSE_GRID_SWAY", "uvisor_less_intense_grid_sway", "OnOff"
+	FlagOption "$UVISOR_LESS_INTENSE_GRID_SWAY", "uvisor_swaying_flags", "OnOff", 0
 	UV_Tooltip "$UVISOR_LESS_INTENSE_GRID_SWAY_TIP"
 	StaticText " "
 	StaticText "$UVISOR_SWAYING_SUBTITLE", LightBlue
 	Option "$UVISOR_ENABLED", "uvisor_swaying", "OnOff"
-	Slider "$UVISOR_SWAY_SENSITIVITY", "uvisor_sway_sensitivity", 1.0, 2.0, 0.1, 1, "uvisor_swaying"	
+	Slider "$UVISOR_SWAY_SENSITIVITY", "uvisor_sway_sensitivity", 1.0, 2.0, 0.1, 1, "uvisor_swaying"
 	StaticText "-----", LightBlue
 	Slider "$UVISOR_CAMERA_SWAY_MULT_X", "uvisor_camera_sway_mult_x", 0.0, 2.0, 0.1, 1, "uvisor_swaying"
 	Slider "$UVISOR_CAMERA_SWAY_MULT_Y", "uvisor_camera_sway_mult_y", 0.0, 2.0, 0.1, 1, "uvisor_swaying"
 	StaticText "-----", LightBlue
-	Option "$UVISOR_MOVEMENT_BOB_SWAY", "uvisor_movement_sway", "OnOff", "uvisor_swaying"
+	FlagOption "$UVISOR_MOVEMENT_BOB_SWAY", "uvisor_swaying_flags", "OnOff", 1, "uvisor_swaying"
 	Slider "$UVISOR_MOVEMENT_SWAY_MULT_X", "uvisor_movement_sway_mult_x", 0, 0.6, 0.05, 2, "uvisor_swaying"
 	Slider "$UVISOR_MOVEMENT_SWAY_MULT_Y", "uvisor_movement_sway_mult_y", 0, 0.4, 0.05, 2, "uvisor_swaying"
 	Slider "$UVISOR_MOVEMENT_SWAY_MULT_BOB", "uvisor_movement_sway_mult_bob", 0, 1.0, 0.05, 2, "uvisor_swaying"
@@ -376,12 +376,12 @@ OptionMenu "UV_SWAY_SHAKE" {
 	UV_Tooltip "$UVISOR_BOB_SWAY_MODE_TIP"
 	Slider "$UVISOR_SIMULATED_BOB_FREQ", "uvisor_bob_sway_freq", 0.1, 3.0, 0.05, 2, "uvisor_swaying"
 	StaticText "$UVISOR_RELATED_ZDOOM_OPTION", DarkGray
-	Slider "$DSPLYMNU_MOVEBOB",			"movebob", 0, 1.0, 0.05, 2
+	Slider "$DSPLYMNU_MOVEBOB",			"movebob", 0, 1.0, 0.05, 2, "uvisor_swaying"
 	StaticText "-----", LightBlue
-	Option "$UVISOR_CROUCH_SWAY", "uvisor_crouch_sway", "OnOff", "uvisor_swaying"
+	FlagOption "$UVISOR_CROUCH_SWAY", "uvisor_swaying_flags", "OnOff", 2, "uvisor_swaying"
 	Slider "$UVISOR_CROUCH_SWAY_MULT", "uvisor_crouch_sway_intensity", 0.1, 1.0, 0.1, 1, "uvisor_swaying"
 	StaticText "-----", LightBlue
-	Option "$UVISOR_JUMP_SWAY", "uvisor_jump_sway", "OnOff", "uvisor_swaying"
+	FlagOption "$UVISOR_JUMP_SWAY", "uvisor_swaying_flags", "OnOff", 3, "uvisor_swaying"
 	Slider "$UVISOR_JUMP_SWAY_MULT", "uvisor_jump_sway_intensity", 0.1, 1.0, 0.1, 1, "uvisor_swaying"
 	UV_Tooltip ""
 	StaticText ""

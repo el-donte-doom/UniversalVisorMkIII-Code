@@ -109,25 +109,20 @@ user int uvisor_blood_detection_mode = 0;
 
 
 // Swaying and Shaking
-user bool uvisor_swaying = true;
 user float uvisor_maxsway_x = 15.0;
 user float uvisor_maxsway_y = 10.0;
-user bool uvisor_less_intense_grid_sway = false;
-
+user int uvisor_swaying_flags = 14; // less intense grid sway false by default
+user bool uvisor_swaying = true;
 user float uvisor_sway_sensitivity = 1.5;
 user float uvisor_camera_sway_mult_x = 1.0;
 user float uvisor_camera_sway_mult_y = 1.0;
-user bool uvisor_movement_sway = true;
 user float uvisor_movement_sway_mult_x = 0.4;
 user float uvisor_movement_sway_mult_y = 0.25;
 user float uvisor_movement_sway_mult_bob = 0.30;
 user int uvisor_bob_sway_mode = 0;
 user float uvisor_bob_sway_freq = 0.70;
-user bool uvisor_crouch_sway = true;
 user float uvisor_crouch_sway_intensity = 0.5;
-user bool uvisor_jump_sway = true;
 user float uvisor_jump_sway_intensity = 0.6;
-
 user bool uvisor_shaking = true;
 user float uvisor_shaking_sensitivity = 0.2;
 
