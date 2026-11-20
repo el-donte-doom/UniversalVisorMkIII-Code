@@ -301,7 +301,7 @@ UVISOR_RESET_ALL_SETTINGS_PROMPT = "Are you sure you want to restore defaults?";
 
 
 //////////////////////////////////////////////////
-[rus ru]
+[ru]
 // Common
 UVISOR_HEALTH = "Здоровье";
 UVISOR_ARMOR = "Броня";
