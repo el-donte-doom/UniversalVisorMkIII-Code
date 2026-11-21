@@ -2121,7 +2121,7 @@ class UV_HudVisorDraw : EventHandler
 					S_StartSound("uvisor_glass_2", CHAN_AUTO, volume: cracksVolume);
 				}
 			} else {
-				string glassSoundName = "uvisor_glass_1_" .. random(1, 3);
+				string glassSoundName = "uvisor_glass_1_" .. random[UV_VeryRandomIdentifierrr](1, 3);
 				S_StartSound(glassSoundName, CHAN_AUTO, volume: cracksVolume);
 			}			
 		}
@@ -2283,13 +2283,13 @@ class UV_HudVisorDraw : EventHandler
 			}
 			if (!isValidColor) return;
 
-			if (random(1, 100) > (100 - bloodFreq)) {
+			if (random[UV_VeryRandomIdentifierrr](1, 100) > (100 - bloodFreq)) {
 				InitBloodSplash(newBloodColor);
 			}
-			if (bloodFreq > 100 && random(1, 100) > (200 - bloodFreq)) { // if frequency > 100 there's a chance for second splash at the same moment
+			if (bloodFreq > 100 && random[UV_VeryRandomIdentifierrr](1, 100) > (200 - bloodFreq)) { // if frequency > 100 there's a chance for second splash at the same moment
 				InitBloodSplash(newBloodColor);
 			}
-			if (bloodFreq > 200 && random(1, 100) > (300 - bloodFreq)) { // third splash
+			if (bloodFreq > 200 && random[UV_VeryRandomIdentifierrr](1, 100) > (300 - bloodFreq)) { // third splash
 				InitBloodSplash(newBloodColor);
 			}
 		}
@@ -2837,8 +2837,8 @@ class UV_HudVisorDraw : EventHandler
 			}
 			fOutCracksTexId = pData.prevCracksLevel;
 			if (pData.prevCracksLevel == 0) {
-				pData.cracksTexturePatternId = random(1, CRACKS_MAX_PATTERN_ID);
-				pData.cracksTextureRotationDegrees = frandom(-7, 7);
+				pData.cracksTexturePatternId = random[UV_VeryRandomIdentifierrr](1, CRACKS_MAX_PATTERN_ID);
+				pData.cracksTextureRotationDegrees = frandom[UV_VeryRandomIdentifierrr](-7.0, 7.0);
 			}
 		} else if (cracksFadeTicker > 0) {
 			cracksFadeTicker--;
@@ -2960,12 +2960,12 @@ class UV_HudVisorDraw : EventHandler
 		prevGridIdleAlphaImage_2 = gridIdleAlphaImage_2;
 		// Select tick for the very first time
 		if (gridIdleNextTriggerTick <= 0) {
-			gridIdleNextTriggerTick = random(GRID_IDLE_CYCLE_TICKS, GRID_IDLE_CYCLE_TICKS * 5); // 7-35 sec
+			gridIdleNextTriggerTick = random[UV_VeryRandomIdentifierrr](GRID_IDLE_CYCLE_TICKS, GRID_IDLE_CYCLE_TICKS * 5); // 7-35 sec
 		}
         if (gridIdleTimer >= gridIdleNextTriggerTick) {
             gridIdleTimer = 0;
 			// Reselect tick
-			gridIdleNextTriggerTick = random(GRID_IDLE_CYCLE_TICKS, GRID_IDLE_CYCLE_TICKS * 8);
+			gridIdleNextTriggerTick = random[UV_VeryRandomIdentifierrr](GRID_IDLE_CYCLE_TICKS, GRID_IDLE_CYCLE_TICKS * 8);
 		}
         if (gridIdleTimer < GRID_IDLE_FADE_TICKS) {
             // First fade: image1 to image2
@@ -3008,14 +3008,14 @@ class UV_HudVisorDraw : EventHandler
 		
 		if (e.thing.Distance3D(playerinf.mo) <= (bloodMaxInitDistance + playerinf.mo.Radius)) {  // playerinf.mo.Radius is usually 16
 			Color newBloodColor;
-			if (random(1, 100) > (100 - bloodFreq)) {
+			if (random[UV_VeryRandomIdentifierrr](1, 100) > (100 - bloodFreq)) {
 				newBloodColor = bloodRandomColors ? GetRandomBloodColor() : GetBloodColorFromBlood(e.thing);
 				InitBloodSplash(newBloodColor);
 			}
-			if (bloodFreq > 100 && random(1, 100) > (200 - bloodFreq)) { // if frequency > 100 there's a chance for second splash at the same moment
+			if (bloodFreq > 100 && random[UV_VeryRandomIdentifierrr](1, 100) > (200 - bloodFreq)) { // if frequency > 100 there's a chance for second splash at the same moment
 				InitBloodSplash(newBloodColor);
 			}
-			if (bloodFreq > 200 && random(1, 100) > (300 - bloodFreq)) { // third splash
+			if (bloodFreq > 200 && random[UV_VeryRandomIdentifierrr](1, 100) > (300 - bloodFreq)) { // third splash
 				InitBloodSplash(newBloodColor);
 			}
 		}
@@ -3092,12 +3092,12 @@ class UV_HudVisorDraw : EventHandler
 		} else {
 			bs.fadeOutTicker = 1;
 		}
-		bs.texIndex = random(1, BLOOD_MAX_TEXTURE_ID); // png names
+		bs.texIndex = random[UV_VeryRandomIdentifierrr](1, BLOOD_MAX_TEXTURE_ID); // png names
 		double w, h;
 		TextureID bloodTex = TexMan
 			.CheckForTexture(CommonGraphicsPathPlayContext .. "Blood/blood_" .. bs.texIndex .. ".png");
 		[w,h] = TexMan.GetSize(bloodTex);
-		double randomSizeMult = double(random(75, 125)) / 100;
+		double randomSizeMult = double(random[UV_VeryRandomIdentifierrr](75, 125)) / 100;
 		w *= randomSizeMult * bloodSize * scaleFactorWidthPlay;
 		h *= randomSizeMult * bloodSize * scaleFactorHeightPlay;
 		bs.fullSize = (w, h);
@@ -3108,8 +3108,8 @@ class UV_HudVisorDraw : EventHandler
 		bs.bColor = newBloodColor;
 		bs.prevAlpha = 1.0;
 		bs.alpha = 1.0;
-		bs.origCoords.x = Screen.GetWidth() - w - random(0, Screen.GetWidth() - w);
-		bs.origCoords.y = Screen.GetHeight() - h - random(0, Screen.GetHeight() - h);
+		bs.origCoords.x = Screen.GetWidth() - w - random[UV_VeryRandomIdentifierrr](0, Screen.GetWidth() - w);
+		bs.origCoords.y = Screen.GetHeight() - h - random[UV_VeryRandomIdentifierrr](0, Screen.GetHeight() - h);
 		bs.coordinates.x = bs.origCoords.x + widthDecrease / 2;
 		bs.coordinates.y = bs.origCoords.y + heightDecrease / 2;
 		bs.prevCoordinates.x = bs.origCoords.x + w / 2;
@@ -3207,7 +3207,7 @@ class UV_HudVisorDraw : EventHandler
 	
 	Color GetRandomBloodColor() {
 		int r, g, b;
-		int rand = random(1, 6);
+		int rand = random[UV_VeryRandomIdentifierrr](1, 6);
 		if (rand == 1) { // green
 			r = 0;
 			g = 255;
@@ -3354,8 +3354,8 @@ class UV_HudVisorDraw : EventHandler
 	
 	void DoHelmetShaking() {
 		if (ShakeIntensity > 0.01) { // ShakeIntensity is calculated in WorldThingDamaged override
-			ShakeOffsetX = frandom(-ShakeIntensity, ShakeIntensity);
-			ShakeOffsetY = frandom(-ShakeIntensity, ShakeIntensity);
+			ShakeOffsetX = frandom[UV_VeryRandomIdentifierrr](-ShakeIntensity, ShakeIntensity);
+			ShakeOffsetY = frandom[UV_VeryRandomIdentifierrr](-ShakeIntensity, ShakeIntensity);
 	
 			ShakeOffsetX *= scaleFactorWidthPlay;
 			ShakeOffsetY *= scaleFactorHeightPlay;
