@@ -210,7 +210,7 @@ UVISOR_POWERUP_COLORS_MODE = "Powerups Affecting Colors ⓘ";
 UVISOR_POWERUP_COLORS_MODE_0 = "All Supported Powerups";
 UVISOR_POWERUP_COLORS_MODE_1 = "Only Night Vision, etc.";
 UVISOR_POWERUP_COLORS_MODE_2 = "None";
-UVISOR_POWERUP_COLORS_MODE_TIP = "Night Vision option includes vanilla one goggles, Night Vision Pack and a number of other mods. Usually it very slightly affects inner helmet parts and fully affects blood, wiper and armor grid";
+UVISOR_POWERUP_COLORS_MODE_TIP = "Night Vision option includes vanilla one goggles, Night Vision Pack and a number of other mods. Usually the NV very slightly affects inner helmet parts and fully affects blood, wiper and armor grid";
 
 // Blood On Visor
 UVISOR_MENU_BLOOD_SPLASHES = "Blood On Visor";
@@ -515,9 +515,9 @@ UVISOR_D_LIGHTS_CONTRIB_MULT = "Влияние Динамического Све
 UVISOR_D_LIGHTS_CONTRIB_MULT_TIP = "Дин. свет используется в продвинутых картах для потолочных ламп и т.д. (и в модах). Чем больше значение, тем больше влияние на яркость и цвет шлема. Также это зависит от угла обзора (внутренние части не должны отражать свет так же, как руки игрока). '0' на слайдере полностью отключает влияние. UV на данный момент не поддерживает т.н. attached lights по типу небольших напольных ламп в разных модах. (!) Закройте меню, чтобы увидеть результат";
 UVISOR_POWERUP_COLORS_MODE = "Поверапы, Влияющие На Цвета ⓘ";
 UVISOR_POWERUP_COLORS_MODE_0 = "Все Поддерживающиеся Поверапы";
-UVISOR_POWERUP_COLORS_MODE_1 = "Только Ночное Зрение и т.д.";
+UVISOR_POWERUP_COLORS_MODE_1 = "Только Ночное Видение и т.д.";
 UVISOR_POWERUP_COLORS_MODE_2 = "Никакие";
-UVISOR_POWERUP_COLORS_MODE_TIP = "Ночное Зрение помимо стандартных очков включает в себя мод Night Vision Pack и некоторые варианты из других модов. Обычно это лишь чуть-чуть влияет на внутренние части шлема и целиком - на кровь, очиститель и сетку брони";
+UVISOR_POWERUP_COLORS_MODE_TIP = "'Ночное Видение' помимо стандартных очков включает в себя мод Night Vision Pack и некоторые варианты из других модов. Обычно НВ лишь чуть-чуть влияет на внутренние части шлема и целиком - на кровь, очиститель и сетку брони";
 
 
 // Blood On Visor
