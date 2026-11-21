@@ -94,10 +94,11 @@ nosave int uvisor_gameplay_alpha_basis_armor_grid = 0;
 nosave int uvisor_powers_overrides_grid_color_mode = 3;
 nosave bool uvisor_grid_disable_when_radsuit_nightvis = false;
 nosave bool uvisor_grid_damage_feedback = true;
+nosave int uvisor_powerup_colors_mode = 0;
 nosave bool uvisor_transparency_on_invis = true;
-nosave bool uvisor_hide_helmet_in_third_person = true;
 nosave float uvisor_sector_br_contrib_mult = 1.0;
 nosave float uvisor_d_lights_contrib_mult = 1.0;
+nosave bool uvisor_hide_helmet_in_third_person = true;
 
 
 // Blood On Visor

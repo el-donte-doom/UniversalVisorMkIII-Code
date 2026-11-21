@@ -264,7 +264,6 @@ OptionMenu "UV_GAMEPLAY" {
 	StaticText " "
 	StaticText " "
 	StaticText "$UVISOR_OPTIONS_MENU_CLOSING_TIP", DarkGray
-
 	StaticText " "
 	StaticText "$UVISOR_GLOW_GLASS_BASIS_SUBTITLE", LightBlue
 	Option "$UVISOR_GLOW_WITH_TIP", "uvisor_gameplay_color_basis_glow", "GameplayColorBasis"
@@ -302,16 +301,21 @@ OptionMenu "UV_GAMEPLAY" {
 	UV_Tooltip "$UVISOR_GRID_TRANSPARENCY_BASIS_TIP"
 	Option "$UVISOR_GRID_DISABLE_WHEN_RADSUIT_NV", "uvisor_grid_disable_when_radsuit_nightvis", "YesNo"
 	UV_Tooltip "$UVISOR_GRID_DISABLE_WHEN_RADSUIT_NV_TIP"
-	Option "$UVISOR_GRID_DAMAGE_FEEDBACK", "uvisor_grid_damage_feedback", "YesNo"
+	Option "$UVISOR_GRID_DAMAGE_FEEDBACK", "uvisor_grid_damage_feedback", "OnOff"
+	UV_Tooltip ""
 	StaticText " "
 	StaticText "$UVISOR_OTHER_SUBTITLE", LightBlue
 	Control "$UVISOR_HOTKEY_TO_ENABLE_DISABLE_MOD", "uvisor_enable_disable"
+	UV_Tooltip ""
+	Option "$UVISOR_POWERUP_COLORS_MODE", "uvisor_powerup_colors_mode", "PowerupColorsModes"
+	UV_Tooltip "$UVISOR_POWERUP_COLORS_MODE_TIP"
 	Option "$UVISOR_TRANSPARENCY_WITH_INVISIBILITY", "uvisor_transparency_on_invis", "OnOff"
-	Option "$UVISOR_HIDE_HELMET_3RD_PERSON", "uvisor_hide_helmet_in_third_person", "YesNo"
+	UV_Tooltip ""
 	Slider "$UVISOR_SECTOR_BR_CONTRIB_MULT", "uvisor_sector_br_contrib_mult", 0.0, 2.0, 0.1
 	UV_Tooltip "$UVISOR_SECTOR_BR_CONTRIB_MULT_TIP"
 	Slider "$UVISOR_D_LIGHTS_CONTRIB_MULT", "uvisor_d_lights_contrib_mult", 0.0, 2.0, 0.1
 	UV_Tooltip "$UVISOR_D_LIGHTS_CONTRIB_MULT_TIP"
+	Option "$UVISOR_HIDE_HELMET_3RD_PERSON", "uvisor_hide_helmet_in_third_person", "YesNo"
 	StaticText " "
 	StaticText "-------------------------", LightBlue
 	SafeCommand "$UVISOR_RESET_SUBMENU", uvisor_reset_gameplay_menu, "$UVISOR_RESET_SUBMENU_PROMPT"
@@ -638,4 +642,11 @@ OptionValue "BreathVoices"
 {
 	0, "$UVISOR_BREATH_VOICE_TYPE_1"
 	1, "$UVISOR_BREATH_VOICE_TYPE_2"
+}
+
+OptionValue "PowerupColorsModes"
+{
+	0, "$UVISOR_POWERUP_COLORS_MODE_0"
+	1, "$UVISOR_POWERUP_COLORS_MODE_1"
+	2, "$UVISOR_POWERUP_COLORS_MODE_2"
 }

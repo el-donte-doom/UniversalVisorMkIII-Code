@@ -70,7 +70,6 @@ class UV_HudVisorDraw : EventHandler
 	bool isVanillaInvulernabilityOn;
 	String lastColormappedPowerup;
 	Color radsuitColor;
-	bool isLastColormappedPowerupBlinking;
 	bool isLastPowerupColomapped;
 	bool isKnownColormapActive;
 	bool applyColormapToGlow;
@@ -296,6 +295,7 @@ class UV_HudVisorDraw : EventHandler
 	const GODMODE_GRID_COLOR = Color(255, 255, 143, 59); // gold
 	const FULL_WHITE_COLOR = Color(255, 255, 255, 255);
 	float dLightsContributionMult;
+	int powerupColorsMode;
 	
 	ui string cracksBasePath;
 	ui string CommonGraphicsPath;
@@ -1723,7 +1723,7 @@ class UV_HudVisorDraw : EventHandler
 	}
 	
 	ui bool ShouldUseStencilStyle(UV_TextureTypes texType = -1) {
-		return (isVanillaInvulernabilityOn)
+		return (isVanillaInvulernabilityOn && powerupColorsMode == 0)
 			|| 
 			(NV_PackInverseMapOn 
 				&& !isLastPowerupColomapped 
@@ -1783,10 +1783,13 @@ class UV_HudVisorDraw : EventHandler
 	}
 	
 	ui Color BlendColorWithEnvironmentAndPowerups(Color originalColor, UV_TextureTypes texType = -1) {
-		Color newColor = Color(255, originalColor.r, originalColor.g, originalColor.b); // 
+		Color newColor = Color(255, originalColor.r, originalColor.g, originalColor.b); // might be without 255 at this point which is required here
+		if (powerupColorsMode == 2) { // if powerup colors disabled
+			return BlendColorWithEnvironment(newColor, texType);
+		}
 		bool isAffectedByEnvironment = true;
 		
-		if (ShouldUseStencilStyle(texType)) {
+		if (ShouldUseStencilStyle(texType) && powerupColorsMode == 0) {
 			// default invulnerability, to use with Stencil style. No PB, cause no white effect there
 			return GetColorForStencilStyle(originalColor);
 		}
@@ -1799,14 +1802,14 @@ class UV_HudVisorDraw : EventHandler
 					newColor = BlendColors(originalColor, newColor, 0.35);
 				}
 			} else {
-				// Light Amplification mode (vanilla / NV Pack default mode / other mods)
+				// Light Amplification mode (vanilla / NV Pack DEFAULT-only mode / other mods with bright light amp)
 				// Special color is set using UpdateColormappedPowerupState() and BlendColorWithColormappedPowerup()
 				newColor = BrightenColor(originalColor, 1.1);
 			}
 			isAffectedByEnvironment = false;
 		}
 		
-		if (lastColormappedPowerup && !isLastColormappedPowerupBlinking) { // last name of a powerup with Powerup.Colormap (false if empty string, i.e. no such powerup)
+		if (lastColormappedPowerup) { // last name of a powerup with Powerup.Colormap (false if empty string, i.e. no such powerup)
 			newColor = BlendColorWithColormappedPowerup(newColor, texType);
 			isAffectedByEnvironment = false;
 		}
@@ -2215,6 +2218,7 @@ class UV_HudVisorDraw : EventHandler
 		sectorBrightnessContributionMult = Cvar.GetCvar("uvisor_sector_br_contrib_mult", playerinf).GetFloat();
 		dLightsContributionMult = Cvar.GetCvar("uvisor_d_lights_contrib_mult", playerinf).GetFloat();
 		transparencyEffectWhenInvis = Cvar.GetCVar("uvisor_transparency_on_invis", playerinf).GetBool();
+		powerupColorsMode = Cvar.GetCvar("uvisor_powerup_colors_mode", playerinf).GetInt();
 		
 		int texRes = Cvar.GetCvar("uvisor_tex_res", playerinf).GetInt();
 		String texResPath;
@@ -2444,26 +2448,9 @@ class UV_HudVisorDraw : EventHandler
 			nightVisionStr = "PowerLightamp";
 		}
 		while (invItem != null) {
-			if (invItem is "Powerup") { // not radsuit
+			if (invItem is "Powerup") {
 				isLastPowerupColomapped = false;
-				isLastColormappedPowerupBlinking = false;
 				Powerup pow = Powerup(invItem);
-				if (pow.GetBlend()) { // Powerup.Color actor property
-					if (invItem is "PowerIronfeet") {
-						radsuitColor = pow.GetBlend();
-					} else {
-						powerupBlendColors.Push(pow.GetBlend());
-					}
-				}
-				if (pow.Colormap && pow.Colormap != -1) { 
-					// Based on Powerup.Colormap actor property, but we can get only its dynamic id here (unreliable if multiple mods loaded)
-					// So store powerup class name instead
-					lastColormappedPowerup = pow.GetClassName();
-					if (pow.isBlinking()) {
-						isLastColormappedPowerupBlinking = true;
-					}
-					isLastPowerupColomapped = true; // gets reset if not last
-				}
 				if (globals.isNightVisionPackLoaded && invItem is NVNightVisionInverseMapStr) {
 					NV_PackInverseMapOn = true; 
 				} else if (invItem is invulnerableStr && !pow.isBlinking()) {
@@ -2474,19 +2461,13 @@ class UV_HudVisorDraw : EventHandler
 				} else if (invItem is "PowerIronfeet") { // Radsuits
 					radSuitOn = true;
 				} else if (invItem is "PowerInvisibility") {
-					invisEffectOn = true;
+					invisEffectOn = true; 
+					// for some reason invis isBlinking() isn't really synced with visual blinking, so not using blink check for it
 				} else if (invItem is nightVisionStr) { // Night vision
 					nightVisionOn = true;
 					if (invItem is PB_NightVisionStr) {
 						PB_NightVisionOn = true;
 					} 
-				} else if (globals.isPB_Loaded) {
-					if (invItem.GetClassName() == PB_SpeedPowerupStr) {
-						powerupBlendColors.Push(Color(80, 255, 255, 25));
-					}  
-					if (invItem.GetClassName() == PB_QuadDamagePowerupStr) {
-						powerupBlendColors.Push(Color(80, 64, 0, 127));
-					}
 				} else if (invItem is heavyMachinegunStr) { // BD and UMES machine gun
 					inMachineGun = true;
 				} else if (!inVehicle) {  					// BD and UMES vehicles except machine gun
@@ -2494,6 +2475,28 @@ class UV_HudVisorDraw : EventHandler
 						if (invItem is vehicleInvNames[i]) {
 							inVehicle = true;
 							break;
+						}
+					}
+				}
+				if ((powerupColorsMode == 0 || (powerupColorsMode == 1 && invItem is nightVisionStr)) && !pow.isBlinking()) {
+					if (pow.GetBlend()) { // Powerup.Color actor property
+						if (invItem is "PowerIronfeet") {
+							radsuitColor = pow.GetBlend();
+						} else {
+							powerupBlendColors.Push(pow.GetBlend());
+						}
+					}
+					if (pow.Colormap && pow.Colormap != -1) { 
+						// Based on Powerup.Colormap actor property, but we can get only its dynamic id here (unreliable if multiple mods loaded)
+						// So store powerup class name instead
+						lastColormappedPowerup = pow.GetClassName();
+						isLastPowerupColomapped = true; // gets reset if not last
+					} else if (globals.isPB_Loaded) {
+						if (invItem.GetClassName() == PB_SpeedPowerupStr) {
+							powerupBlendColors.Push(Color(80, 255, 255, 25));
+						}  
+						if (invItem.GetClassName() == PB_QuadDamagePowerupStr) {
+							powerupBlendColors.Push(Color(80, 64, 0, 127));
 						}
 					}
 				}
@@ -2674,6 +2677,8 @@ class UV_HudVisorDraw : EventHandler
 	}
 	
 	void SetPlayerBlendColorAndAlpha() {
+		if (powerupColorsMode > 0)
+			return;
 		double combinedA;
 		double combinedR;
 		double combinedG;
@@ -2712,7 +2717,7 @@ class UV_HudVisorDraw : EventHandler
 		isKnownColormapActive = false;
 		applyColormapToGlow = false; // PowerInvulnerable, etc. applies even to glow
 		blendColormap = false; // to blend actual helmet metal pieces with night vision colors
-		if (!lastColormappedPowerup || isLastColormappedPowerupBlinking) { // last name of a powerup with Powerup.Colormap (false if empty string, i.e. no such powerup)
+		if (!lastColormappedPowerup) { // last name of a powerup with Powerup.Colormap (false if empty string, i.e. no such powerup)
 			return;
 		}
 		
@@ -2728,7 +2733,7 @@ class UV_HudVisorDraw : EventHandler
 		}
 
 		// Night Vision Pack
-		if (globals.isNightVisionPackLoaded) {
+		if (globals.isNightVisionPackLoaded && nightVisionOn) {
 			if (lastColormappedPowerup == "NVNightVision") {
 				SetColormapState(0, 1, 0, 0, 35, 0, false, true);
 			} else if (lastColormappedPowerup == "NVNightVisionProto") {

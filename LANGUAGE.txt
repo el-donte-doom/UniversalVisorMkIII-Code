@@ -200,13 +200,17 @@ UVISOR_GRID_DISABLE_WHEN_RADSUIT_NV_TIP = "Sort of compatibility with overlays f
 UVISOR_GRID_DAMAGE_FEEDBACK = "Visual Damage Feedback";
 UVISOR_OTHER_SUBTITLE = "----- Other -----";
 UVISOR_HOTKEY_TO_ENABLE_DISABLE_MOD = "Hotkey to Enable/Disable Mod";
-UVISOR_TRANSPARENCY_WITH_INVISIBILITY = "Transparency Effect With Invisibility Items";
-UVISOR_HIDE_HELMET_3RD_PERSON = "Hide Helmet in Third Person (Chase Camera)";
+UVISOR_TRANSPARENCY_WITH_INVISIBILITY = "Transparency With Invisibility Items";
+UVISOR_HIDE_HELMET_3RD_PERSON = "Hide Helmet in 3rd Person (Chase Camera)";
 UVISOR_SECTOR_BR_CONTRIB_MULT = "Sector Brightness Contribution ⓘ";
-UVISOR_SECTOR_BR_CONTRIB_MULT_TIP = "Usual brightness mechanics in most maps. The more the value - the more it affects helmet (so in a dark sector the helmet will be even darker). (!) Close menu to see difference";
-UVISOR_D_LIGHTS_CONTRIB_MULT = "Dynamic Lights Contrubition  ⓘ";
-UVISOR_D_LIGHTS_CONTRIB_MULT_TIP = "Dynamic lights are used in advanced maps for ceiling/wall lamps, etc. (or in mods). The more the value, the more they affect helmet brightness and color. Also it depends on view angle (inner parts shouldn't reflect all lights like player hands). '0' on the slider completely disables the contribution. UV doesn't support, at least for now, small attached lights like floor lamps in some mods. (!) Close menu to see difference";
-
+UVISOR_SECTOR_BR_CONTRIB_MULT_TIP = "Usual brightness mechanics in most maps. The more the value, the more it affects helmet (so in a dark sector the helmet will be even darker). (!) Close the menu to see difference";
+UVISOR_D_LIGHTS_CONTRIB_MULT = "Dynamic Lights Contrubition ⓘ";
+UVISOR_D_LIGHTS_CONTRIB_MULT_TIP = "Dynamic lights are used in advanced maps for ceiling/wall lamps, etc. (or in mods). The more the value, the more they affect helmet brightness and color. Also it depends on view angle (inner parts shouldn't reflect all lights like player hands). '0' on the slider completely disables the contribution. UV doesn't support, at least for now, small attached lights like floor lamps in some mods. (!) Close the menu to see difference";
+UVISOR_POWERUP_COLORS_MODE = "Powerups Affecting Colors ⓘ";
+UVISOR_POWERUP_COLORS_MODE_0 = "All Supported Powerups";
+UVISOR_POWERUP_COLORS_MODE_1 = "Only Night Vision, etc.";
+UVISOR_POWERUP_COLORS_MODE_2 = "None";
+UVISOR_POWERUP_COLORS_MODE_TIP = "Night Vision option includes vanilla one goggles, Night Vision Pack and a number of other mods. Usually it very slightly affects inner helmet parts and fully affects blood, wiper and armor grid";
 
 // Blood On Visor
 UVISOR_MENU_BLOOD_SPLASHES = "Blood On Visor";
@@ -234,7 +238,7 @@ UVISOR_BLOOD_DEFAULT_SATURATION_SHIFT = "Default Blood Saturation ⓘ";
 UVISOR_BLOOD_DEFAULT_SATURATION_SHIFT_TIP = "If color can't be recognized, the default color set by base game/mod is used (usually red). However saturation may still mismatch slightly, depending on mods. Adjust if needed";
 UVISOR_FAMILY_FRIENDLY_BLOOD_COLORS = "Family-Friendly Blood Colors";
 UVISOR_BLOOD_DETECTION_MODE = "Blood Detection Mode ⓘ";
-UVISOR_BLOOD_DETECTION_MODE_TIP = "Enemy-based better detects colors and tuned to filter damage types similar to blood-based. Select blood-based only if other mod is incompatible (e.g. no blood where it should be or vice versa)";
+UVISOR_BLOOD_DETECTION_MODE_TIP = "Enemy-based better detects colors and tuned to filter damage types similar to blood-based. Select blood-based only if other mod is incompatible (no blood where it should be or vice versa)";
 UVISOR_BLOOD_DETECTION_MODE_1 = "Enemy-based (Default)";
 UVISOR_BLOOD_DETECTION_MODE_2 = "Blood-based";
 
@@ -503,12 +507,17 @@ UVISOR_GRID_DISABLE_WHEN_RADSUIT_NV_TIP = "Своего рода совмест�
 UVISOR_GRID_DAMAGE_FEEDBACK = "Визуальная Реакция на Урон";
 UVISOR_OTHER_SUBTITLE = "----- Прочее -----";
 UVISOR_HOTKEY_TO_ENABLE_DISABLE_MOD = "Горячая Клавиша для Вкл./Откл. Мода";
-UVISOR_TRANSPARENCY_WITH_INVISIBILITY = "Эффект Прозрачности для Невидимости и т.д.";
+UVISOR_TRANSPARENCY_WITH_INVISIBILITY = "Прозрачность при Невидимости";
 UVISOR_HIDE_HELMET_3RD_PERSON = "Скрывать Шлем При Виде от 3 Лица (Chase Camera)";
 UVISOR_SECTOR_BR_CONTRIB_MULT = "Влияние Яркости Сектора Карты ⓘ";
 UVISOR_SECTOR_BR_CONTRIB_MULT_TIP = "Обычная механика яркости почти на всех картах. Чем больше значение слайдера - тем больше влияние (т.е. в тёмном месте шлем станет ещё темнее). (!) Закройте меню, чтобы увидеть результат";
-UVISOR_D_LIGHTS_CONTRIB_MULT = "Влияние Динамического Света  ⓘ";
-UVISOR_D_LIGHTS_CONTRIB_MULT_TIP = "Дин. свет используется в продвинутых картах для потолочных ламп и т.д. (и в модах). Чем больше значение, тем больше влияния на яркость и цвет шлема. Также это зависит от угла обзора (внутренние части не должны отражать свет так же, как руки игрока). '0' на слайдере полностью отключает влияние. UV на данный момент не поддерживает т.н. attached lights по типу небольших напольных ламп в разных модах. (!) Закройте меню, чтобы увидеть результат";
+UVISOR_D_LIGHTS_CONTRIB_MULT = "Влияние Динамического Света ⓘ";
+UVISOR_D_LIGHTS_CONTRIB_MULT_TIP = "Дин. свет используется в продвинутых картах для потолочных ламп и т.д. (и в модах). Чем больше значение, тем больше влияние на яркость и цвет шлема. Также это зависит от угла обзора (внутренние части не должны отражать свет так же, как руки игрока). '0' на слайдере полностью отключает влияние. UV на данный момент не поддерживает т.н. attached lights по типу небольших напольных ламп в разных модах. (!) Закройте меню, чтобы увидеть результат";
+UVISOR_POWERUP_COLORS_MODE = "Поверапы, Влияющие На Цвета ⓘ";
+UVISOR_POWERUP_COLORS_MODE_0 = "Все Поддерживающиеся Поверапы";
+UVISOR_POWERUP_COLORS_MODE_1 = "Только Ночное Зрение и т.д.";
+UVISOR_POWERUP_COLORS_MODE_2 = "Никакие";
+UVISOR_POWERUP_COLORS_MODE_TIP = "Ночное Зрение помимо стандартных очков включает в себя мод Night Vision Pack и некоторые варианты из других модов. Обычно это лишь чуть-чуть влияет на внутренние части шлема и целиком - на кровь, очиститель и сетку брони";
 
 
 // Blood On Visor
@@ -538,7 +547,7 @@ UVISOR_BLOOD_DEFAULT_SATURATION_SHIFT_TIP = "Если цвет нельзя оп
 UVISOR_FAMILY_FRIENDLY_BLOOD_COLORS = "Цвета Для Всей Семьи";
 UVISOR_BLOOD_DETECTION_MODE = "Режим Обнаружения Крови ⓘ";
 UVISOR_BLOOD_DETECTION_MODE_TIP = "Режим 'На основе врагов' лучше определяет цвета и тоже фильтрует типы урона. Выберите 'На основе крови' только при несовместимости с модом (нет крови, где она должна быть, или наоборот)";
-UVISOR_BLOOD_DETECTION_MODE_1 = "На Основе Врагов (Стандартная)";
+UVISOR_BLOOD_DETECTION_MODE_1 = "На Основе Врагов (Стандартный)";
 UVISOR_BLOOD_DETECTION_MODE_2 = "На Основе Крови";
 
 
