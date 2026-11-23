@@ -10,6 +10,7 @@ class UV_HudVisorStaticGlobals: StaticEventHandler {
 	bool isLitDOOM_Loaded;
 	bool isBeautifulDoomLoaded;
 	bool isBD64_Loaded;
+	bool isXimSW_Loaded;
 	bool isHellriderLoaded;
 	bool isHellriderVengefulLoaded;
 	bool isNightVisionPackLoaded;
@@ -42,45 +43,48 @@ class UV_HudVisorStaticGlobals: StaticEventHandler {
 		if (!playerinf.mo) {
             return;
 		}
-		string playerClassName = playerinf.mo.getclassname();
+		name playerClassName = playerinf.mo.GetClassName();
 		
-		string BD_ActorName = "BIG_FUCKING_GUN";
+		name BD_ActorName = 'BIG_FUCKING_GUN';
 		Class<Actor> BD_ActorClass = BD_ActorName;
 		
-		string BP_ActorName = "BP_Pistol";
+		name BP_ActorName = 'BP_Pistol';
 		Class<Actor> BP_ActorClass = BP_ActorName;
 		
-		string BD64_ActorName = "64ZombieMan";
+		name BD64_ActorName = '64ZombieMan';
 		Class<Actor> BD64_ActorClass = BD64_ActorName;
 		
-		string litDoomActorName = "LiTRifle";
+		name litDoomActorName = 'LiTRifle';
 		Class<Actor> lidDoomActorClass = litDoomActorName;
 		
-		string PB_ActorName = "PB_Shotgun";
+		name PB_ActorName = 'PB_Shotgun';
 		Class<Actor> PB_ActorClass = PB_ActorName;
 		
-		string BeautD_ActorName = "BDoomWeapon";
+		name BeautD_ActorName = 'BDoomWeapon';
 		Class<Actor> BeautD_ActorClass = BeautD_ActorName;
 		
-		string HellriderActorName = "HR_InvulnerabilitySphere";
+		name XimSW_ActorName = 'StarWarsBattleDroid';
+		Class<Actor> XimSW_ActorClass = XimSW_ActorName;
+		
+		name HellriderActorName = 'HR_InvulnerabilitySphere';
 		Class<Actor> HellriderActorClass = HellriderActorName;
 		
-		string HellriderVengefulActorName = "HR_Maskofliterally";
+		name HellriderVengefulActorName = 'HR_Maskofliterally';
 		Class<Actor> HellriderVengefulActorClass = HellriderVengefulActorName;
 		
-		string NightVisionPackActorName = "NVNightVision";
+		name NightVisionPackActorName = 'NVNightVision';
 		Class<Actor> NightVisionPackActorClass = NightVisionPackActorName;
 		
 		bloodDefaultSaturationMultiplier = 1.55; 
 		if (BD_ActorClass) {
 			isBD_Loaded = true;
-		} else if (playerClassName == "PB_PlayerPrawn" || playerClassName == "PBXCore_Player" || PB_ActorClass) {
+		} else if (playerClassName == 'PB_PlayerPrawn' || playerClassName == 'PBXCore_Player' || PB_ActorClass) {
 			isPB_Loaded = true;
 			// PB blood decals seem to be darker than in most mods (but actually more in line with the defaultbloodcolor)
 			bloodDefaultSaturationMultiplier = 1.35; 
 		} else if (BP_ActorClass) {
 			isBP_Loaded = true;
-		} else if (playerClassName == "Kiwi") {
+		} else if (playerClassName == 'Kiwi') {
 			isDD_Loaded = true;
 		} else if (lidDoomActorClass) {
 			isLitDOOM_Loaded = true;
@@ -88,6 +92,8 @@ class UV_HudVisorStaticGlobals: StaticEventHandler {
 			isBD64_Loaded = true;
 		} else if (BeautD_ActorClass) {
 			isBeautifulDoomLoaded = true;
+		} else if (XimSW_ActorClass) {
+			isXimSW_Loaded = true;
 		} else if (HellriderActorClass) {
 			isHellriderLoaded = true;
 		} else if (HellriderVengefulActorClass) {

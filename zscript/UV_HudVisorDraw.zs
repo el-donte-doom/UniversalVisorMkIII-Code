@@ -2262,13 +2262,16 @@ class UV_HudVisorDraw : EventHandler
 			if (isGlassDestroyed) return;
 			if (inVehicle) return;
 			string enemyClassName = e.thing.GetClassName();
+			name enemyClassNameN = enemyClassName;
 			if (e.thing.bloodColor == UNSET_COLOR && (e.thing.bNOBLOOD || e.thing.bNOBLOODDECALS)) {
 				if (!(globals.isDD_Loaded && enemyClassName.IndexOf("CYBORG") != -1) // Don't return if BD64 (except Lost Souls) or some enemies in DD
-					&& !(globals.isDD_Loaded && enemyClassName.IndexOf("HUNTERKILLER") != -1)
+					&& !(globals.isDD_Loaded && enemyClassNameN == 'HunterKiller')
 					&& !(globals.isBD64_Loaded && !(e.thing is 'LostSoul'))
 				) {
 					return;
 				}
+			} else if (globals.isXimSW_Loaded && e.thing.bNOBLOOD) {
+				return;
 			}
 			name eDamageType = e.DamageType;
 			for (int i = 0; i < damageTypesNoBlood.Size(); i++) {  
