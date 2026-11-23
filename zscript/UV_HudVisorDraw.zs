@@ -3270,21 +3270,19 @@ class UV_HudVisorDraw : EventHandler
 			}
 		}
 		
+		bool preventedNotifyingBySmartW = false;
 		if (isSmartAmmoWarning) {
 			if (ammoData.ammo1_ClassName && !ammoData.ammo2_ClassName
 					|| !ammoData.ammo1_ClassName && ammoData.ammo2_ClassName) {
-				StopBothAmmoNotifications(); // weapon doesn't have reloading
-				return; 
+				preventedNotifyingBySmartW = true; // weapon doesn't have reloading
 			}
 			if (warningSoundBasis == 2) { // ammo1
 				if (ammoData.am2amt <= 0) { // no ammo for reloading
-					StopBothAmmoNotifications();
-					return;
+					preventedNotifyingBySmartW = true;
 				}
 			} else if (warningSoundBasis == 3) { // ammo2
 				if (ammoData.am1amt <= 0) { // no ammo for reloading
-					StopBothAmmoNotifications();
-					return;
+					preventedNotifyingBySmartW = true;
 				}
 			}
 		}
@@ -3292,7 +3290,7 @@ class UV_HudVisorDraw : EventHandler
 		if (ammoData.am1max > 0) {
 			if (globals.isBD64_Loaded && ammoData.ammo1_ClassName && ammoData.ammo1_ClassName.IndexOf("AltPunch") != -1) {
 				NotifyIfLowAmmo(0, 0, 1);
-			} else {
+			} else if (!preventedNotifyingBySmartW) {
 				NotifyIfLowAmmo(ammoData.am1amt, ammoData.am1max, 1); // Regular case
 			}
 			mappedCurrentAmmo1 = MapRange(ammoData.am1amt, 0, ammoData.am1max, 0, 200);
@@ -3304,28 +3302,35 @@ class UV_HudVisorDraw : EventHandler
 				&& ammoData.ammo2_ClassName && ammoData.ammo2_ClassName.IndexOf("SSG") != -1) {
 				// Chainsaw alt in BD64 is supershotgun, don't notify if its barrels are empty
 				NotifyIfLowAmmo(0, 0, 2);
-			} else {
+			} else if (!preventedNotifyingBySmartW) {
 				NotifyIfLowAmmo(ammoData.am2amt, ammoData.am2max, 2); // Regular case
 			}
 			mappedCurrentAmmo2 = MapRange(ammoData.am2amt, 0, ammoData.am2max, 0, 200);
 		} 
+		
+		if (preventedNotifyingBySmartW) {
+			StopBothAmmoNotifications();
+			return;
+		}
 		
 		if (ammoData.ammo1_ClassName && !ammoData.ammo2_ClassName) { 
 			// Mod weapons often have two ammo types, for example ammo1 for total and ammo2 for current (mag)
 			// But a weapon without mag (like chaingun) in this case will usually have only ammo1 type
 			// So in such case if basis is ammo2, check ammo1 and vice versa
 			if (!(globals.isBD64_Loaded && ammoData.ammo1_ClassName.IndexOf("AltPunch") != -1)) {
-				NotifyIfLowAmmo(ammoData.am1amt, ammoData.am1max, 2);	// And notify about ammo1 (like chaingun) as if basis is ammo2 
+				if (!preventedNotifyingBySmartW) {
+					NotifyIfLowAmmo(ammoData.am1amt, ammoData.am1max, 2);	// And notify about ammo1 (like chaingun) as if basis is ammo2 
+				}
 			} else {
 				NotifyIfLowAmmo(0, 0, 2);
 			}
-		} else if (ammoData.ammo2_ClassName && !ammoData.ammo1_ClassName) {
+		} else if (ammoData.ammo2_ClassName && !ammoData.ammo1_ClassName && !preventedNotifyingBySmartW) {
 			NotifyIfLowAmmo(ammoData.am2amt, ammoData.am2max, 1);
 		}
 	}
 	
 	void NotifyIfLowAmmo(int currentAmmo, int maxAmmo, int ammoType) {
-		bool foundLowAmmo;
+		bool foundLowAmmo = false;
 		if (maxAmmo > 0) {
 			if (	   (maxAmmo > 400 && currentAmmo <= 30)
 					|| (maxAmmo > 200 && currentAmmo <= 20)
