@@ -35,6 +35,7 @@ class UV_HudVisorDraw : EventHandler
 	bool invulnerabilityOn;
 	bool isVanillaInvulernabilityOn;
 	name lastColormappedPowerup;
+	bool isActiveColormap;
 	Color radsuitColor;
 	bool isLastPowerupColomapped;
 	bool isKnownColormapActive;
@@ -1822,7 +1823,7 @@ class UV_HudVisorDraw : EventHandler
 			isAffectedByEnvironment = false;
 		}
 		
-		if (lastColormappedPowerup) { // last name of a powerup with Powerup.Colormap (false if empty string, i.e. no such powerup)
+		if (isKnownColormapActive) {
 			newColor = BlendColorWithColormappedPowerup(newColor, texType);
 			isAffectedByEnvironment = false;
 		}
@@ -1843,8 +1844,7 @@ class UV_HudVisorDraw : EventHandler
 	}
 	
 	ui Color BlendColorWithColormappedPowerup(Color originalColor, UV_TextureTypes texType = -1) {
-		if (!isKnownColormapActive
-			|| texType == UV_HudVisorDraw.GLOW && !applyColormapToGlow) {
+		if (texType == UV_HudVisorDraw.GLOW && !applyColormapToGlow) {
 			return originalColor;
 		}
 		int grayscale = CalculateGrayscaleAmount(originalColor);
@@ -2452,6 +2452,7 @@ class UV_HudVisorDraw : EventHandler
 		doingHelmetEquipAnim = false;
 		isLastPowerupColomapped = false;
 		lastColormappedPowerup = '';
+		isActiveColormap = false;
 		radsuitColor = UNSET_COLOR;
 		powerupBlendColors.Clear();
 		effectiveBlendAlpha = 0.0;
@@ -2510,6 +2511,7 @@ class UV_HudVisorDraw : EventHandler
 						// So store powerup class name instead
 						lastColormappedPowerup = pow.GetClassName();
 						isLastPowerupColomapped = true; // gets reset if not last
+						isActiveColormap = true;
 					} else if (globals.isPB_Loaded) {
 						if (itemClass == PB_SpeedPowerupClass) {
 							powerupBlendColors.Push(Color(80, 255, 255, 25));
@@ -2738,7 +2740,7 @@ class UV_HudVisorDraw : EventHandler
 		isKnownColormapActive = false;
 		applyColormapToGlow = false; // PowerInvulnerable, etc. applies even to glow
 		blendColormap = false; // to blend actual helmet metal pieces with night vision colors
-		if (!lastColormappedPowerup) { // last name of a powerup with Powerup.Colormap (false if empty string, i.e. no such powerup)
+		if (!isActiveColormap) {
 			return;
 		}
 		
