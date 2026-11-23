@@ -2497,11 +2497,13 @@ class UV_HudVisorDraw : EventHandler
 				}
 			} 
 			// Non-powerups
-			else if (IsDemonPlayerFlag(invItem)) { // BD demon morphs
-				isDemonPlayer = true;
-			} else if (globals.isPB_Loaded && invItem.GetClassName() == PB_HelmetAnimClass) {
+			else if (globals.isPB_Loaded && itemClass == PB_HelmetAnimClass) {
 				doingHelmetEquipAnim = true;
-			} 
+			}
+			// Both powerups and non-powerups
+			if (IsDemonPlayerFlag(invItem)) { // BD demon morphs
+				isDemonPlayer = true;
+			}
 			invItem = invItem.Inv; // Move to the next item
 		}
 		
