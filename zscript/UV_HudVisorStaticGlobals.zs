@@ -45,8 +45,10 @@ class UV_HudVisorStaticGlobals: StaticEventHandler {
 		}
 		name playerClassName = playerinf.mo.GetClassName();
 		
-		name BD_ActorName = 'BIG_FUCKING_GUN';
+		name BD_ActorName = 'Purist';
+		name BD_ActorName_2 = 'BDoomer';
 		Class<Actor> BD_ActorClass = BD_ActorName;
+		Class<Actor> BD_ActorClass_2 = BD_ActorName_2;
 		
 		name BP_ActorName = 'BP_Pistol';
 		Class<Actor> BP_ActorClass = BP_ActorName;
@@ -76,7 +78,7 @@ class UV_HudVisorStaticGlobals: StaticEventHandler {
 		Class<Actor> NightVisionPackActorClass = NightVisionPackActorName;
 		
 		bloodDefaultSaturationMultiplier = 1.55; 
-		if (BD_ActorClass) {
+		if (BD_ActorClass && BD_ActorClass_2) {
 			isBD_Loaded = true;
 		} else if (playerClassName == 'PB_PlayerPrawn' || playerClassName == 'PBXCore_Player' || PB_ActorClass) {
 			isPB_Loaded = true;
