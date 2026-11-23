@@ -633,6 +633,8 @@ class UV_HudVisorDraw : EventHandler
 	name BD_BLOOD;
 	name PM_BLOOD; // Project Malice
 	name MD_BLOOD; // Mass Disassembly
+	array<UV_BloodColorCacheEntry> enemyBasedBloodColorCache;
+	array<UV_BloodColorCacheEntry> bloodBasedBloodColorCache;
 	
 	// Screen wiper
 	const SCREEN_WIPER_TICKS = 40;
@@ -2320,34 +2322,46 @@ class UV_HudVisorDraw : EventHandler
 					int(newBloodColor.b * 0.6)
 				);
 			}
+			return newBloodColor, true;
+		}
+		// Not so good: vanilla Doom or mod enemies where color is empty (0, 0, 0, 0) (usually it's not the same as set black)
+		// However, check cache first
+		name actorClassName = enemyActor.GetClassName();
+		for (int i = 0; i < enemyBasedBloodColorCache.Size(); i++) {
+			if (enemyBasedBloodColorCache[i].actorClassName == actorClassName) {
+				return enemyBasedBloodColorCache[i].col, enemyBasedBloodColorCache[i].valid;
+			}
+		}
+		// Try to find color name in the 3 blood types
+		array<string> enemyBloodTypes;
+		for (int i = 0; i < 3; i++) {
+			if (enemyActor.GetBloodType(i) != null) {
+				string enemyBloodType = enemyActor.GetBloodType(i).getClassName();
+				enemyBloodType = enemyBloodType.MakeLower();
+				enemyBloodTypes.Push(enemyBloodType);
+			} 
+		}
+		if (enemyBloodTypes.Size() == 0) {
+			return Color(0,0,0,0), false; // Rare case when enemy doesn't have noblood flags, but has no actual blood and all 3 types are null (because has BloodType "None"?)
+					// Example: Blot in Dragon Sector Remake
+		}
+		if (globals.isDD_Loaded) {
+			if (enemyBloodTypes.Size() > 0 && enemyBloodTypes[2].IndexOf("blue") != -1) {
+				return Color("3399BF"), true; // light blue
+			}
+		} else if (globals.isBD64_Loaded) {
+			if (enemyBloodTypes.Size() > 0 && enemyBloodTypes[1].IndexOf("blue") != -1) {
+				return Color("1A166B"), true; // blue-purple, not just blue
+			}
 		} else {
-			// Not so good: vanilla Doom or mod enemies where color is empty (0, 0, 0, 0) (usually it's not the same as set black)
-			// Try to find color name in the 3 blood types
-			array<string> enemyBloodTypes;
-			for (int i = 0; i < 3; i++) {
-				if (enemyActor.GetBloodType(i) != null) {
-					string enemyBloodType = enemyActor.GetBloodType(i).getClassName();
-					enemyBloodType = enemyBloodType.MakeLower();
-					enemyBloodTypes.Push(enemyBloodType);
-				} 
-			}
-			if (enemyBloodTypes.Size() == 0) {
-				return Color(0,0,0,0), false; // Rare case when enemy doesn't have noblood flags, but has no actual blood and all 3 types are null (because has BloodType "None"?)
-						// Example: Blot in Dragon Sector Remake
-			}
-			// Special cases
-			if (globals.isDD_Loaded) {
-				if (enemyBloodTypes.Size() > 0 && enemyBloodTypes[2].IndexOf("blue") != -1) {
-					return Color("3399BF"), true; // light blue
-				}
-			} else if (globals.isBD64_Loaded) {
-				if (enemyBloodTypes.Size() > 0 && enemyBloodTypes[1].IndexOf("blue") != -1) {
-					return Color("1A166B"), true; // blue-purple, not just blue
-				}
-			}
 			// Try to find color name in type names or use gameinfo default color
 			newBloodColor = GetBloodColorFromTypesOrDefault(enemyBloodTypes);
 		}
+		UV_BloodColorCacheEntry cacheEntry = new("UV_BloodColorCacheEntry");
+		cacheEntry.actorClassName = actorClassName;
+		cacheEntry.col = newBloodColor;
+		cacheEntry.valid = true;
+		enemyBasedBloodColorCache.Push(cacheEntry);
 		return newBloodColor, true;
 	}
 	
@@ -3036,10 +3050,15 @@ class UV_HudVisorDraw : EventHandler
 			newBloodColor = thing.bloodcolor;
 		}
 		if (newBloodColor == UNSET_COLOR) {
+			string bloodClassName = thing.GetClassName();
+			for (int i = 0; i < bloodBasedBloodColorCache.Size(); i++) {
+				if (bloodBasedBloodColorCache[i].actorClassName == bloodClassName) {
+					return bloodBasedBloodColorCache[i].col;
+				}
+			}
 			if (!(thing is MD_BLOOD)) { // enemies in Mass Disassembly have black blood
 				newBloodColor = GetDefaultBloodColor();
 			}
-			string bloodClassName = thing.GetClassName();
 			bloodClassName = bloodClassName.MakeLower();
 			if (bloodClassName.IndexOf("green") != -1) {
 				newBloodColor = "006400";
@@ -3067,6 +3086,11 @@ class UV_HudVisorDraw : EventHandler
 					}
 				}
 			}
+			UV_BloodColorCacheEntry cacheEntry = new("UV_BloodColorCacheEntry");
+			cacheEntry.actorClassName = bloodClassName;
+			cacheEntry.col = newBloodColor;
+			cacheEntry.valid = true;
+			bloodBasedBloodColorCache.Push(cacheEntry);
 		}
 		return newBloodColor;
 	}
@@ -3717,4 +3741,11 @@ class UV_AmmoData {
 	int am2amt;
 	int am1max;
 	int am2max;
+}
+
+class UV_BloodColorCacheEntry {
+	
+	name actorClassName;
+    Color col;
+    bool valid;
 }
