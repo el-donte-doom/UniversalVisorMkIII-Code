@@ -135,6 +135,7 @@ nosave float uvisor_shaking_sensitivity = 0.2;
 
 // Sounds
 nosave int uvisor_warning_sound_mode = 3;
+nosave bool uvisor_warning_ammo_smart = false;
 nosave float uvisor_warning_volume = 1.0;
 nosave int uvisor_warning_sound_channel = 105;
 nosave float uvisor_cracks_sounds_volume = 1.0;

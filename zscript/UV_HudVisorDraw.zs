@@ -501,6 +501,13 @@ class UV_HudVisorDraw : EventHandler
 		"Explosion"
 	};
 	
+	static const name skippableWeaponsForAmmoData[] = {
+		"LedgeGrab",
+		"LedgeGrabWeapon",
+		"BladeWeapon",
+		"GloryFist"
+	};
+	
 	// Armor grid
 	const ARMOR_GRID_DAMAGE_ANIM_TICKS = 12;
 	const ARMOR_GRID_HEAVY_DAMAGE_ANIM_TICKS = 12;
@@ -639,6 +646,7 @@ class UV_HudVisorDraw : EventHandler
 	
 	// Sounds
 	int warningSoundBasis;
+	bool isSmartAmmoWarning;
 	double warningVolume;
 	int prevWarningSoundChannel;
 	int warningSoundChannel;
@@ -672,6 +680,7 @@ class UV_HudVisorDraw : EventHandler
 	int lowAmmo2Ticker;
 	bool lowAmmo2Active;
 	UV_AmmoReaderFactory ammoReaderFactory;
+	bool shouldSkipWeaponData; // for ledge grabbing, etc.
 	
 	// Dynamic lights
 	double dLightsBrightnessWeighted;
@@ -1929,12 +1938,9 @@ class UV_HudVisorDraw : EventHandler
 		}
 		
 		if (!ammoData.ammo1_ClassName && !ammoData.ammo2_ClassName) {
-			string wClass = ammoData.weaponClassName;
-			if (wClass) {
-				if (wClass.IndexOf("Ledge") != -1 || wClass.IndexOf("BladeWeapon") != -1
-						|| wClass.IndexOf("GloryFist") != -1)
-						{
-					return; // if these are found, keep color of previous weapon
+			if (ammoData.weaponClassName) {
+				if (shouldSkipWeaponData) {
+					return; // keep color of previous weapon
 				} else {
 					// or if for example chainsaw with infinite ammo is selected, set max color
 					colorAmmo1 = gameplayColorStep4;
@@ -2198,6 +2204,7 @@ class UV_HudVisorDraw : EventHandler
 		hideHelmetInThirdPerson = Cvar.GetCvar("uvisor_hide_helmet_in_third_person", playerinf).GetBool();
 		
 		warningSoundBasis = Cvar.GetCvar("uvisor_warning_sound_mode", playerinf).GetInt();
+		isSmartAmmoWarning = Cvar.GetCvar("uvisor_warning_ammo_smart", playerinf).GetBool();
 		warningVolume = Cvar.GetCVar("uvisor_warning_volume", playerinf).GetFloat();
 		warningSoundChannel = Cvar.GetCvar("uvisor_warning_sound_channel", playerinf).GetInt();
 		cracksVolume = Cvar.GetCVar("uvisor_cracks_sounds_volume", playerinf).GetFloat();
@@ -2507,9 +2514,9 @@ class UV_HudVisorDraw : EventHandler
 			if (IsDemonPlayerFlag(invItem)) { // BD demon morphs
 				isDemonPlayer = true;
 			}
+			
 			invItem = invItem.Inv; // Move to the next item
 		}
-		
 		invisEffectOn = invisEffectOn && transparencyEffectWhenInvis;
 		
 		if (isEnteringOrLeavingMachineGun()) {
@@ -3248,7 +3255,40 @@ class UV_HudVisorDraw : EventHandler
 	}
 	
 	void CheckAmmo() {
+		shouldSkipWeaponData = false;
 		ammoData = UV_AmmoReaderFactory.Get().GetAmmoData(playerinf, globals);
+		if (!ammoData.ammo1_ClassName && !ammoData.ammo2_ClassName) { // no ammo classes
+			name wClass = ammoData.weaponClassName;
+			if (wClass) {
+				if (IsSkippableWeaponData(wClass)) {
+					shouldSkipWeaponData = true;
+					return; // if these are found, do nothing, keep previous ammo behaviour
+				} else {
+					// or if for example chainsaw with infinite ammo is selected, notify to disable both warning types
+					StopBothAmmoNotifications();
+				}
+			}
+		}
+		
+		if (isSmartAmmoWarning) {
+			if (ammoData.ammo1_ClassName && !ammoData.ammo2_ClassName
+					|| !ammoData.ammo1_ClassName && ammoData.ammo2_ClassName) {
+				StopBothAmmoNotifications(); // weapon doesn't have reloading
+				return; 
+			}
+			if (warningSoundBasis == 2) { // ammo1
+				if (ammoData.am2amt <= 0) { // no ammo for reloading
+					StopBothAmmoNotifications();
+					return;
+				}
+			} else if (warningSoundBasis == 3) { // ammo2
+				if (ammoData.am1amt <= 0) { // no ammo for reloading
+					StopBothAmmoNotifications();
+					return;
+				}
+			}
+		}
+		
 		if (ammoData.am1max > 0) {
 			if (globals.isBD64_Loaded && ammoData.ammo1_ClassName && ammoData.ammo1_ClassName.IndexOf("AltPunch") != -1) {
 				NotifyIfLowAmmo(0, 0, 1);
@@ -3281,21 +3321,6 @@ class UV_HudVisorDraw : EventHandler
 			}
 		} else if (ammoData.ammo2_ClassName && !ammoData.ammo1_ClassName) {
 			NotifyIfLowAmmo(ammoData.am2amt, ammoData.am2max, 1);
-		}
-		
-		if (!ammoData.ammo1_ClassName && !ammoData.ammo2_ClassName) {
-			string wClass = ammoData.weaponClassName;
-			if (wClass) {
-				if (wClass.IndexOf("Ledge") != -1 || wClass.IndexOf("BladeWeapon") != -1 
-						|| wClass.IndexOf("GloryFist") != -1)
-						{
-					return; // if these are found, do nothing 
-				} else {
-					// or if for example chainsaw with infinite ammo is selected, notify to disable both warning types
-					NotifyIfLowAmmo(0, 0, 1);
-					NotifyIfLowAmmo(0, 0, 2);
-				}
-			}
 		}
 	}
 	
@@ -3351,7 +3376,21 @@ class UV_HudVisorDraw : EventHandler
 			}
 		}
 	}
-
+	
+	void StopBothAmmoNotifications() {
+		NotifyIfLowAmmo(0, 0, 1);
+		NotifyIfLowAmmo(0, 0, 2);
+	}
+	
+	bool IsSkippableWeaponData(name wClass) {
+		for (int i = 0; i < skippableWeaponsForAmmoData.Size(); i++) {
+			if (wClass == skippableWeaponsForAmmoData[i]) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	void DoHelmetShaking() {
 		if (ShakeIntensity > 0.01) { // ShakeIntensity is calculated in WorldThingDamaged override
 			ShakeOffsetX = frandom[UV_VeryRandomIdentifierrr](-ShakeIntensity, ShakeIntensity);

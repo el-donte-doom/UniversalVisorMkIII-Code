@@ -431,6 +431,8 @@ OptionMenu "UV_SOUNDS" {
 	StaticText "$UVISOR_WARNING_SOUND_TIP", DarkGray
 	Option "$UVISOR_BASIS_WITH_TIP", "uvisor_warning_sound_mode", "WarningBasis"
 	UV_Tooltip "$UVISOR_AMMO_TYPES_TIP"
+	Option "$UVISOR_WARNING_AMMO_SMART", "uvisor_warning_ammo_smart", "OnOff"
+	UV_Tooltip "$UVISOR_WARNING_AMMO_SMART_TIP"
 	Slider "$UVISOR_VOLUME", "uvisor_warning_volume", 0, 1.0, 0.1, 1
 	UV_Tooltip ""
 	Slider "$UVISOR_SOUND_CHANNEL", "uvisor_warning_sound_channel", 20, 255, 1, 0
