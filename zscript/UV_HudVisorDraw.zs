@@ -3,40 +3,6 @@
 // El Donte - total rewrite with much more functionality (Universal Visor Mk III)
 // generic name guy, Agent_Ash, CHEEKIBREEKI - original mod (Universal Visor Mk II)
 
-enum UV_MainTogglesFlags
-{
-    UV_ShowPieces          = 1 << 0,
-    UV_ShowGlow            = 1 << 1,
-    UV_ShowGlass		   = 1 << 2,
-    UV_ShowTacticalOverlay = 1 << 3,
-    UV_ShowTacticalMarks   = 1 << 4,
-    UV_ShowArmorGrid       = 1 << 5,
-    UV_ShowGlassCracks     = 1 << 6,
-    UV_ShowBloodSplashes   = 1 << 7,
-	UV_StartupAnimEnabled  = 1 << 8
-}
-
-enum UV_SeparateTogglesFlags
-{
-    UV_ShowPartTop		= 1 << 0,
-    UV_ShowGlowTop		= 1 << 1,
-    UV_ShowGlassTop		= 1 << 2,
-	UV_ShowPartBottom	= 1 << 3,
-    UV_ShowGlowBottom	= 1 << 4,
-    UV_ShowGlassBottom	= 1 << 5,
-	UV_ShowGlassSides	= 1 << 6,
-	UV_ShowPartCorners	= 1 << 7,
-    UV_ShowGlowCorners	= 1 << 8,
-    UV_ShowGlassCorners = 1 << 9
-}
-
-enum UV_SwayFlags
-{
-	UV_LessIntenseGridSway 	= 1 << 0,
-    UV_MovementSway			= 1 << 1,
-    UV_CrouchSway			= 1 << 2,
-	UV_JumpSway				= 1 << 3,
-}
 
 class UV_HudVisorDraw : EventHandler
 {	
@@ -68,12 +34,12 @@ class UV_HudVisorDraw : EventHandler
 	bool NV_PackInverseMapOn;
 	bool invulnerabilityOn;
 	bool isVanillaInvulernabilityOn;
-	String lastColormappedPowerup;
+	name lastColormappedPowerup;
 	Color radsuitColor;
 	bool isLastPowerupColomapped;
 	bool isKnownColormapActive;
 	bool applyColormapToGlow;
-	bool blendColormap; // Night vision pack and other mods with nv
+	bool blendColormap;
 	Vector3 colormapMultRGB;
 	Vector3 colormapAddRGB;
 	Color combPlayerBlendAndPowerupBlendColor;
@@ -84,6 +50,27 @@ class UV_HudVisorDraw : EventHandler
 	Vector3 combinedFullColorScale;
 	bool doingHelmetEquipAnim;
 	int swayFlags;
+	
+	enum UV_MainTogglesFlags
+	{
+		UV_ShowPieces          = 1 << 0,
+		UV_ShowGlow            = 1 << 1,
+		UV_ShowGlass		   = 1 << 2,
+		UV_ShowTacticalOverlay = 1 << 3,
+		UV_ShowTacticalMarks   = 1 << 4,
+		UV_ShowArmorGrid       = 1 << 5,
+		UV_ShowGlassCracks     = 1 << 6,
+		UV_ShowBloodSplashes   = 1 << 7,
+		UV_StartupAnimEnabled  = 1 << 8
+	}
+
+	enum UV_SwayFlags
+	{
+		UV_LessIntenseGridSway 	= 1 << 0,
+		UV_MovementSway			= 1 << 1,
+		UV_CrouchSway			= 1 << 2,
+		UV_JumpSway				= 1 << 3,
+	}
 	
 	
 	///// UI CONTEXT VARS /////
@@ -187,6 +174,20 @@ class UV_HudVisorDraw : EventHandler
 		ARMOR_GRID,
 		SCREEN_WIPER
 	};
+	
+	enum UV_SeparateTogglesFlags
+	{
+		UV_ShowPartTop		= 1 << 0,
+		UV_ShowGlowTop		= 1 << 1,
+		UV_ShowGlassTop		= 1 << 2,
+		UV_ShowPartBottom	= 1 << 3,
+		UV_ShowGlowBottom	= 1 << 4,
+		UV_ShowGlassBottom	= 1 << 5,
+		UV_ShowGlassSides	= 1 << 6,
+		UV_ShowPartCorners	= 1 << 7,
+		UV_ShowGlowCorners	= 1 << 8,
+		UV_ShowGlassCorners = 1 << 9
+	}
 	
 	ui bool initialUIInitDone;
 	ui double FracTicGlobal;
@@ -294,8 +295,7 @@ class UV_HudVisorDraw : EventHandler
 	const INVULN_GRID_COLOR = Color(255, 0, 255, 0); 	 // green
 	const GODMODE_GRID_COLOR = Color(255, 255, 143, 59); // gold
 	const FULL_WHITE_COLOR = Color(255, 255, 255, 255);
-	float dLightsContributionMult;
-	int powerupColorsMode;
+	ui bool isGL_EnhancedNV;
 	
 	ui string cracksBasePath;
 	ui string CommonGraphicsPath;
@@ -341,9 +341,6 @@ class UV_HudVisorDraw : EventHandler
 	ui double uiScaledMaxSwayX;
 	ui double uiScaledMaxSwayY;
 	
-	ui int warningSoundBasisUIContext;
-	ui bool isGL_EnhancedNV;
-	
 	
 	///// PLAY CONTEXT VARS /////
 	
@@ -355,17 +352,19 @@ class UV_HudVisorDraw : EventHandler
 	bool isGlassDestroyed;
 	bool hideGlassIfEmptyArmorPlayContext;
 	bool transparencyEffectWhenInvis;
+	float dLightsContributionMult;
+	int powerupColorsMode;
 	double sectorBrightnessContributionMult;
 	bool isDemonPlayer;
-	string PB_NightVisionStr;
-	string NVNightVisionInverseMapStr;
-	string PB_HelmetAnimStr;
-	string invulnerableStr;
-	string nightVisionStr;
-	string PB_SpeedPowerupStr;
-	string PB_QuadDamagePowerupStr;
+	name PB_NightVisionClass;
+	name NVNightVisionInverseMapClass;
+	name PB_HelmetAnimClass;
+	name invulnerableClass;
+	name nightVisionClass;
+	name PB_SpeedPowerupClass;
+	name PB_QuadDamagePowerupClass;
 	Array<Color> powerupBlendColors;
-	static const string isDemonPlayerFlags[] = {
+	static const name isDemonPlayerFlags[] = {
 		"isDemonPlayer", // using only this one isn't reliable cause it's not set if two nearby demon powerups picked up very quickly
 		"powerTransformBaron",
 		"powerTransformRevenant"
@@ -374,13 +373,13 @@ class UV_HudVisorDraw : EventHandler
 	bool inVehicle;
 	bool wasInMachineGun;
 	bool inMachineGun;
-	string heavyMachinegunStr;
+	name heavyMachinegunClass;
 	int machineGunEnterLeaveTicker;
 	bool alreadyStoredDataInVehicle;
 	int storedHealthInsideVehicle; // stored manually, not an inventory item from BD, etc.
 	int storedArmorInsideVehicle; // same
 
-	static const string vehicleInvNames[] = {
+	static const name vehicleInvNames[] = {
 			// BD and UMES
 		"PowerTankSwitch",
 		"PowerArtilleryTankSwitch",
@@ -393,7 +392,7 @@ class UV_HudVisorDraw : EventHandler
 		"PowerDemoMechSwitch"
 	};
 	
-	static const string damageTypesNoBlood[] = { // for enemy actor based blood detection
+	static const name damageTypesNoBlood[] = { // for enemy actor based blood detection
 			// Common
 		"Fire",
 			// BP, PB
@@ -411,7 +410,7 @@ class UV_HudVisorDraw : EventHandler
 		"PlayerPyro"
 	};
 	
-	static const string bloodBaseTypes[] = {  // for blood actor based blood color detection
+	static const name bloodBaseTypes[] = {  // for blood actor based blood color detection
 		"Blood",
 		"Brutal_Blood", 		// Brutal Doom and forks
 		"BD_BloodBase", 		// Beautiful Doom
@@ -427,19 +426,19 @@ class UV_HudVisorDraw : EventHandler
 		"NashGoreBloodBase" 	// already extends Blood, but just in case
 	};
 	
-	static const string bdBloodSubtypes[] = {
-		"Green_BLood", // not a typo
+	static const name bdBloodSubtypes[] = {
+		"Green_Blood",
 		"Blue_Blood",
 		"Alien Blood"
 	};
 	
-	static const string bdBloodSubtypesColors[] = {
-		"00FF00",
-		"0000FF",
-		"9370DB"
+	static const Color bdBloodSubtypesColors[] = {
+		Color(255, 0, 100, 0),
+		Color(255, 0, 0, 255),
+		Color(255, 147, 112, 219)
 	};
 	
-	static const string pmBloodSubtypes[] = {
+	static const name pmBloodSubtypes[] = {
 		"PM_GreenBloodBase",
 		"PM_DarkGreenBloodBase",
 		"PM_DarkGreenCyberBloodBase",
@@ -452,20 +451,20 @@ class UV_HudVisorDraw : EventHandler
 		"PM_SlothBloodBase"
 	};
 	
-	static const string pmBloodSubtypesColors[] = {
-		"006400",
-		"006400",
-		"006400",
-		"0000FF",
-		"A020F0",
-		"000000",
-		"006400",
-		"FF7F50",
-		"000000",
-		"00008B"
+	static const Color pmBloodSubtypesColors[] = {
+		Color(0, 100, 0),
+		Color(0, 100, 0),
+		Color(0, 100, 0),
+		Color(0, 0, 255),
+		Color(160, 32, 240),
+		Color(0, 0, 0),
+		Color(0, 100, 0),
+		Color(255, 127, 80),
+		Color(0, 0, 0),
+		Color(0, 0, 139)
 	};
 	
-	static const string shakingDamageTypes[] = {
+	static const name shakingDamageTypes[] = {
 			// Common
 		"ExplosiveImpact",
 		"GreenFire",
@@ -624,9 +623,9 @@ class UV_HudVisorDraw : EventHandler
 	int bloodDefaultSaturationShiftCvar;
 	int bloodDetectionMode;
 	LookExParams paramsForIsVisible;
-	string BD_BLOOD;
-	string PM_BLOOD; // Project Malice
-	string MD_BLOOD; // Mass Disassembly
+	name BD_BLOOD;
+	name PM_BLOOD; // Project Malice
+	name MD_BLOOD; // Mass Disassembly
 	
 	// Screen wiper
 	const SCREEN_WIPER_TICKS = 40;
@@ -1008,8 +1007,8 @@ class UV_HudVisorDraw : EventHandler
 		
 		armorGridDisplayMode = Cvar.GetCvar("uvisor_armor_grid_display_mode", playerinf).GetInt();
 		powersOverrideGridColorMode = Cvar.GetCvar("uvisor_powers_overrides_grid_color_mode", playerinf).GetInt();
-		
 		alphaBasisArmorGrid = Cvar.GetCvar("uvisor_gameplay_alpha_basis_armor_grid", playerinf).GetInt();
+		isGL_EnhancedNV = Cvar.GetCvar("gl_enhanced_nightvision", playerinf).GetBool();
 		
 		int texRes = Cvar.GetCvar("uvisor_tex_res", playerinf).GetInt();
 		if (texRes == 0) {
@@ -1031,36 +1030,39 @@ class UV_HudVisorDraw : EventHandler
 		texPartTacticalMarkRight = TexMan.CheckForTexture(commonGraphicsPath .. "Tactical_Marks/Part_Tactical_Mark_Right.png");
 		texGlowTacticalMarkLeft = TexMan.CheckForTexture(commonGraphicsPath .. "Tactical_Marks/Glow_Tactical_Mark_Left.png");
 		texGlowTacticalMarkRight = TexMan.CheckForTexture(commonGraphicsPath .. "Tactical_Marks/Glow_Tactical_Mark_Right.png");
+		String tacticalOverlay_1_Name = tacticalOverlayStyles[Clamp(styleTacticalOverlay_1, 0, tacticalOverlayStyles.Size() - 1)];
+		String tacticalOverlay_2_Name = tacticalOverlayStyles[Clamp(styleTacticalOverlay_2, 0, tacticalOverlayStyles.Size() - 1)];
  		texTacticalOverlay_1 = TexMan
-			.CheckForTexture(commonGraphicsPath .. "Tactical_Lines_Decals/Overlay_" .. tacticalOverlayStyles[styleTacticalOverlay_1] .. ".png");
+			.CheckForTexture(commonGraphicsPath .. "Tactical_Lines_Decals/Overlay_" .. tacticalOverlay_1_Name .. ".png");
 		texTacticalOverlay_2 = TexMan
-			.CheckForTexture(commonGraphicsPath .. "Tactical_Lines_Decals/Overlay_" .. tacticalOverlayStyles[styleTacticalOverlay_2] .. ".png");
+			.CheckForTexture(commonGraphicsPath .. "Tactical_Lines_Decals/Overlay_" .. tacticalOverlay_2_Name .. ".png");
 		String armorGridTexturesPath = GetArmorGridTexturesPath();
 		texArmorGrid = TexMan.CheckForTexture(armorGridTexturesPath .. "/armor_grid.png");
 		texArmorGridIdleAnim = TexMan.CheckForTexture(armorGridTexturesPath .. "/armor_grid_idle_anim.png");
 		texArmorGridDamage = TexMan.CheckForTexture(armorGridTexturesPath .. "/armor_grid_damage.png");
 		texArmorGridDamageHeavy = TexMan.CheckForTexture(armorGridTexturesPath .. "/armor_grid_damage_heavy.png");
 		
-		texPartTop = TexMan.CheckForTexture(helmetGraphicsPath .. topStyles[styleTop] .. "/Part_Top.png");
-		texPartBottom = TexMan.CheckForTexture(helmetGraphicsPath .. bottomStyles[styleBottom] .. "/Part_Bottom.png");
-		texPartCornerLeft = TexMan.CheckForTexture(helmetGraphicsPath .. cornerStyles[styleCorners] .. "/Part_Corner_Left.png");
-		texPartCornerRight = TexMan.CheckForTexture(helmetGraphicsPath .. cornerStyles[styleCorners] .. "/Part_Corner_Right.png");
+		String topStylePath = helmetGraphicsPath .. topStyles[Clamp(styleTop, 0, topStyles.Size() - 1)];
+		String bottomStylePath = helmetGraphicsPath .. bottomStyles[Clamp(styleBottom, 0, bottomStyles.Size() - 1)];
+		String cornersStylePath = helmetGraphicsPath .. cornerStyles[Clamp(styleCorners, 0, cornerStyles.Size() - 1)];
+		String sideStylePath = helmetGraphicsPath .. sideGlassStyles[Clamp(styleSideGlass, 0, sideGlassStyles.Size() - 1)];
+		
+		texPartTop = TexMan.CheckForTexture(topStylePath .. "/Part_Top.png");
+		texPartBottom = TexMan.CheckForTexture(bottomStylePath .. "/Part_Bottom.png");
+		texPartCornerLeft = TexMan.CheckForTexture(cornersStylePath .. "/Part_Corner_Left.png");
+		texPartCornerRight = TexMan.CheckForTexture(cornersStylePath .. "/Part_Corner_Right.png");
 			
-		texGlowTop = TexMan.CheckForTexture(helmetGraphicsPath .. topStyles[styleTop] .. "/Glow_Top.png");
-		texGlowBottom = TexMan.CheckForTexture(helmetGraphicsPath .. bottomStyles[styleBottom] .. "/Glow_Bottom.png");
-		texGlowCornerLeft = TexMan.CheckForTexture(helmetGraphicsPath .. cornerStyles[styleCorners] .. "/Glow_Corner_Left.png");
-		texGlowCornerRight = TexMan.CheckForTexture(helmetGraphicsPath .. cornerStyles[styleCorners] .. "/Glow_Corner_Right.png");
+		texGlowTop = TexMan.CheckForTexture(topStylePath .. "/Glow_Top.png");
+		texGlowBottom = TexMan.CheckForTexture(bottomStylePath .. "/Glow_Bottom.png");
+		texGlowCornerLeft = TexMan.CheckForTexture(cornersStylePath .. "/Glow_Corner_Left.png");
+		texGlowCornerRight = TexMan.CheckForTexture(cornersStylePath .. "/Glow_Corner_Right.png");
 		
-		texGlassTop = TexMan.CheckForTexture(helmetGraphicsPath .. topStyles[styleTop] .. "/Glass_Top.png");
-		texGlassBottom = TexMan.CheckForTexture(helmetGraphicsPath .. bottomStyles[styleBottom] .. "/Glass_Bottom.png");
-		texGlassCornerLeft = TexMan.CheckForTexture(helmetGraphicsPath .. cornerStyles[styleCorners] .. "/Glass_Corner_Left.png");
-		texGlassCornerRight = TexMan.CheckForTexture(helmetGraphicsPath .. cornerStyles[styleCorners] .. "/Glass_Corner_Right.png");
-		texGlassSideLeft = TexMan.CheckForTexture(helmetGraphicsPath .. sideGlassStyles[styleSideGlass] .. "/Glass_Side_Left.png");
-		texGlassSideRight = TexMan.CheckForTexture(helmetGraphicsPath .. sideGlassStyles[styleSideGlass] .. "/Glass_Side_Right.png");
-		
-		warningSoundBasisUIContext = Cvar.GetCvar("uvisor_warning_sound_mode", playerinf).GetInt();
-		
-		isGL_EnhancedNV = Cvar.GetCvar("gl_enhanced_nightvision", playerinf).GetBool();
+		texGlassTop = TexMan.CheckForTexture(topStylePath .. "/Glass_Top.png");
+		texGlassBottom = TexMan.CheckForTexture(bottomStylePath .. "/Glass_Bottom.png");
+		texGlassCornerLeft = TexMan.CheckForTexture(cornersStylePath .. "/Glass_Corner_Left.png");
+		texGlassCornerRight = TexMan.CheckForTexture(cornersStylePath .. "/Glass_Corner_Right.png");
+		texGlassSideLeft = TexMan.CheckForTexture(sideStylePath .. "/Glass_Side_Left.png");
+		texGlassSideRight = TexMan.CheckForTexture(sideStylePath .. "/Glass_Side_Right.png");
 		
 		texScreenWiper = TexMan.CheckForTexture(commonGraphicsPath .. "screen_wiper.png");
 	}
@@ -1069,7 +1071,7 @@ class UV_HudVisorDraw : EventHandler
 		int armorGridCellType = Cvar.GetCvar("uvisor_armor_grid_cell_type", playerinf).GetInt();
 		int armorGridShapeType = Cvar.GetCvar("uvisor_armor_grid_shape_type", playerinf).GetInt();
 		String cellPath = armorGridCellType == 0 ? "Cell_Big/" : "Cell_Small/";
-		String shapePath = "Shape_" .. armorGridShapeTypes[armorGridShapeType];
+		String shapePath = "Shape_" .. armorGridShapeTypes[Clamp(armorGridShapeType, 0, armorGridShapeTypes.Size() - 1)];
 		return commonGraphicsPath .. "Armor_Grid/" .. cellPath .. shapePath;
 	}
 	
@@ -1965,12 +1967,12 @@ class UV_HudVisorDraw : EventHandler
 		BD_BLOOD = "Brutal_Blood";
 		PM_BLOOD = "PM_NormalBloodBase";
 		MD_BLOOD = "MDBlood";
-		heavyMachinegunStr = "PowerHeavyMachinegunSwitch";
-		PB_NightVisionStr = "PB_PowerLightAmp";
-		NVNightVisionInverseMapStr = "NVNightVisionInverseMap";
-		PB_HelmetAnimStr = "DoingHelmetAnim";
-		PB_SpeedPowerupStr = "PB_PowerSpeed";
-		PB_QuadDamagePowerupStr = "PB_PowerDoomDamage";
+		heavyMachinegunClass = "PowerHeavyMachinegunSwitch";
+		PB_NightVisionClass = "PB_PowerLightAmp";
+		NVNightVisionInverseMapClass = "NVNightVisionInverseMap";
+		PB_HelmetAnimClass = "DoingHelmetAnim";
+		PB_SpeedPowerupClass = "PB_PowerSpeed";
+		PB_QuadDamagePowerupClass = "PB_PowerDoomDamage";
 		startupTicker = STARTUP_TICKS;
 		paramsForIsVisible.minDist = 1; // prevent false positives (for our case), which apparently happen when minDist is 0
 		globals = UV_HudVisorStaticGlobals.Get();
@@ -2268,8 +2270,9 @@ class UV_HudVisorDraw : EventHandler
 					return;
 				}
 			}
+			name eDamageType = e.DamageType;
 			for (int i = 0; i < damageTypesNoBlood.Size(); i++) {  
-				if (e.DamageType == damageTypesNoBlood[i]) {
+				if (eDamageType == damageTypesNoBlood[i]) {
 					return;
 				}
 			}
@@ -2311,21 +2314,12 @@ class UV_HudVisorDraw : EventHandler
 			// Not so good: vanilla Doom or mod enemies where color is empty (0, 0, 0, 0) (usually it's not the same as set black)
 			// Try to find color name in the 3 blood types
 			array<string> enemyBloodTypes;
-			string enemyBloodType0 = "";
-			if (enemyActor.GetBloodType(0) != null) {
-				enemyBloodType0 = enemyActor.GetBloodType(0).getClassName();
-				enemyBloodType0 = enemyBloodType0.MakeLower();
-				enemyBloodTypes.Push(enemyBloodType0);
-			} 
-			string enemyBloodType1 = "";
-			if (enemyActor.GetBloodType(1) != null) {
-				enemyBloodType1 = enemyActor.GetBloodType(1).getClassName();
-				enemyBloodType1 = enemyBloodType1.MakeLower();
-			} 
-			string enemyBloodType2 = "";
-			if (enemyActor.GetBloodType(2) != null) {
-				enemyBloodType2 = enemyActor.GetBloodType(2).getClassName();
-				enemyBloodType2 = enemyBloodType2.MakeLower();
+			for (int i = 0; i < 3; i++) {
+				if (enemyActor.GetBloodType(i) != null) {
+					string enemyBloodType = enemyActor.GetBloodType(i).getClassName();
+					enemyBloodType = enemyBloodType.MakeLower();
+					enemyBloodTypes.Push(enemyBloodType);
+				} 
 			}
 			if (enemyBloodTypes.Size() == 0) {
 				return Color(0,0,0,0), false; // Rare case when enemy doesn't have noblood flags, but has no actual blood and all 3 types are null (because has BloodType "None"?)
@@ -2333,11 +2327,11 @@ class UV_HudVisorDraw : EventHandler
 			}
 			// Special cases
 			if (globals.isDD_Loaded) {
-				if (enemyBloodType2.IndexOf("blue") != -1) {
+				if (enemyBloodTypes.Size() > 0 && enemyBloodTypes[2].IndexOf("blue") != -1) {
 					return Color("3399BF"), true; // light blue
 				}
 			} else if (globals.isBD64_Loaded) {
-				if (enemyBloodType1.IndexOf("blue") != -1) {
+				if (enemyBloodTypes.Size() > 0 && enemyBloodTypes[1].IndexOf("blue") != -1) {
 					return Color("1A166B"), true; // blue-purple, not just blue
 				}
 			}
@@ -2433,27 +2427,28 @@ class UV_HudVisorDraw : EventHandler
 		inVehicle = false;
 		doingHelmetEquipAnim = false;
 		isLastPowerupColomapped = false;
-		lastColormappedPowerup = "";
+		lastColormappedPowerup = '';
 		radsuitColor = UNSET_COLOR;
 		powerupBlendColors.Clear();
 		effectiveBlendAlpha = 0.0;
 		if (globals.isPB_Loaded) {
-			invulnerableStr = "PB_PowerInvul"; // check specifically this one to avoid grid highlight when doing melee groly kills
+			invulnerableClass = "PB_PowerInvul"; // check specifically this one to avoid grid highlight when doing melee groly kills
 		} else {
-			invulnerableStr = "PowerInvulnerable";
+			invulnerableClass = "PowerInvulnerable";
 		}
 		if (globals.isDD_Loaded) {
-			nightVisionStr = "PowerNightVisionMode";
+			nightVisionClass = "PowerNightVisionMode";
 		} else {
-			nightVisionStr = "PowerLightamp";
+			nightVisionClass = "PowerLightamp";
 		}
 		while (invItem != null) {
+			name itemClass = invItem.GetClassName();
 			if (invItem is "Powerup") {
 				isLastPowerupColomapped = false;
 				Powerup pow = Powerup(invItem);
-				if (globals.isNightVisionPackLoaded && invItem is NVNightVisionInverseMapStr) {
+				if (globals.isNightVisionPackLoaded && itemClass == NVNightVisionInverseMapClass) {
 					NV_PackInverseMapOn = true; 
-				} else if (invItem is invulnerableStr && !pow.isBlinking()) {
+				} else if (invItem is invulnerableClass && !pow.isBlinking()) {
 					invulnerabilityOn = true;
 					if (!pow.Colormap && !pow.GetBlend() && !globals.isPB_Loaded) {
 						isVanillaInvulernabilityOn = true;
@@ -2463,12 +2458,12 @@ class UV_HudVisorDraw : EventHandler
 				} else if (invItem is "PowerInvisibility") {
 					invisEffectOn = true; 
 					// for some reason invis isBlinking() isn't really synced with visual blinking, so not using blink check for it
-				} else if (invItem is nightVisionStr) { // Night vision
+				} else if (invItem is nightVisionClass) { // Night vision
 					nightVisionOn = true;
-					if (invItem is PB_NightVisionStr) {
+					if (invItem is PB_NightVisionClass) {
 						PB_NightVisionOn = true;
 					} 
-				} else if (invItem is heavyMachinegunStr) { // BD and UMES machine gun
+				} else if (invItem is heavyMachinegunClass) { // BD and UMES machine gun
 					inMachineGun = true;
 				} else if (!inVehicle) {  					// BD and UMES vehicles except machine gun
 					for (int i = 0; i < vehicleInvNames.Size(); i++) {
@@ -2478,7 +2473,7 @@ class UV_HudVisorDraw : EventHandler
 						}
 					}
 				}
-				if ((powerupColorsMode == 0 || (powerupColorsMode == 1 && invItem is nightVisionStr)) && !pow.isBlinking()) {
+				if ((powerupColorsMode == 0 || (powerupColorsMode == 1 && invItem is nightVisionClass)) && !pow.isBlinking()) {
 					if (pow.GetBlend()) { // Powerup.Color actor property
 						if (invItem is "PowerIronfeet") {
 							radsuitColor = pow.GetBlend();
@@ -2492,10 +2487,10 @@ class UV_HudVisorDraw : EventHandler
 						lastColormappedPowerup = pow.GetClassName();
 						isLastPowerupColomapped = true; // gets reset if not last
 					} else if (globals.isPB_Loaded) {
-						if (invItem.GetClassName() == PB_SpeedPowerupStr) {
+						if (itemClass == PB_SpeedPowerupClass) {
 							powerupBlendColors.Push(Color(80, 255, 255, 25));
 						}  
-						if (invItem.GetClassName() == PB_QuadDamagePowerupStr) {
+						if (itemClass == PB_QuadDamagePowerupClass) {
 							powerupBlendColors.Push(Color(80, 64, 0, 127));
 						}
 					}
@@ -2504,7 +2499,7 @@ class UV_HudVisorDraw : EventHandler
 			// Non-powerups
 			else if (IsDemonPlayerFlag(invItem)) { // BD demon morphs
 				isDemonPlayer = true;
-			} else if (globals.isPB_Loaded && invItem.GetClassName() == PB_HelmetAnimStr) {
+			} else if (globals.isPB_Loaded && invItem.GetClassName() == PB_HelmetAnimClass) {
 				doingHelmetEquipAnim = true;
 			} 
 			invItem = invItem.Inv; // Move to the next item
@@ -2721,7 +2716,7 @@ class UV_HudVisorDraw : EventHandler
 			return;
 		}
 		
-		if (lastColormappedPowerup == "PowerInvulnerable") {
+		if (lastColormappedPowerup == 'PowerInvulnerable') {
 			if (globals.isBD_Loaded) {
 				SetColormapState(1, 1, 1, 0, 0, 0, true, false);
 			} else if (globals.isHellriderLoaded) {
@@ -2734,22 +2729,22 @@ class UV_HudVisorDraw : EventHandler
 
 		// Night Vision Pack
 		if (globals.isNightVisionPackLoaded && nightVisionOn) {
-			if (lastColormappedPowerup == "NVNightVision") {
+			if (lastColormappedPowerup == 'NVNightVision') {
 				SetColormapState(0, 1, 0, 0, 35, 0, false, true);
-			} else if (lastColormappedPowerup == "NVNightVisionProto") {
+			} else if (lastColormappedPowerup == 'NVNightVisionProto') {
 				SetColormapState(0, 1, 1, 0, 20, 20, false, true);
-			} else if (lastColormappedPowerup == "NVNightVisionGoldMap") {
+			} else if (lastColormappedPowerup == 'NVNightVisionGoldMap') {
 				SetColormapState(1, 1, 0, 55, 10, 0, false, true);
-			} else if (lastColormappedPowerup == "NVNightVisionGreenMap") {
+			} else if (lastColormappedPowerup == 'NVNightVisionGreenMap') {
 				SetColormapState(1, 1, 1, 30, 40, 10, false, true);
-			} else if (lastColormappedPowerup == "NVNightVisionRedMap") {
+			} else if (lastColormappedPowerup == 'NVNightVisionRedMap') {
 				SetColormapState(1, 0.3, 0.3, 50, 0, 0, false, true);
-			} else if (lastColormappedPowerup == "NVNightVisionWhite") {
+			} else if (lastColormappedPowerup == 'NVNightVisionWhite') {
 				SetColormapState(1, 1, 1, 20, 20, 20, false, true);
 			}
 		}
 
-		if (globals.isDD_Loaded && lastColormappedPowerup == "PowerNightVisionMode") {
+		if (globals.isDD_Loaded && lastColormappedPowerup == 'PowerNightVisionMode') {
 			SetColormapState(0, 1, 0, 0, 35, 0, false, true);
 		}
 	}
@@ -3351,7 +3346,7 @@ class UV_HudVisorDraw : EventHandler
 			}
 		}
 	}
-	
+
 	void DoHelmetShaking() {
 		if (ShakeIntensity > 0.01) { // ShakeIntensity is calculated in WorldThingDamaged override
 			ShakeOffsetX = frandom[UV_VeryRandomIdentifierrr](-ShakeIntensity, ShakeIntensity);
@@ -3587,14 +3582,6 @@ class UV_HudVisorDraw : EventHandler
 		// Menu was opened 
 		} else if (e.Name == "Menu_Opened") {
 			wasMenuOpened = true;
-		} else if (e.Name == "UV_warning_ammo1_enable") {
-			warningAmmo1Active = true;
-		} else if (e.Name == "UV_warning_ammo1_disable") {
-			warningAmmo1Active = false;
-		} else if (e.Name == "UV_warning_ammo2_enable") {
-			warningAmmo2Active = true;
-		} else if (e.Name == "UV_warning_ammo2_disable") {
-			warningAmmo2Active = false;
 		}
     }
 	
