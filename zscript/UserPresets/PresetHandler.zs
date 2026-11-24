@@ -374,6 +374,7 @@ class UV_PresetHandler : StaticEventHandler
 // 		addCVarData('uvisor_shaking');
 // 		addCVarData('uvisor_shaking_sensitivity');
 // 		addCVarData('uvisor_warning_sound_mode');
+// 		addCVarData('uvisor_warning_ammo_smart');
 // 		addCVarData('uvisor_warning_volume');
 // 		addCVarData('uvisor_warning_sound_channel');
 // 		addCVarData('uvisor_cracks_sounds_volume');

@@ -1093,18 +1093,18 @@ class UV_HudVisorDraw : EventHandler
 	ui void UpdateUiSwayVars() {
 		UV_SwaySourceHolder reg = UV_SwaySourceHolder(StaticEventHandler.Find("UV_SwaySourceHolder"));
 		UV_SwaySource src = reg ? reg.source : null;
-		if (src && src.isEnabled) { // use swaying data from patch
-			uiSwayOffX = InterpolateValue(src.swayOffsetOld.x, src.swayOffset.x, FracTicGlobal);
-			uiSwayOffY = InterpolateValue(src.swayOffsetOld.y, src.swayOffset.y, FracTicGlobal);
-			hudExpansionX = InterpolateValue(src.hudExpansionOld.x, src.hudExpansion.x, FracTicGlobal);
-			hudExpansionY = InterpolateValue(src.hudExpansionOld.y, src.hudExpansion.y, FracTicGlobal);
-			forwardOfsHelmet = InterpolateValue(src.forwardOfsOld, src.forwardOfs, FracTicGlobal);
+		if (src && src.isEnabled) { // use swaying data from a service or separate patch
+			uiSwayOffX = UV_SmallUtils.InterpolateValue(src.swayOffsetOld.x, src.swayOffset.x, FracTicGlobal);
+			uiSwayOffY = UV_SmallUtils.InterpolateValue(src.swayOffsetOld.y, src.swayOffset.y, FracTicGlobal);
+			hudExpansionX = UV_SmallUtils.InterpolateValue(src.hudExpansionOld.x, src.hudExpansion.x, FracTicGlobal);
+			hudExpansionY = UV_SmallUtils.InterpolateValue(src.hudExpansionOld.y, src.hudExpansion.y, FracTicGlobal);
+			forwardOfsHelmet = UV_SmallUtils.InterpolateValue(src.forwardOfsOld, src.forwardOfs, FracTicGlobal);
 			swayMarginX = src.marginX;
 			swayMarginY = src.marginY;
 			swaySourceName = src.sourceName;
 		} else { // use default Mk III swaying (calculated in DoHelmetSwaying)
-			uiSwayOffX = InterpolateValue(OldSwayOffX, SwayOffX, FracTicGlobal);
-			uiSwayOffY = InterpolateValue(OldSwayOffY, SwayOffY, FracTicGlobal);
+			uiSwayOffX = UV_SmallUtils.InterpolateValue(OldSwayOffX, SwayOffX, FracTicGlobal);
+			uiSwayOffY = UV_SmallUtils.InterpolateValue(OldSwayOffY, SwayOffY, FracTicGlobal);
 			hudExpansionX = 0;
 			hudExpansionY = 0;
 			swayMarginX = scaledMaxSwayX;
@@ -1131,22 +1131,22 @@ class UV_HudVisorDraw : EventHandler
 				- double(level.time - STARTUP_BLACK_SOLID_TICKS - 1) / (STARTUP_BLACK_TICKS - STARTUP_BLACK_SOLID_TICKS);
 			double alphaBlack = 1 
 				- double(level.time - STARTUP_BLACK_SOLID_TICKS) / (STARTUP_BLACK_TICKS - STARTUP_BLACK_SOLID_TICKS);
-			alphaBlackInter = InterpolateValue(alphaBlackPrev, alphaBlack, FracTicGlobal);
+			alphaBlackInter = UV_SmallUtils.InterpolateValue(alphaBlackPrev, alphaBlack, FracTicGlobal);
 		}
 		DrawFullScreenTexture(texBlack, alphaBlackInter, FULL_WHITE_COLOR);
 	}
 	
 	ui void DrawArmorGrid() {	
-		double x = InterpolateValue(prevArmorGridCoords.x, armorGridCoords.x, FracTicGlobal) * scaleFactorWidth;
-		double y = InterpolateValue(prevArmorGridCoords.y, armorGridCoords.y, FracTicGlobal) * scaleFactorHeight;
-		double w = InterpolateValue(prevArmorGridSize.x, armorGridSize.x, FracTicGlobal) * scaleFactorWidth;
-		double h = InterpolateValue(prevArmorGridSize.y, armorGridSize.y, FracTicGlobal) * scaleFactorHeight;
+		double x = UV_SmallUtils.InterpolateValue(prevArmorGridCoords.x, armorGridCoords.x, FracTicGlobal) * scaleFactorWidth;
+		double y = UV_SmallUtils.InterpolateValue(prevArmorGridCoords.y, armorGridCoords.y, FracTicGlobal) * scaleFactorHeight;
+		double w = UV_SmallUtils.InterpolateValue(prevArmorGridSize.x, armorGridSize.x, FracTicGlobal) * scaleFactorWidth;
+		double h = UV_SmallUtils.InterpolateValue(prevArmorGridSize.y, armorGridSize.y, FracTicGlobal) * scaleFactorHeight;
 		double gridImage_1_AlphaInter 
-			= alphaArmorGrid * InterpolateValue(prevGridIdleAlphaImage_1, gridIdleAlphaImage_1, FracTicGlobal);
+			= alphaArmorGrid * UV_SmallUtils.InterpolateValue(prevGridIdleAlphaImage_1, gridIdleAlphaImage_1, FracTicGlobal);
 		double gridImage_2_AlphaInter = 0.0;
 		if (gridIdleAnimEnabled) {
 			gridImage_2_AlphaInter = alphaArmorGrid 
-				* InterpolateValue(prevGridIdleAlphaImage_2, gridIdleAlphaImage_2, FracTicGlobal);
+				* UV_SmallUtils.InterpolateValue(prevGridIdleAlphaImage_2, gridIdleAlphaImage_2, FracTicGlobal);
 		}
 		if (alphaBasisArmorGrid == 1 && (armorGridDisplayMode == 2 || armorGridDisplayMode == 0)) {
 			gridImage_1_AlphaInter *= alphaArmorGridMult;
@@ -1156,9 +1156,9 @@ class UV_HudVisorDraw : EventHandler
 		if (armorGridDamageAnimTicker > 0 && gridDamageFeedbackEnabled) {
 			// Calc alpha ratio for usual grid (may be a combo of two idle textures) and damage grid 
 			double usualGridAlphaInterpolated 
-				= alphaArmorGrid * InterpolateValue(prevUsualArmorGridAlpha, usualArmorGridAlpha, FracTicGlobal);
+				= alphaArmorGrid * UV_SmallUtils.InterpolateValue(prevUsualArmorGridAlpha, usualArmorGridAlpha, FracTicGlobal);
 			double damageGridAlphaInterpolated 
-				= alphaArmorGrid * InterpolateValue(prevDamageArmorGridAlpha, damageArmorGridAlpha, FracTicGlobal);
+				= alphaArmorGrid * UV_SmallUtils.InterpolateValue(prevDamageArmorGridAlpha, damageArmorGridAlpha, FracTicGlobal);
 			gridImage_1_AlphaInter *= usualGridAlphaInterpolated;
 			gridImage_2_AlphaInter *= usualGridAlphaInterpolated;
 			// Draw damage grid
@@ -1249,7 +1249,7 @@ class UV_HudVisorDraw : EventHandler
 		double texAlpha = alphaGlow;
 		if (pulseActive) {
 			targetPulseAlpha = alphaGlow * (sin(pulseTime) * 0.5 + 0.5);
-			texAlpha = InterpolateValue(prevPulseAlpha, targetPulseAlpha, FracTicGlobal);
+			texAlpha = UV_SmallUtils.InterpolateValue(prevPulseAlpha, targetPulseAlpha, FracTicGlobal);
 			prevPulseAlpha = texAlpha;
 		}
 		double texAlphaBottom;
@@ -1257,7 +1257,7 @@ class UV_HudVisorDraw : EventHandler
 			texAlphaBottom = alphaGlowBottom;
 			if (pulseActive) {
  				targetPulseAlphaBottom = alphaGlowBottom * (sin(pulseTime) * 0.5 + 0.5);
-				texAlphaBottom = InterpolateValue(prevPulseAlphaBottom, targetPulseAlphaBottom, FracTicGlobal);
+				texAlphaBottom = UV_SmallUtils.InterpolateValue(prevPulseAlphaBottom, targetPulseAlphaBottom, FracTicGlobal);
 				prevPulseAlphaBottom = texAlphaBottom;
 			}
 		} else {
@@ -1421,11 +1421,11 @@ class UV_HudVisorDraw : EventHandler
 			TextureID oldCracksTex = TexMan.CheckForTexture(
 				cracksBasePath .. "Pattern_" .. pData.cracksTexturePatternId .. "/glass_cracks_" .. fOutCracksTexId .. ".png"
 			);
-			double f_OutCracksAlphaInter = alphaCracks * InterpolateValue(prevF_OutCracksAlpha, f_OutCracksAlpha, FracTicGlobal);
+			double f_OutCracksAlphaInter = alphaCracks * UV_SmallUtils.InterpolateValue(prevF_OutCracksAlpha, f_OutCracksAlpha, FracTicGlobal);
 			DrawFullScreenTexture(oldCracksTex, f_OutCracksAlphaInter, colorGlassCracks, 
 				sizeMult: sizeMult, offsetX: offsetX, offsetY: offsetY, degree: pData.cracksTextureRotationDegrees
 			);
-			f_InCracksAlphaInter *= InterpolateValue(prevF_InCracksAlpha, f_InCracksAlpha, FracTicGlobal);
+			f_InCracksAlphaInter *= UV_SmallUtils.InterpolateValue(prevF_InCracksAlpha, f_InCracksAlpha, FracTicGlobal);
 		}
 		if (pData.cracksLevel > 0) {
 			TextureID newCracksTex = TexMan.CheckForTexture(
@@ -1442,7 +1442,7 @@ class UV_HudVisorDraw : EventHandler
 		[w,h] = TexMan.GetSize(texScreenWiper);
 		w *= scaleFactorWidth;
 		h *= scaleFactorHeight;
-		double ratioInterpolated = InterpolateValue(prevClipRatioInverted, clipRatioInverted, FracTicGlobal);
+		double ratioInterpolated = UV_SmallUtils.InterpolateValue(prevClipRatioInverted, clipRatioInverted, FracTicGlobal);
 		double x = Screen.GetWidth() - (Screen.GetWidth() + w) * ratioInterpolated;
 		x += uiSwayOffX;
 		Color wiperColor = FULL_WHITE_COLOR;
@@ -1462,7 +1462,7 @@ class UV_HudVisorDraw : EventHandler
 		for (int i = 0; i < bloodMaxCount; i++) {
 			UV_BloodSplash bs = currentBloodSplashes[i];
 			if (bs == null || bs.fadeOutTicker < 1) continue;
-			double texAlpha = InterpolateValue(bs.prevAlpha, bs.alpha, FracTicGlobal);
+			double texAlpha = UV_SmallUtils.InterpolateValue(bs.prevAlpha, bs.alpha, FracTicGlobal);
 			texAlpha *= alphaBlood;
 			int texRenderStyle = Style_Translucent;
 			if (invisEffectOn) {
@@ -1473,10 +1473,10 @@ class UV_HudVisorDraw : EventHandler
 			}
 			Color texColor = BlendColorWithEnvironmentAndPowerups(bs.bColor);			
 
-			double x = InterpolateValue(bs.prevCoordinates.x, bs.coordinates.x, FracTicGlobal);
-			double y = InterpolateValue(bs.prevCoordinates.y, bs.coordinates.y, FracTicGlobal);
-			double w = InterpolateValue(bs.prevSize.x, bs.size.x, FracTicGlobal);
-			double h = InterpolateValue(bs.prevSize.y, bs.size.y, FracTicGlobal);
+			double x = UV_SmallUtils.InterpolateValue(bs.prevCoordinates.x, bs.coordinates.x, FracTicGlobal);
+			double y = UV_SmallUtils.InterpolateValue(bs.prevCoordinates.y, bs.coordinates.y, FracTicGlobal);
+			double w = UV_SmallUtils.InterpolateValue(bs.prevSize.x, bs.size.x, FracTicGlobal);
+			double h = UV_SmallUtils.InterpolateValue(bs.prevSize.y, bs.size.y, FracTicGlobal);
 			
 			TextureID bloodTexture = TexMan.CheckForTexture(CommonGraphicsPath .. "Blood/blood_" .. bs.texIndex .. ".png");
 			
@@ -1587,13 +1587,6 @@ class UV_HudVisorDraw : EventHandler
 			DTA_Color, texColor,
 			DTA_LegacyRenderStyle, texRenderStyle
 		);
-	}
-	
-	ui Color BlendColors(Color base, Color blend, double factor) {
-		int r = int(base.r * (1.0 - factor) + blend.r * factor);
-		int g = int(base.g * (1.0 - factor) + blend.g * factor); 
-		int b = int(base.b * (1.0 - factor) + blend.b * factor); 
-		return Color(255, r, g, b);
 	}
 	
 	ui double, int GetPartialInvisibilityDrawParams(double baseAlpha, UV_TextureTypes texType = -1) {
@@ -1810,20 +1803,20 @@ class UV_HudVisorDraw : EventHandler
 		
 		if (ShouldUseStencilStyle(texType) && powerupColorsMode == 0) {
 			// default invulnerability, to use with Stencil style. No PB, cause no white effect there
-			return GetColorForStencilStyle(originalColor);
+			return UV_SmallUtils.GetColorForStencilStyle(originalColor);
 		}
 		
 		if (nightVisionOn && !isLastPowerupColomapped) {
 			if (isGL_EnhancedNV) { // Idk why vanilla Enhanced Night Vision doesn't color blood
-				int grayscaleAmount = CalculateGrayscaleAmount(originalColor);
+				int grayscaleAmount = UV_SmallUtils.CalculateGrayscaleAmount(originalColor);
 				newColor = Color(255, grayscaleAmount - 40, grayscaleAmount + 30, 0);
 				if (texType > -1 && texType != UV_HudVisorDraw.ARMOR_GRID) { // Helmet parts except armor grid
-					newColor = BlendColors(originalColor, newColor, 0.35);
+					newColor = UV_SmallUtils.BlendColors(originalColor, newColor, 0.35);
 				}
 			} else {
 				// Light Amplification mode (vanilla / NV Pack DEFAULT-only mode / other mods with bright light amp)
 				// Special color is set using UpdateColormappedPowerupState() and BlendColorWithColormappedPowerup()
-				newColor = BrightenColor(originalColor, 1.1);
+				newColor = UV_SmallUtils.ScaleColor(originalColor, 1.1);
 			}
 			isAffectedByEnvironment = false;
 		}
@@ -1833,12 +1826,12 @@ class UV_HudVisorDraw : EventHandler
 			isAffectedByEnvironment = false;
 		}
 		if (combPlayerBlendAndPowerupBlendColor && effectiveBlendAlpha) { // if Powerup.Color or A_SetBlend()
-			newColor = BlendColors(newColor, combPlayerBlendAndPowerupBlendColor, effectiveBlendAlpha);
+			newColor = UV_SmallUtils.BlendColors(newColor, combPlayerBlendAndPowerupBlendColor, effectiveBlendAlpha);
 		}
 		if (radsuitOn && radsuitColor && 
 			(texType == -1 || texType == UV_HudVisorDraw.ARMOR_GRID || texType == UV_HudVisorDraw.SCREEN_WIPER)) {
 			// only blood, armor grid, screen wiper
-			newColor = BlendColors(newColor, radsuitColor, double(radsuitColor.a) / 255);
+			newColor = UV_SmallUtils.BlendColors(newColor, radsuitColor, double(radsuitColor.a) / 255);
 		}
 		
 		if (!isAffectedByEnvironment) {
@@ -1852,7 +1845,7 @@ class UV_HudVisorDraw : EventHandler
 		if (texType == UV_HudVisorDraw.GLOW && !applyColormapToGlow) {
 			return originalColor;
 		}
-		int grayscale = CalculateGrayscaleAmount(originalColor);
+		int grayscale = UV_SmallUtils.CalculateGrayscaleAmount(originalColor);
 		int r = Clamp(int(grayscale * colormapMultRGB.X + colormapAddRGB.X), 0, 255);
 		int g = Clamp(int(grayscale * colormapMultRGB.Y + colormapAddRGB.Y), 0, 255);
 		int b = Clamp(int(grayscale * colormapMultRGB.Z + colormapAddRGB.Z), 0, 255);
@@ -1861,7 +1854,7 @@ class UV_HudVisorDraw : EventHandler
 		if (blendColormap && texType > -1
 				&& texType != UV_HudVisorDraw.ARMOR_GRID
 				&& texType != UV_HudVisorDraw.SCREEN_WIPER) {
-			newColor = BlendColors(originalColor, newColor, 0.2);
+			newColor = UV_SmallUtils.BlendColors(originalColor, newColor, 0.2);
 		}
 		return newColor;
 	}
@@ -1879,14 +1872,14 @@ class UV_HudVisorDraw : EventHandler
 		double dynScaleR, dynScaleG, dynScaleB;
 		if (texType == UV_HudVisorDraw.GLOW || texType == UV_HudVisorDraw.ARMOR_GRID || texType == UV_HudVisorDraw.SCREEN_WIPER) {
 			// Only brightness change
-			double interBrightnessScale = InterpolateValue(prevCombinedBrightnessScale, combinedBrightnessScale, FracTicGlobal);
+			double interBrightnessScale = UV_SmallUtils.InterpolateValue(prevCombinedBrightnessScale, combinedBrightnessScale, FracTicGlobal);
 			dynScaleR = dynScaleG = dynScaleB = ApplyInfluence(interBrightnessScale, overallEnvInfluence);
 		} else {
 			// Full color path
 			Vector3 interFullColorScale = (
-				InterpolateValue(prevCombinedFullColorScale.X, combinedFullColorScale.X, FracTicGlobal),
-				InterpolateValue(prevCombinedFullColorScale.Y, combinedFullColorScale.Y, FracTicGlobal),
-				InterpolateValue(prevCombinedFullColorScale.Z, combinedFullColorScale.Z, FracTicGlobal)
+				UV_SmallUtils.InterpolateValue(prevCombinedFullColorScale.X, combinedFullColorScale.X, FracTicGlobal),
+				UV_SmallUtils.InterpolateValue(prevCombinedFullColorScale.Y, combinedFullColorScale.Y, FracTicGlobal),
+				UV_SmallUtils.InterpolateValue(prevCombinedFullColorScale.Z, combinedFullColorScale.Z, FracTicGlobal)
 			);
 			double colR = interFullColorScale.X;
 			double colG = interFullColorScale.Y;
@@ -1908,24 +1901,6 @@ class UV_HudVisorDraw : EventHandler
 	// Simple multiplying would darken low-influence elements instead of leaving them neutral in our case
 	ui double ApplyInfluence(double value, double influence) {
 		return 1.0 + (value - 1.0) * influence;
-	}
-	
-	ui int CalculateGrayscaleAmount(Color originalColor) {
-		// luminosity method
-		return int(0.2126 * originalColor.r + 0.7152 * originalColor.g + 0.0722 * originalColor.b);
-	}
-	
-	ui Color GetColorForStencilStyle(Color originalColor) {
-		int grayscale = CalculateGrayscaleAmount(originalColor) + 110;
-		return Color(255, grayscale, grayscale, grayscale);
-	}
-	
-	ui Color BrightenColor(Color originalColor, double multiplier) {
-		return Color(255, 
-			int(originalColor.r * multiplier), 
-			int(originalColor.g * multiplier), 
-			int(originalColor.b * multiplier)
-		);
 	}
 	
 	// Set ammo colors if glow/glass are ammo-based and notify about low ammo if warning sound or glow pulse are ammo-based
@@ -1955,10 +1930,6 @@ class UV_HudVisorDraw : EventHandler
 				}
 			}
 		}
-	}
-	
-	ui double InterpolateValue(double prev, double next, double fracTic) {
-		return prev * (1.0 - fracTic) + next * fracTic;
 	}
 	
 	override void InterfaceProcess(ConsoleEvent e) {
@@ -2407,7 +2378,7 @@ class UV_HudVisorDraw : EventHandler
 		int blue = int(defaultColor.b * globals.bloodDefaultSaturationMultiplier);
 		// Finally, adjust using cvar if it's set
 		if (bloodDefaultSaturationShiftCvar != 0) {
-			int shiftMapped = MapRange(bloodDefaultSaturationShiftCvar, -100, 100, -255, 255);
+			int shiftMapped = UV_SmallUtils.MapRange(bloodDefaultSaturationShiftCvar, -100, 100, -255, 255);
 			red = (red > 0) ? (red + shiftMapped) : 0;
 			green = (green > 0) ? (green + shiftMapped) : 0;
 			blue = (blue > 0) ? (blue + shiftMapped) : 0;
@@ -2575,15 +2546,15 @@ class UV_HudVisorDraw : EventHandler
 // 			dLightsFullColorWeighted.z);
 
 		// Brightness-only path for glow, armor grid, wiper
-		combinedBrightnessScale = BlendBrightness(sectorBrightnessScale, dLightsBrightnessWeighted);
+		combinedBrightnessScale = UV_SmallUtils.BlendBrightness(sectorBrightnessScale, dLightsBrightnessWeighted);
 		
 		// Full color change (including brightness) for other textures
 		double colR = dLightsFullColorWeighted.X;
 		double colG = dLightsFullColorWeighted.Y;
 		double colB = dLightsFullColorWeighted.Z;
-		combinedFullColorScale.X = BlendBrightness(sectorBrightnessScale, colR);
-		combinedFullColorScale.Y = BlendBrightness(sectorBrightnessScale, colG);
-		combinedFullColorScale.Z = BlendBrightness(sectorBrightnessScale, colB);
+		combinedFullColorScale.X = UV_SmallUtils.BlendBrightness(sectorBrightnessScale, colR);
+		combinedFullColorScale.Y = UV_SmallUtils.BlendBrightness(sectorBrightnessScale, colG);
+		combinedFullColorScale.Z = UV_SmallUtils.BlendBrightness(sectorBrightnessScale, colB);
 		double colMax = max(colR, max(colG, colB));
 		if (colMax > 0.01) {
 			double hueR = colR / colMax;
@@ -2591,9 +2562,9 @@ class UV_HudVisorDraw : EventHandler
 			double hueB = colB / colMax;
 			double saturation = 1.0 - min(hueR, min(hueG, hueB));
 			double tint = sectorBrightnessScale * saturation * 0.25 * colMax;
-			combinedFullColorScale.X = TintTowardHue(combinedFullColorScale.X, hueR, tint);
-			combinedFullColorScale.Y = TintTowardHue(combinedFullColorScale.Y, hueG, tint);
-			combinedFullColorScale.Z = TintTowardHue(combinedFullColorScale.Z, hueB, tint);
+			combinedFullColorScale.X = UV_SmallUtils.TintTowardHue(combinedFullColorScale.X, hueR, tint);
+			combinedFullColorScale.Y = UV_SmallUtils.TintTowardHue(combinedFullColorScale.Y, hueG, tint);
+			combinedFullColorScale.Z = UV_SmallUtils.TintTowardHue(combinedFullColorScale.Z, hueB, tint);
 		}
 	}
 
@@ -2608,7 +2579,7 @@ class UV_HudVisorDraw : EventHandler
 		double gSum = 0.0;
 		double bSum = 0.0;
 		
-		Vector3 playerViewDirection = GetDirectionFromAngles(playerViewYaw, playerViewPitch);
+		Vector3 playerViewDirection = UV_SmallUtils.GetDirectionFromAngles(playerViewYaw, playerViewPitch);
 		ThinkerIterator iterator = ThinkerIterator.Create("DynamicLight");
 		DynamicLight light;
 
@@ -2625,7 +2596,7 @@ class UV_HudVisorDraw : EventHandler
 			double distanceAttenuation = 1.0 - (distanceToLight / effectiveRadius);
 			double directionAttenuation = 1.0;
 			if (light.bSpot) {
-				directionAttenuation = SpotlightConeAttenuation(light, point); // fade to 0 outside the cone
+				directionAttenuation = UV_SmallUtils.SpotlightConeAttenuation(light, point); // fade to 0 outside the cone
 			}
 			double finalAttenuation = distanceAttenuation * directionAttenuation;
 
@@ -2635,7 +2606,7 @@ class UV_HudVisorDraw : EventHandler
 			double angleDegrees = acos(cosViewAngle);
 
 			// Full influence up to 65 degrees, then fades to 0 (up to 180 degrees)
-			double behindness = Smoothstep(65.0, 180.0, angleDegrees);
+			double behindness = UV_SmallUtils.Smoothstep(65.0, 180.0, angleDegrees);
 
 			// Soft floor, so HUD never goes fully black
 			double brightnessFacing = 0.25 + 0.75 * (1.0 - behindness);
@@ -2659,57 +2630,10 @@ class UV_HudVisorDraw : EventHandler
 
 		dLightsBrightnessWeighted = Clamp(totalBrightness / 255.0 * 0.5 * dLightsContributionMult, 0.0, 1.0);
 		dLightsFullColorWeighted = (
-			Clamp(rSum / 255.0 * 0.9 * dLightsContributionMult, 0.0, 1.0),
-			Clamp(gSum / 255.0 * 0.9 * dLightsContributionMult, 0.0, 1.0),
-			Clamp(bSum / 255.0 * 0.9 * dLightsContributionMult, 0.0, 1.0)
+			Clamp(rSum / 255.0 * dLightsContributionMult, 0.0, 1.0),
+			Clamp(gSum / 255.0 * dLightsContributionMult, 0.0, 1.0),
+			Clamp(bSum / 255.0 * dLightsContributionMult, 0.0, 1.0)
 		);
-	}
-	
-	// Combines two brightness values (used for sector brightness and dynamic lights brightness)
-	double BlendBrightness(double base, double add) {
-		return 1.0 - (1.0 - base) * (1.0 - add);
-	}
-
-	// Create visible hue even at full brightness (e.g. when very bright sector, but also a colored dynamic light)
-	// So it subtracts from non-dominant channels, but partially, not just channel*hue to keep colored elements
-	// if hue=1: no change (already dominant channel), hue=0: reduced by amount
-	double TintTowardHue(double channel, double hue, double amount) {
-		return channel * (1.0 - amount * (1.0 - hue));
-	}
-	
-	// Get forward vector (player's view or spotlights direction)
-	Vector3 GetDirectionFromAngles(double yaw, double pitch) {
-		double horizontal = cos(pitch);
-		return (
-			cos(yaw) * horizontal,
-			sin(yaw) * horizontal,
-			sin(-pitch) // +pitch = down
-		);
-	}
-
-	// Smooth 0 to 1 ramp between edges
-	double Smoothstep(double edge0, double edge1, double x) {
-		double t = Clamp((x - edge0) / (edge1 - edge0), 0.0, 1.0);
-		return t * t * (3.0 - 2.0 * t);
-	}
-
-	// 1.0 inside inner cone, 0.0 outside outer cone, linear fade between
-	double SpotlightConeAttenuation(DynamicLight light, Vector3 point) {
-		Vector3 lightPosition = light.pos;
-		// Some spotlights seem to be attached to an actor positioned higher than the actual light
-		if (light is "Spotlight") {
-			lightPosition.Z -= 16;
-		}
-		Vector3 spotDirection = GetDirectionFromAngles(light.Angle, light.Pitch);
-		Vector3 toPoint = (point - lightPosition).Unit();
-		double cosToPoint = spotDirection dot toPoint;
-		double cosInner = cos(light.SpotInnerAngle);
-		double cosOuter = cos(light.SpotOuterAngle);
-		if (cosToPoint <= cosOuter) 
-			return 0.0;
-		if (cosToPoint >= cosInner) 
-			return 1.0;
-		return (cosToPoint - cosOuter) / (cosInner - cosOuter);
 	}
 	
 	void SetPlayerBlendColorAndAlpha() {
@@ -3247,10 +3171,6 @@ class UV_HudVisorDraw : EventHandler
 				&& playerinf.mo.isVisible(actor, false, paramsForIsVisible);
 	}
 	
-	double MapRange(double val, double fromLow, double fromHigh, double toLow, double toHigh) {
-		return toLow + (val - fromLow) * (toHigh - toLow) / (fromHigh - fromLow);
-	}
-	
 	Color GetRandomBloodColor() {
 		int r, g, b;
 		int rand = random[UV_VeryRandomIdentifierrr](1, 6);
@@ -3330,13 +3250,13 @@ class UV_HudVisorDraw : EventHandler
 			if (!preventedNotifyingBySmartW) {
 				UpdateAmmoNotification(ammoData.am1amt, ammoData.am1max, 1);
 			}
-			mappedCurrentAmmo1 = MapRange(ammoData.am1amt, 0, ammoData.am1max, 0, 200);
+			mappedCurrentAmmo1 = UV_SmallUtils.MapRange(ammoData.am1amt, 0, ammoData.am1max, 0, 200);
 		}
 		if (ammoData.am2max > 0) {
 			if (!preventedNotifyingBySmartW) {
 				UpdateAmmoNotification(ammoData.am2amt, ammoData.am2max, 2);
 			}
-			mappedCurrentAmmo2 = MapRange(ammoData.am2amt, 0, ammoData.am2max, 0, 200);
+			mappedCurrentAmmo2 = UV_SmallUtils.MapRange(ammoData.am2amt, 0, ammoData.am2max, 0, 200);
 		} 
 		
 		if (preventedNotifyingBySmartW) {
