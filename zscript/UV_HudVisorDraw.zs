@@ -630,6 +630,7 @@ class UV_HudVisorDraw : EventHandler
 	int newBloodSplashNumber;
 	UV_BloodSplash currentBloodSplashes[BLOOD_MAX_SPLASHES];
 	const UNSET_COLOR = Color(0, 0, 0, 0);
+	int prevBloodDefaultSaturationShiftCvar;
 	int bloodDefaultSaturationShiftCvar;
 	int bloodDetectionMode;
 	LookExParams paramsForIsVisible;
@@ -2040,7 +2041,13 @@ class UV_HudVisorDraw : EventHandler
 		SetPlayerBlendColorAndAlpha();
 		
 		SetStoredHealthArmor();
-
+		
+		if (prevBloodDefaultSaturationShiftCvar != bloodDefaultSaturationShiftCvar) {
+			enemyBasedBloodColorCache.Clear();
+			bloodBasedBloodColorCache.Clear();
+		}
+		prevBloodDefaultSaturationShiftCvar = bloodDefaultSaturationShiftCvar;
+		
 		if (mainTogglesFlagsPlay & UV_ShowBloodSplashes) {
 			UpdateBloodSplashesData();
 		}
@@ -2333,6 +2340,7 @@ class UV_HudVisorDraw : EventHandler
 		name actorClassName = enemyActor.GetClassName();
 		for (int i = 0; i < enemyBasedBloodColorCache.Size(); i++) {
 			if (enemyBasedBloodColorCache[i].actorClassName == actorClassName) {
+// 				console.printf("Got color from cache for " .. actorClassName);
 				return enemyBasedBloodColorCache[i].col, enemyBasedBloodColorCache[i].valid;
 			}
 		}
@@ -2357,15 +2365,15 @@ class UV_HudVisorDraw : EventHandler
 			if (enemyBloodTypes.Size() > 0 && enemyBloodTypes[1].IndexOf("blue") != -1) {
 				return Color("1A166B"), true; // blue-purple, not just blue
 			}
-		} else {
-			// Try to find color name in type names or use gameinfo default color
-			newBloodColor = GetBloodColorFromTypesOrDefault(enemyBloodTypes);
 		}
+		// Try to find color name in type names or use gameinfo default color
+		newBloodColor = GetBloodColorFromTypesOrDefault(enemyBloodTypes);
 		UV_BloodColorCacheEntry cacheEntry = new("UV_BloodColorCacheEntry");
 		cacheEntry.actorClassName = actorClassName;
 		cacheEntry.col = newBloodColor;
 		cacheEntry.valid = true;
 		enemyBasedBloodColorCache.Push(cacheEntry);
+// 		console.printf("Set color " .. newBloodColor .. " to cache for " .. actorClassName);
 		return newBloodColor, true;
 	}
 	
