@@ -7,8 +7,9 @@ class UV_AmmoReader : Object {
 		playerinf = currentPlayerinf;
 		Weapon currentWeapon = playerinf.ReadyWeapon;
 		amData = new("UV_AmmoData");
-		if (!currentWeapon)
+		if (!currentWeapon) {
 			return amData;
+		}
 		amData.weaponClassName = currentWeapon.GetClassName();
 		if (globals.isPB_Loaded && amData.weaponClassName == 'PBX_RideableCaco') {
 			return amData;
@@ -71,13 +72,14 @@ class UV_AmmoReader : Object {
 	}
 	
 	void SetLitDoomData() {
-		if (amData.weaponClassName == "LitRifle") {
+		name wClassN = amData.weaponClassName;
+		if (wClassN == 'LitRifle') {
 			SetAm1DataCustom("minigunammo");
 			SetAm2DataCustom("rifleammo");
-		} else if (amData.weaponClassName == "shot_gun") {
+		} else if (wClassN == 'shot_gun') {
 			SetAm1DataCustom("ammoslug");
 			SetAm2DataCustom("shotgunammo");
-		} else if (amData.weaponClassName == "GRENADELAUNCHER") {
+		} else if (wClassN == 'GRENADELAUNCHER') {
 			string ammo1Name = "flareloaded";
 			if (playerinf.mo.FindInventory(ammo1Name)) {
 				SetAm1DataCustom("flare");
@@ -124,15 +126,16 @@ class UV_AmmoReader : Object {
 	}
 	
 	void SetBeautifulDoomData() {
-		if (amData.weaponClassName == "BD_Pistol") {
+		name wClassN = amData.weaponClassName;
+		if (wClassN == 'BD_Pistol') {
 			SetAm2DataCustom("BD_PistolClip");
-		} else  if (amData.weaponClassName == "BD_Shotgun") {
+		} else  if (wClassN == 'BD_Shotgun') {
 			SetAm2DataCustom("BD_ShotgunClip");
-		} else if (amData.weaponClassName == "BD_SuperShotgun") {
+		} else if (wClassN == 'BD_SuperShotgun') {
 			SetAm2DataCustom("BD_SSGClip");
-		} else if (amData.weaponClassName == "BD_Chaingun") {
+		} else if (wClassN == 'BD_Chaingun') {
 			SetAm2DataCustom("RifleClip"); // not a typo
-		} else if (amData.weaponClassName == "BD_RocketLauncher") {
+		} else if (wClassN == 'BD_RocketLauncher') {
 			SetAm2DataCustom("BD_RLClip");
 		}
 	}
@@ -142,7 +145,7 @@ class UV_AmmoReader : Object {
 		if (am1) {
 			amData.ammo1_ClassName = am1.GetClassName();
 // 			console.printf(" ammo1_ClassName: " .. amData.ammo1_ClassName);
-			amData.am1amt = playerinf.mo.CountInv(ammoClassName);
+			amData.am1amt = am1.Amount;
 // 			console.printf(" am1amt: " .. amData.am1amt);
 			amData.am1max = am1.maxamount;
 // 			console.printf(" am1max: " .. amData.am1max);
@@ -154,7 +157,7 @@ class UV_AmmoReader : Object {
 		if (am2) {
 			amData.ammo2_ClassName = am2.GetClassName();
 // 			console.printf(" ammo2_ClassName: " .. amData.ammo2_ClassName);
-			amData.am2amt = playerinf.mo.CountInv(ammoClassName);
+			amData.am2amt = am2.Amount;
 // 			console.printf(" am2amt: " .. amData.am2amt);
 			amData.am2max = am2.maxamount;
 // 			console.printf(" am2max: " .. amData.am2max);

@@ -2255,7 +2255,8 @@ class UV_HudVisorDraw : EventHandler
 		CommonGraphicsPathPlayContext = "graphics/" .. texResPath .. "/Common/";
 		
 		if (globals && !globals.checkedLoadedMod) {
-			globals.checkLoadedMod();
+			globals.CheckLoadedMods();
+			globals.SetDefaultBloodSaturationMultiplier();
 			globals.checkedLoadedMod = true;
 		}
 	}
@@ -2757,7 +2758,7 @@ class UV_HudVisorDraw : EventHandler
 		}
 		
 		if (lastColormappedPowerup == 'PowerInvulnerable') {
-			if (globals.isBD_Loaded) {
+			if (globals.isBDv21v22_Loaded) {
 				SetColormapState(1, 1, 1, 0, 0, 0, true, false);
 			} else if (globals.isHellriderLoaded) {
 				SetColormapState(1.225, 0.875, 3.5, 0, 0, 0, true, false);
