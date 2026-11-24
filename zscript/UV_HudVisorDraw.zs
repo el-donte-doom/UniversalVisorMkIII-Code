@@ -332,15 +332,17 @@ class UV_HudVisorDraw : EventHandler
 	ui double targetPulseAlpha;
 	ui double targetPulseAlphaBottom;
 	
-	ui double uiSwayOffX; // Gets interpolated from SwayOffX
-	ui double uiSwayOffY; // Gets interpolated from SwayOffY
+	ui double uiSwayOffX;
+	ui double uiSwayOffY;
 	ui double uiSwayOffX_ArmorGrid;
 	ui double uiSwayOffY_ArmorGrid;
 	ui double forwardOfsHelmet;
 	ui double hudExpansionX;
 	ui double hudExpansionY;
-	ui double uiScaledMaxSwayX;
-	ui double uiScaledMaxSwayY;
+	ui double swayMarginX;
+	ui double swayMarginY;
+	ui string swaySourceName;
+	const DEFAULT_SWAY_SOURCE_NAME = "UVMkIII";
 	
 	
 	///// PLAY CONTEXT VARS /////
@@ -1096,15 +1098,17 @@ class UV_HudVisorDraw : EventHandler
 			hudExpansionX = InterpolateValue(src.hudExpansionOld.x, src.hudExpansion.x, FracTicGlobal);
 			hudExpansionY = InterpolateValue(src.hudExpansionOld.y, src.hudExpansion.y, FracTicGlobal);
 			forwardOfsHelmet = InterpolateValue(src.forwardOfsOld, src.forwardOfs, FracTicGlobal);
-			uiScaledMaxSwayX = src.marginX;
-			uiScaledMaxSwayY = src.marginY;
+			swayMarginX = src.marginX;
+			swayMarginY = src.marginY;
+			swaySourceName = src.sourceName;
 		} else { // use default Mk III swaying (calculated in DoHelmetSwaying)
 			uiSwayOffX = InterpolateValue(OldSwayOffX, SwayOffX, FracTicGlobal);
 			uiSwayOffY = InterpolateValue(OldSwayOffY, SwayOffY, FracTicGlobal);
 			hudExpansionX = 0;
 			hudExpansionY = 0;
-			uiScaledMaxSwayX = scaledMaxSwayX;
-			uiScaledMaxSwayY = scaledMaxSwayY;
+			swayMarginX = scaledMaxSwayX;
+			swayMarginY = scaledMaxSwayY;
+			swaySourceName = DEFAULT_SWAY_SOURCE_NAME;
 		}
 		
 		if (swayFlags & UV_LessIntenseGridSway) {
@@ -1439,13 +1443,13 @@ class UV_HudVisorDraw : EventHandler
 		h *= scaleFactorHeight;
 		double ratioInterpolated = InterpolateValue(prevClipRatioInverted, clipRatioInverted, FracTicGlobal);
 		double x = Screen.GetWidth() - (Screen.GetWidth() + w) * ratioInterpolated;
-		x += uiSwayOffX + ShakeOffsetX;
+		x += uiSwayOffX;
 		Color wiperColor = FULL_WHITE_COLOR;
 		wiperColor = BlendColorWithEnvironmentAndPowerups(wiperColor, UV_HudVisorDraw.SCREEN_WIPER);
 		Screen.DrawTexture(
 			texScreenWiper, false,
 			x,
-			uiSwayOffY + ShakeOffsetY,
+			uiSwayOffY,
 			DTA_DestWidthF, w,
 			DTA_DestHeightF, h,
 			DTA_Color, wiperColor
@@ -1477,8 +1481,8 @@ class UV_HudVisorDraw : EventHandler
 			
 			Screen.DrawTexture(
 				bloodTexture, false, 
-				x + uiSwayOffX + ShakeOffsetX,
-				y + uiSwayOffY + ShakeOffsetY,
+				x + uiSwayOffX,
+				y + uiSwayOffY,
 				DTA_DestWidthF, w,
 				DTA_DestHeightF, h,
 				DTA_Alpha, texAlpha,
@@ -1503,21 +1507,21 @@ class UV_HudVisorDraw : EventHandler
 		[origWidth, origHeight] = TexMan.GetSize(texture);
 		double texWidth = ceil(origWidth * scaleFactorWidth); // without ceil it could be 1559.9996 instead of 1600 which will not pass next check
 		texWidth *= optionalWidthScale;
-		double diffSwayTex = Screen.GetWidth() + uiScaledMaxSwayX * 2 - texWidth;
+		double diffSwayTex = Screen.GetWidth() + swayMarginX * 2 - texWidth;
 		if ((helmetSwayEnabled || helmetShakeEnabled)
-				&& diffSwayTex <= uiScaledMaxSwayX * 2 // if scaled texture width equals screenwidth or is a bit bigger (but not bigger than uiScaledMaxSwayX * 2)
+				&& diffSwayTex <= swayMarginX * 2 // if scaled texture width equals screenwidth or is a bit bigger (but not bigger than swayMarginX * 2)
 				&& diffSwayTex > 0 // and if not already big enough
 				&& (anchor == UV_HudVisorDraw.TOP_MIDDLE || anchor == UV_HudVisorDraw.BOTTOM_MIDDLE)) {
 			texWidth += diffSwayTex; // increase its width to get extra space for swaying
 		}
 		double texHeight = ceil(origHeight * scaleFactorHeight);
 		texHeight *= optionalHeightScale;
-		diffSwayTex = Screen.GetHeight() + uiScaledMaxSwayY * 2 - texHeight;
+		diffSwayTex = Screen.GetHeight() + swayMarginY * 2 - texHeight;
 		if ((helmetSwayEnabled || helmetShakeEnabled) 
-				&& diffSwayTex <= uiScaledMaxSwayY * 2
+				&& diffSwayTex <= swayMarginY * 2
 				&& diffSwayTex > 0
 				&& (anchor == UV_HudVisorDraw.MIDDLE_LEFT || anchor == UV_HudVisorDraw.MIDDLE_RIGHT)) {
-			texHeight += uiScaledMaxSwayY * 2;
+			texHeight += swayMarginY * 2;
 		}
 		offsetX *= scaleFactorWidth;
 		offsetY *= scaleFactorHeight;
@@ -1574,8 +1578,8 @@ class UV_HudVisorDraw : EventHandler
 		
 		Screen.DrawTexture(
 			texture, false,
-			x + uiSwayOffX + anchorOfsX + ShakeOffsetX, // already scaled
-			y + uiSwayOffY + anchorOfsY + ShakeOffsetY,
+			x + uiSwayOffX + anchorOfsX, // already scaled
+			y + uiSwayOffY + anchorOfsY,
 			DTA_DestWidthF, texWidth,
 			DTA_DestHeightF, texHeight,
 			DTA_Alpha, texAlpha,
@@ -1612,69 +1616,69 @@ class UV_HudVisorDraw : EventHandler
 			case TOP_LEFT:
 				x = 0 - offsetX;
 				if (helmetSwayEnabled || helmetShakeEnabled) {
-					x -= uiScaledMaxSwayX;
+					x -= swayMarginX;
 				}
 				y = 0 - offsetY;
 				if (helmetSwayEnabled || helmetShakeEnabled) {
-					y -= uiScaledMaxSwayY;
+					y -= swayMarginY;
 				}
 				break;
 			case TOP_MIDDLE:
 				x = Screen.GetWidth() / 2.0 - texWidth / 2.0;
 				y = 0 - offsetY;
 				if (helmetSwayEnabled || helmetShakeEnabled) {
-					y -= uiScaledMaxSwayY;
+					y -= swayMarginY;
 				}
 				break;
 			case TOP_RIGHT:
 				x = Screen.GetWidth() - texWidth + offsetX;
 				if (helmetSwayEnabled || helmetShakeEnabled) {
-					x += uiScaledMaxSwayX;
+					x += swayMarginX;
 				}
 				y = 0 - offsetY;
 				if (helmetSwayEnabled || helmetShakeEnabled) {
-					y -= uiScaledMaxSwayY;
+					y -= swayMarginY;
 				}
 				break;
 			case MIDDLE_LEFT:
 				x = 0 - offsetX;
 				if (helmetSwayEnabled || helmetShakeEnabled) {
-					x -= uiScaledMaxSwayX;
+					x -= swayMarginX;
 				}
 				y = Screen.GetHeight() / 2.0 - texHeight / 2.0;
 				break;
 			case MIDDLE_RIGHT:
 				x = Screen.GetWidth() - texWidth + offsetX;
 				if (helmetSwayEnabled || helmetShakeEnabled) {
-					x += uiScaledMaxSwayX;
+					x += swayMarginX;
 				}
 				y = Screen.GetHeight() / 2.0 - texHeight / 2.0;
 				break;
 			case BOTTOM_LEFT:
 				x = 0 - offsetX;
 				if (helmetSwayEnabled || helmetShakeEnabled) {
-					x -= uiScaledMaxSwayX;
+					x -= swayMarginX;
 				}
 				y = Screen.GetHeight() - texHeight + offsetY;
 				if (helmetSwayEnabled || helmetShakeEnabled) {
-					y += uiScaledMaxSwayY;
+					y += swayMarginY;
 				}
 				break;
 			case BOTTOM_MIDDLE:
 				x = Screen.GetWidth() / 2.0 - texWidth / 2.0;
 				y = Screen.GetHeight() - texHeight + offsetY;
 				if (helmetSwayEnabled || helmetShakeEnabled) {
-					y += uiScaledMaxSwayY;
+					y += swayMarginY;
 				}
 				break;
 			case BOTTOM_RIGHT:
 				x = Screen.GetWidth() - texWidth + offsetX;
 				if (helmetSwayEnabled || helmetShakeEnabled) {
-					x += uiScaledMaxSwayX;
+					x += swayMarginX;
 				}
 				y = Screen.GetHeight() - texHeight + offsetY;
 				if (helmetSwayEnabled || helmetShakeEnabled) {
-					y += uiScaledMaxSwayY;
+					y += swayMarginY;
 				}
 				break;
 		}
@@ -1699,10 +1703,10 @@ class UV_HudVisorDraw : EventHandler
 		texColor = BlendColorWithEnvironmentAndPowerups(texColor);
 		Screen.DrawTexture(
 			texture, false, 
-			offsetX - expandX + uiSwayOffX + ShakeOffsetX - uiScaledMaxSwayX, // move texture (and increase size in DestWidth/DestHeight) not to draw beyond its edges
-			offsetY - expandY + uiSwayOffY + ShakeOffsetY - uiScaledMaxSwayY,
-			DTA_DestWidthF, (Screen.GetWidth() + expandX * 2 + uiScaledMaxSwayX * 2) * sizeMult, 
-			DTA_DestHeightF, (Screen.GetHeight() + expandY * 2 + uiScaledMaxSwayY * 2) * sizeMult, 
+			offsetX - expandX + uiSwayOffX - swayMarginX, // move texture (and increase size in DestWidth/DestHeight) not to draw beyond its edges
+			offsetY - expandY + uiSwayOffY - swayMarginY,
+			DTA_DestWidthF, (Screen.GetWidth() + expandX * 2 + swayMarginX * 2) * sizeMult, 
+			DTA_DestHeightF, (Screen.GetHeight() + expandY * 2 + swayMarginY * 2) * sizeMult, 
 			DTA_Alpha, 	texAlpha,
 			DTA_Color, texColor,
 			DTA_LegacyRenderStyle, texRenderStyle,
@@ -1726,10 +1730,10 @@ class UV_HudVisorDraw : EventHandler
 
 		Screen.DrawTexture(
 			texture, false, 
-			newX + uiSwayOffX_ArmorGrid + ShakeOffsetX - uiScaledMaxSwayX,
-			newY + uiSwayOffY_ArmorGrid + ShakeOffsetY - uiScaledMaxSwayY,
-			DTA_DestWidthF,  newW + uiScaledMaxSwayX * 2, 
-			DTA_DestHeightF, newH + uiScaledMaxSwayY * 2, 
+			newX + uiSwayOffX_ArmorGrid - swayMarginX,
+			newY + uiSwayOffY_ArmorGrid - swayMarginY,
+			DTA_DestWidthF,  newW + swayMarginX * 2, 
+			DTA_DestHeightF, newH + swayMarginY * 2, 
 			DTA_Alpha, texAlpha,
 			DTA_Color, texColor,
 			DTA_LegacyRenderStyle, texRenderStyle
@@ -2036,7 +2040,7 @@ class UV_HudVisorDraw : EventHandler
 		SetPlayerBlendColorAndAlpha();
 		
 		SetStoredHealthArmor();
-		
+
 		if (mainTogglesFlagsPlay & UV_ShowBloodSplashes) {
 			UpdateBloodSplashesData();
 		}
@@ -3618,6 +3622,10 @@ class UV_HudVisorDraw : EventHandler
 				ShakeOffsetY *= scaleY;
 			}
 		}
+		
+		// UI doesn't care about sway/shake ratio and should just use total values
+		SwayOffX = SwayOffX + ShakeOffsetX;
+		SwayOffY = SwayOffY + ShakeOffsetY;
 		 
 		wasGrounded = IsGrounded;
 		PrevVelZ = playerinf.mo.vel.Z;

@@ -1,11 +1,19 @@
 class UV_SwaySource : Object {
+
     bool isEnabled;
-	name sourceName; // just in case
+	string sourceName;
     Vector2 swayOffsetOld, swayOffset;
-    Vector2 hudExpansionOld, hudExpansion; // expansion applied to fullscreen textures (armor grid, tactical overlay), 
-										   // similar to pb hud expansion on movement
+	
+	// max possible horizontal and vertical sway
+	// used to reserve space for swaying
+	double marginY;
+	double marginX;
+	
+	// expansion applied to most of UV fullscreen textures 
+	// similar to pb hud expansion on movement
+	// basically used only if UV has PB sway as a source
+    Vector2 hudExpansionOld, hudExpansion; 
 	double forwardOfsOld, forwardOfs; // for smaller textures like top/bottom helmet pieces which can't just expand
-    double marginX, marginY; // how much helmet space to reserve for swaying
 }
 
 class UV_SwaySourceHolder : StaticEventHandler {  // EventHandler can be found in both contexts (we need ui)
