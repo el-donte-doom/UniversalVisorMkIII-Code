@@ -3670,8 +3670,8 @@ class UV_HudVisorDraw : EventHandler
 	
 	void SetIsThirdPerson() {
 		isThirdPerson = (playerinf && (playerinf.cheats & CF_CHASECAM)) // Vanilla chase cam
-			|| (playerinf.camera && playerinf.camera.GetClassName() == "chaseCam2") // LiTDOOM
-			|| (playerinf.camera && playerinf.camera.GetClassName() == "ThirdPersonCamera") // ChaseCam++
+			|| (playerinf.camera && playerinf.camera.GetClassName() == 'chaseCam2') // LiTDOOM
+			|| (playerinf.camera && playerinf.camera.GetClassName() == 'ThirdPersonCamera') // ChaseCam++
 		;
 	}
 	
