@@ -1102,6 +1102,7 @@ class UV_HudVisorDraw : EventHandler
 			swayMarginX = src.marginX;
 			swayMarginY = src.marginY;
 			swaySourceName = src.sourceName;
+			CVar.GetCVar("uvisor_alt_sway_source_on").SetBool(true);
 		} else { // use default Mk III swaying (calculated in DoHelmetSwaying)
 			uiSwayOffX = UV_SmallUtils.InterpolateValue(OldSwayOffX, SwayOffX, FracTicGlobal);
 			uiSwayOffY = UV_SmallUtils.InterpolateValue(OldSwayOffY, SwayOffY, FracTicGlobal);
@@ -1110,6 +1111,7 @@ class UV_HudVisorDraw : EventHandler
 			swayMarginX = scaledMaxSwayX;
 			swayMarginY = scaledMaxSwayY;
 			swaySourceName = DEFAULT_SWAY_SOURCE_NAME;
+			CVar.GetCVar("uvisor_alt_sway_source_on").SetBool(false);
 		}
 		
 		if (swayFlags & UV_LessIntenseGridSway) {

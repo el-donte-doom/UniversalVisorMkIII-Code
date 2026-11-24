@@ -147,3 +147,5 @@ nosave int uvisor_breath_voice = 0;
 nosave int uvisor_breath_sound_channel = 106;
 nosave float uvisor_startup_volume = 1.0;
 nosave float uvisor_screen_wiper_volume = 1.0;
+
+nosave noarchive string uvisor_alt_sway_source_on = false; // used to show different text in the menu based on sway source 

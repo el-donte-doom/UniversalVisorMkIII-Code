@@ -367,6 +367,9 @@ OptionMenu "UV_SWAY_SHAKE" {
 	Title "$UVISOR_MENU_SWAY_SHAKE_INNER"
 	StaticText " "
 	StaticText " "
+	UV_DynamicText "uvisor_alt_sway_source_on", "$UVISOR_SWAY_SOURCE_MSG_1_ALT", "$UVISOR_SWAY_SOURCE_MSG_1_DEFAULT", White
+	UV_DynamicText "uvisor_alt_sway_source_on", "$UVISOR_SWAY_SOURCE_MSG_2_ALT", "$UVISOR_SWAY_SOURCE_MSG_2_DEFAULT", White
+	StaticText " "
 	Slider "$UVISOR_MAX_HORIZONTAL_SWAY_SHAKE", "uvisor_maxsway_x", 0, 15, 1, 0
 	Slider "$UVISOR_MAX_VERTICAL_SWAY_SHAKE", "uvisor_maxsway_y", 0, 15, 1, 0
 	UV_Tooltip ""

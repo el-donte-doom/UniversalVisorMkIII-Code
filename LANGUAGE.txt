@@ -246,6 +246,10 @@ UVISOR_BLOOD_DETECTION_MODE_2 = "Blood-based";
 // Swaying and Shaking
 UVISOR_MENU_SWAY_SHAKE = "Swaying and Shaking";
 UVISOR_MENU_SWAY_SHAKE_INNER = "\nSwaying and Shaking";
+UVISOR_SWAY_SOURCE_MSG_1_DEFAULT = "Default sway source detected";
+UVISOR_SWAY_SOURCE_MSG_1_ALT = "Detected alternate sway source";
+UVISOR_SWAY_SOURCE_MSG_2_DEFAULT = "All options below are applied";
+UVISOR_SWAY_SOURCE_MSG_2_ALT = "Only 'Less Intense Armor Grid Sway/Shake' option is applied";
 UVISOR_MAX_HORIZONTAL_SWAY_SHAKE = "Max Horizontal Sway/Shake";
 UVISOR_MAX_VERTICAL_SWAY_SHAKE = "Max Vertical Sway/Shake";
 UVISOR_LESS_INTENSE_GRID_SWAY = "Less Intense Armor Grid Sway/Shake ⓘ";
@@ -556,6 +560,10 @@ UVISOR_BLOOD_DETECTION_MODE_2 = "На Основе Крови";
 // Swaying and Shaking
 UVISOR_MENU_SWAY_SHAKE = "Покачивание и Тряска Шлема";
 UVISOR_MENU_SWAY_SHAKE_INNER = "\nПокачивание и Тряска Шлема";
+UVISOR_SWAY_SOURCE_MSG_1_DEFAULT = "Обнаружен стандартный источник покачивания";
+UVISOR_SWAY_SOURCE_MSG_1_ALT = "Обнаружен альтернативный источник покачивания";
+UVISOR_SWAY_SOURCE_MSG_2_DEFAULT = "Используются все настройки";
+UVISOR_SWAY_SOURCE_MSG_2_ALT = "Используется только настройка 'Менее Интенсивно Для Сетки Брони'";
 UVISOR_MAX_HORIZONTAL_SWAY_SHAKE = "Макс. Гориз. Покачивание/Тряска";
 UVISOR_MAX_VERTICAL_SWAY_SHAKE = "Макс. Верт. Покачивание/Тряска";
 UVISOR_LESS_INTENSE_GRID_SWAY = "Менее Интенсивно Для Сетки Брони ⓘ";
