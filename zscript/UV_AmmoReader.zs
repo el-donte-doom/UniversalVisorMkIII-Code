@@ -10,26 +10,53 @@ class UV_AmmoReader : Object {
 		if (!currentWeapon)
 			return amData;
 		amData.weaponClassName = currentWeapon.GetClassName();
-		if (globals.isPB_Loaded && amData.weaponClassName == "PBX_RideableCaco")
+		if (globals.isPB_Loaded && amData.weaponClassName == 'PBX_RideableCaco') {
 			return amData;
+		}
 // 		console.printf("weaponClassName: " .. amData.weaponClassName);
 		Ammo am1 = Ammo(playerinf.mo.FindInventory(currentWeapon.ammotype1));
 		if (am1) {
 			amData.ammo1_ClassName = am1.GetClassName();
-// 			console.printf(" ammo1_ClassName: " .. amData.ammo1_ClassName);
-			amData.am1amt = playerinf.mo.CountInv(currentWeapon.ammotype1);
-// 			console.printf(" am1amt: " .. amData.am1amt);
+			amData.am1amt = am1.Amount;
 			amData.am1max = am1.maxamount;
+// 			console.printf(" ammo1_ClassName: " .. amData.ammo1_ClassName);
+// 			console.printf(" am1amt: " .. amData.am1amt);
 // 			console.printf(" am1max: " .. amData.am1max);
 		}
 		Ammo am2 = Ammo(playerinf.mo.FindInventory(currentWeapon.ammotype2));
 		if (am2) {
-			amData.ammo2_ClassName = am2.GetClassName();
+			bool skip = false;
+			if (globals.isBD64_Loaded) {
+				Cvar BD64VoH_NoReloadCvar = Cvar.GetCvar("NoReloadCvar", playerinf); // firstly check if cvar exists to avoid crash in old BD64
+				if (BD64VoH_NoReloadCvar != null && BD64VoH_NoReloadCvar.GetBool()) {
+					skip = true; // When "Skip Reload Sequence" enabled with Tactical and Modern classes, am2 still has mag ammo, so skip it
+				}
+			}
+			if (!skip) { // Regular case
+				amData.ammo2_ClassName = am2.GetClassName();
+				amData.am2amt = am2.Amount;
+				amData.am2max = am2.maxamount;
+			}
 // 			console.printf(" ammo2_ClassName: " .. amData.ammo2_ClassName);
-			amData.am2amt = playerinf.mo.CountInv(currentWeapon.ammotype2);
 // 			console.printf(" am2amt: " .. amData.am2amt);
-			amData.am2max = am2.maxamount;
 // 			console.printf(" am2max: " .. amData.am2max);
+		}
+		if (globals.isBD64_Loaded && amData.ammo1_ClassName) {
+			name ammo1_ClassNameN = amData.ammo1_ClassName; // faster comparison
+			name ammo2_ClassNameN = amData.ammo2_ClassName;
+			if (ammo1_ClassNameN == 'SawGas' 
+					&& amData.ammo2_ClassName && ammo2_ClassNameN == 'SSGAmmo') {
+				// Chainsaw alt in BD64 is supershotgun, don't notify if its barrels are empty, might be annoying when no shells
+				// Also keep fuel indication on both ammo types selected
+				amData.am2amt = amData.am1amt;
+				amData.am2max = amData.am1max;
+				amData.ammo2_ClassName = amData.ammo1_ClassName;
+			} else if (ammo1_ClassNameN == 'AltPunchCharge' || ammo1_ClassNameN == 'AxeCharge') {
+				// Don't notify or change colors when hands or axe are selected
+				amData.am1amt = 0;
+				amData.am1max = 0;
+				amData.ammo1_ClassName = "";
+			}
 		}
 		if (amData.weaponClassName) {
 			if (am1 || am2) {

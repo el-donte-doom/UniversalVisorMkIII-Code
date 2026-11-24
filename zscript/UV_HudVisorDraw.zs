@@ -3326,22 +3326,14 @@ class UV_HudVisorDraw : EventHandler
 		}
 		
 		if (ammoData.am1max > 0) {
-			if (globals.isBD64_Loaded && ammoData.ammo1_ClassName && ammoData.ammo1_ClassName.IndexOf("AltPunch") != -1) {
-				NotifyIfLowAmmo(0, 0, 1);
-			} else if (!preventedNotifyingBySmartW) {
-				NotifyIfLowAmmo(ammoData.am1amt, ammoData.am1max, 1); // Regular case
+			if (!preventedNotifyingBySmartW) {
+				UpdateAmmoNotification(ammoData.am1amt, ammoData.am1max, 1);
 			}
 			mappedCurrentAmmo1 = MapRange(ammoData.am1amt, 0, ammoData.am1max, 0, 200);
 		}
-		
 		if (ammoData.am2max > 0) {
-			if (globals.isBD64_Loaded 
-				&& ammoData.ammo1_ClassName && ammoData.ammo1_ClassName.IndexOf("Saw") != -1 
-				&& ammoData.ammo2_ClassName && ammoData.ammo2_ClassName.IndexOf("SSG") != -1) {
-				// Chainsaw alt in BD64 is supershotgun, don't notify if its barrels are empty
-				NotifyIfLowAmmo(0, 0, 2);
-			} else if (!preventedNotifyingBySmartW) {
-				NotifyIfLowAmmo(ammoData.am2amt, ammoData.am2max, 2); // Regular case
+			if (!preventedNotifyingBySmartW) {
+				UpdateAmmoNotification(ammoData.am2amt, ammoData.am2max, 2);
 			}
 			mappedCurrentAmmo2 = MapRange(ammoData.am2amt, 0, ammoData.am2max, 0, 200);
 		} 
@@ -3357,17 +3349,17 @@ class UV_HudVisorDraw : EventHandler
 			// So in such case if basis is ammo2, check ammo1 and vice versa
 			if (!(globals.isBD64_Loaded && ammoData.ammo1_ClassName.IndexOf("AltPunch") != -1)) {
 				if (!preventedNotifyingBySmartW) {
-					NotifyIfLowAmmo(ammoData.am1amt, ammoData.am1max, 2);	// And notify about ammo1 (like chaingun) as if basis is ammo2 
+					UpdateAmmoNotification(ammoData.am1amt, ammoData.am1max, 2);	// And notify about ammo1 (like chaingun) as if basis is ammo2 
 				}
 			} else {
-				NotifyIfLowAmmo(0, 0, 2);
+				UpdateAmmoNotification(0, 0, 2);
 			}
 		} else if (ammoData.ammo2_ClassName && !ammoData.ammo1_ClassName && !preventedNotifyingBySmartW) {
-			NotifyIfLowAmmo(ammoData.am2amt, ammoData.am2max, 1);
+			UpdateAmmoNotification(ammoData.am2amt, ammoData.am2max, 1);
 		}
 	}
 	
-	void NotifyIfLowAmmo(int currentAmmo, int maxAmmo, int ammoType) {
+	void UpdateAmmoNotification(int currentAmmo, int maxAmmo, int ammoType) {
 		bool foundLowAmmo = false;
 		if (maxAmmo > 0) {
 			if (	   (maxAmmo > 400 && currentAmmo <= 30)
@@ -3421,8 +3413,8 @@ class UV_HudVisorDraw : EventHandler
 	}
 	
 	void StopBothAmmoNotifications() {
-		NotifyIfLowAmmo(0, 0, 1);
-		NotifyIfLowAmmo(0, 0, 2);
+		UpdateAmmoNotification(0, 0, 1);
+		UpdateAmmoNotification(0, 0, 2);
 	}
 	
 	bool IsSkippableWeaponData(name wClass) {
