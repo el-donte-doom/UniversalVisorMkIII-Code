@@ -1,14 +1,16 @@
 AddOptionMenu "OptionsMenu"
-{
+{	
+	AnimatedTransition
 	Submenu "$UVISOR_NAME", "VisorOptions"
 }
 
 OptionMenu "VisorOptions"
 {
-	Title "$UVISOR_INNER_MENU_NAME"
+	Animated // high framerate
+	AnimatedTransition // horizontal transition
+	Position -37 // lower submenu a bit because the title usually covers the top helmet piece (the title itself is lowered with '\n')
+	Title "$UVISOR_NAME_INNER"
 	
-	StaticText " "
-	StaticText " "
 	Option "$UVISOR_MOD_ENABLED", "uvisor_mod_enabled", "YesNo"
 	Option "$UVISOR_TEXTURE_RESOLUTION", "uvisor_tex_res", "TextureResolutions"
 	
@@ -51,12 +53,14 @@ OptionMenu "VisorOptions"
 
 // Main Toggles
 OptionMenu "UV_MENU_MAIN_TOGGLES" {
+	Animated
+	AnimatedTransition
+	Position -37
 	class UV_TooltipOptionMenu
 	UV_TooltipGeometry 0.028, 0.25, 0.18, 1.2, 0.6 // X, Y, width, horizontal margin, vertical margin, scale
 	UV_TooltipAppearance "", "", "uv_tt_bg"
 	Title "$UVISOR_MENU_MAIN_TOGGLES_INNER"
-	StaticText " "
-	StaticText " "
+
 	FlagOption "$UVISOR_SHOW_HELMET_PIECES", "uvisor_main_toggles_flags", "OnOff", 0
 	FlagOption "$UVISOR_SHOW_GLOW", "uvisor_main_toggles_flags", "OnOff", 1
 	FlagOption "$UVISOR_SHOW_GLASS", "uvisor_main_toggles_flags", "OnOff", 2
@@ -76,9 +80,11 @@ OptionMenu "UV_MENU_MAIN_TOGGLES" {
 
 // Presets and Backup
 OptionMenu "UV_MENU_PRESETS" {
+	Animated
+	AnimatedTransition
+	Position -37
 	Title "$UVISOR_MENU_PRESETS_INNER"
-	StaticText " "
-	StaticText " "
+
 	StaticText "$UVISOR_PREDEFINED_PRESETS_SUBTITLE", LightBlue
 	SafeCommand "Doomguy #1", "uvisor_apply_preset_doomguy_1"
 	SafeCommand "Doomguy #2", "uvisor_apply_preset_doomguy_2"
@@ -105,12 +111,14 @@ OptionMenu "UV_MENU_PRESETS" {
 
 // Style Options
 OptionMenu "UV_MENU_STYLE" {
+	Animated
+	AnimatedTransition
+	Position -37
 	class UV_TooltipOptionMenu
 	UV_TooltipGeometry 0.028, 0.38, 0.18, 1.2, 0.6
 	UV_TooltipAppearance "", "", "uv_tt_bg"
 	Title "$UVISOR_MENU_STYLE_INNER"
-	StaticText " "
-	StaticText " "
+
 	Option "$UVISOR_STYLE_HELMET_TOP", "uvisor_style_helmet_top", "TopStyles"
 	StaticText " "
 	Option "$UVISOR_STYLE_HELMET_BOTTOM", "uvisor_style_helmet_bottom", "BottomStyles"
@@ -132,14 +140,16 @@ OptionMenu "UV_MENU_STYLE" {
 	SafeCommand "$UVISOR_RESET_SUBMENU", uvisor_reset_style_menu, "$UVISOR_RESET_SUBMENU_PROMPT"
 }
 
-// Colors and Transparency
+// Colors / Transparency
 OptionMenu "UV_MENU_COLORS" {
+	Animated
+	AnimatedTransition
+	Position -37
 	class UV_TooltipOptionMenu
 	UV_TooltipGeometry 0.028, 0.38, 0.18, 1.2, 0.6
 	UV_TooltipAppearance "", "", "uv_tt_bg"
 	Title "$UVISOR_MENU_COLORS_INNER"
-	StaticText " "
-	StaticText " "
+
 	StaticText "$UVISOR_COLORS_SUBTITLE", LightBlue
 	StaticText "$UVISOR_RGB_SLIDERS_TIP", DarkGray
 	ColorPicker "$UVISOR_COLOR_PART_TOP", "uvisor_color_part_top"
@@ -193,17 +203,18 @@ OptionMenu "UV_MENU_COLORS" {
 
 // Offsets, Scaling
 OptionMenu "UV_MENU_OFFSETS_SIZES" {
+	Animated
+	AnimatedTransition
+	Position -37
 	class UV_TooltipOptionMenu
 	UV_TooltipGeometry 0.028, 0.38, 0.18, 1.2, 0.6
 	UV_TooltipAppearance "", "", "uv_tt_bg"
 	Title "$UVISOR_MENU_OFFSETS_SIZES_INNER"
-	StaticText " "
-	StaticText " "
 	StaticText "$UVISOR_OFFSET_SUBTITLE", LightBlue
-	Slider "$UVISOR_OFFSET_TOP", "uvisor_offset_top", 0, 160, 1, 0 // 48 + 80 (glass gradient)
-	Slider "$UVISOR_OFFSET_BOTTOM", "uvisor_offset_bottom", 0, 164, 1, 0 // 84 + 80 (glass gradient)
+	Slider "$UVISOR_OFFSET_TOP", "uvisor_offset_top", 0, 160, 1, 0
+	Slider "$UVISOR_OFFSET_BOTTOM", "uvisor_offset_bottom", 0, 164, 1, 0
 	Slider "$UVISOR_OFFSET_CORNERS_X", "uvisor_offset_corners_x", 0, 260, 2, 0
-	Slider "$UVISOR_OFFSET_CORNERS_Y", "uvisor_offset_corners_y", 0, 196, 2, 0 // 116 + 80 (glass gradient)
+	Slider "$UVISOR_OFFSET_CORNERS_Y", "uvisor_offset_corners_y", 0, 196, 2, 0
 	Slider "$UVISOR_OFFSET_SIDES_GLASS", "uvisor_offset_sides_glass", 0, 120, 1, 0
 	Slider "$UVISOR_OFFSET_TACTICAL_MARKS", "uvisor_offset_tactical_marks", 0, 1000, 4, 0
 	StaticText " "
@@ -217,12 +228,14 @@ OptionMenu "UV_MENU_OFFSETS_SIZES" {
 
 // Separate Toggles
 OptionMenu "UV_MENU_TOGGLES" {
+	Animated
+	AnimatedTransition
+	Position -37
 	class UV_TooltipOptionMenu
 	UV_TooltipGeometry 0.028, 0.38, 0.18, 1.2, 0.6
 	UV_TooltipAppearance "", "", "uv_tt_bg"
 	Title "$UVISOR_MENU_TOGGLES_INNER"
-	StaticText " "
-	StaticText " "
+
 	StaticText "$UVISOR_TOP_PART_SUBTITLE", LightBlue
 	FlagOption "$UVISOR_HELMET_PIECE", "uvisor_separate_toggles_flags", "OnOff", 0
 	FlagOption "$UVISOR_GLOW", "uvisor_separate_toggles_flags", "OnOff", 1
@@ -257,12 +270,15 @@ OptionMenu "UV_MENU_TOGGLES" {
 
 // Gameplay
 OptionMenu "UV_GAMEPLAY" {
+	Animated
+	AnimatedTransition
+	Position -37
+	Position -37
 	class UV_TooltipOptionMenu
 	UV_TooltipGeometry 0.028, 0.38, 0.18, 1.2, 0.9
 	UV_TooltipAppearance "", "", "uv_tt_bg"
 	Title "$UVISOR_MENU_GAMEPLAY_INNER"
-	StaticText " "
-	StaticText " "
+
 	StaticText "$UVISOR_OPTIONS_MENU_CLOSING_TIP", DarkGray
 	StaticText " "
 	StaticText "$UVISOR_GLOW_GLASS_BASIS_SUBTITLE", LightBlue
@@ -287,10 +303,6 @@ OptionMenu "UV_GAMEPLAY" {
 	Option "$UVISOR_ANIMATED_GLASS_DESTR", "uvisor_hitfeedback_if_empty_armor", "YesNo", "uvisor_hide_glass_if_empty_armor"
 	UV_Tooltip "$UVISOR_ANIMATED_GLASS_DESTR_TIP"
 	StaticText " "
-	StaticText "$UVISOR_GLOW_PULSE_SUBTITLE", LightBlue
-	Option "$UVISOR_MODE", "uvisor_glow_pulse_mode", "PulseModes"
-	Slider "$UVISOR_SPEED", "uvisor_glow_pulse_speed", 0.1, 30.0, 0.1, 1, "uvisor_glow_pulse_mode"
-	StaticText " "
 	StaticText "$UVISOR_ARMOR_GRID_SUBTITLE", LightBlue
 	Option "$UVISOR_DISPLAY_MODE", "uvisor_armor_grid_display_mode", "ArmorGridDisplayModes"
 	Option "$UVISOR_GRID_COLOR_BASIS", "uvisor_gameplay_color_basis_armor_grid", "ArmorGridColorBasis"
@@ -303,6 +315,10 @@ OptionMenu "UV_GAMEPLAY" {
 	UV_Tooltip "$UVISOR_GRID_DISABLE_WHEN_RADSUIT_NV_TIP"
 	Option "$UVISOR_GRID_DAMAGE_FEEDBACK", "uvisor_grid_damage_feedback", "OnOff"
 	UV_Tooltip ""
+	StaticText " "
+	StaticText "$UVISOR_GLOW_PULSE_SUBTITLE", LightBlue
+	Option "$UVISOR_MODE", "uvisor_glow_pulse_mode", "PulseModes"
+	Slider "$UVISOR_SPEED", "uvisor_glow_pulse_speed", 0.1, 30.0, 0.1, 1, "uvisor_glow_pulse_mode"
 	StaticText " "
 	StaticText "$UVISOR_OTHER_SUBTITLE", LightBlue
 	Control "$UVISOR_HOTKEY_TO_ENABLE_DISABLE_MOD", "uvisor_enable_disable"
@@ -323,12 +339,14 @@ OptionMenu "UV_GAMEPLAY" {
 
 // Blood On Visor
 OptionMenu "UV_BLOOD_SPLASHES" {
+	Animated
+	AnimatedTransition
+	Position -37
 	class UV_TooltipOptionMenu
 	UV_TooltipGeometry 0.028, 0.38, 0.18, 1.2, 0.6
 	UV_TooltipAppearance "", "", "uv_tt_bg"
 	Title "$UVISOR_MENU_BLOOD_SPLASHES_INNER"
-	StaticText " "
-	StaticText " "
+
 	StaticText "$UVISOR_SPLASHES_SETTINGS_AFFECT_NEW_TIP", DarkGray
 	StaticText "$UVISOR_SPLASHES_DISABLED_TIP", DarkGray
 	StaticText " "
@@ -361,12 +379,14 @@ OptionMenu "UV_BLOOD_SPLASHES" {
 
 // Swaying and Shaking
 OptionMenu "UV_SWAY_SHAKE" {
+	Animated
+	AnimatedTransition
+	Position -37
 	class UV_TooltipOptionMenu
 	UV_TooltipGeometry 0.028, 0.38, 0.18, 1.2, 0.6
 	UV_TooltipAppearance "", "", "uv_tt_bg"
 	Title "$UVISOR_MENU_SWAY_SHAKE_INNER"
-	StaticText " "
-	StaticText " "
+
 	UV_DynamicText "uvisor_alt_sway_source_on", "$UVISOR_SWAY_SOURCE_MSG_1_ALT", "$UVISOR_SWAY_SOURCE_MSG_1_DEFAULT", White
 	UV_DynamicText "uvisor_alt_sway_source_on", "$UVISOR_SWAY_SOURCE_MSG_2_ALT", "$UVISOR_SWAY_SOURCE_MSG_2_DEFAULT", White
 	StaticText " "
@@ -412,12 +432,14 @@ OptionMenu "UV_SWAY_SHAKE" {
 
 // Sounds
 OptionMenu "UV_SOUNDS" {
+	Animated
+	AnimatedTransition
+	Position -37
 	class UV_TooltipOptionMenu
 	UV_TooltipGeometry 0.028, 0.38, 0.18, 1.2, 0.6
 	UV_TooltipAppearance "", "", "uv_tt_bg"
 	Title "$UVISOR_SOUNDS_INNER"
-	StaticText " "
-	StaticText " "
+
 	StaticText "$UVISOR_STARTUP_SUBTITLE", LightBlue
 	Slider "$UVISOR_VOLUME", "uvisor_startup_volume", 0, 1.0, 0.1, 1
 	StaticText " "
