@@ -21,8 +21,10 @@ class UV_HudVisorDraw : EventHandler
 	int previousHealth;
 	int bloodMaxCount;
 
-	const STARTUP_BLACK_TICKS = 60;
-	const STARTUP_BLACK_SOLID_TICKS = 35;
+	const STARTUP_BLACK_TICKS = int(1.72 * TICRATE);
+	const STARTUP_BLACK_SOLID_TICKS = TICRATE;
+	const STARTUP_SOUND_TICKS_BEFORE_FADE_IN = int(0.23 * TICRATE);
+	const ARMOR_GRID_STARTUP_DELAY_TICKS = int(0.15 * TICRATE);
 	
 	bool hideHelmetInThirdPerson;
 	bool isThirdPerson;
@@ -368,15 +370,16 @@ class UV_HudVisorDraw : EventHandler
 	name PB_QuadDamagePowerupClass;
 	Array<Color> powerupBlendColors;
 	static const name isDemonPlayerFlags[] = {
-		"isDemonPlayer", // using only this one isn't reliable cause it's not set if two nearby demon powerups picked up very quickly
-		"powerTransformBaron",
-		"powerTransformRevenant"
+		'isDemonPlayer', // using only this one isn't reliable cause it's not set if two nearby demon powerups picked up very quickly
+		'powerTransformBaron',
+		'powerTransformRevenant'
 	};
 	bool wasInVehicle;
 	bool inVehicle;
 	bool wasInMachineGun;
 	bool inMachineGun;
 	name heavyMachinegunClass;
+	const MACHINEGUN_ENTER_LEAVE_TICKS = int(0.23 * TICRATE);
 	int machineGunEnterLeaveTicker;
 	bool alreadyStoredDataInVehicle;
 	int storedHealthInsideVehicle; // stored manually, not an inventory item from BD, etc.
@@ -384,55 +387,55 @@ class UV_HudVisorDraw : EventHandler
 
 	static const name vehicleInvNames[] = {
 			// BD and UMES
-		"PowerTankSwitch",
-		"PowerArtilleryTankSwitch",
-		"PowerBikeSwitch",
-		"PowerattackhelicopterSwitch",
+		'PowerTankSwitch',
+		'PowerArtilleryTankSwitch',
+		'PowerBikeSwitch',
+		'PowerattackhelicopterSwitch',
 			// BD, UMES, Omni Vehicles
-		"PowerMechSwitch",
+		'PowerMechSwitch',
 			// Omni Vehicles
-		"PowerFlameTankSwitch",
-		"PowerDemoMechSwitch"
+		'PowerFlameTankSwitch',
+		'PowerDemoMechSwitch'
 	};
 	
 	static const name damageTypesNoBlood[] = { // for enemy actor based blood detection
 			// Common
-		"Fire",
+		'Fire',
 			// BP, PB
-		"Ice",
-		"BurnDOT",
-		"FlameBelch",
-		"FlameBelchChain",
+		'Ice',
+		'BurnDOT',
+		'FlameBelch',
+		'FlameBelchChain',
 			// PB, BD Cat's Frozen Addon
-		"freeze",
-		"GloryFire",
+		'freeze',
+		'GloryFire',
 			// Abyssal Marine
-		"PlayerFire",
+		'PlayerFire',
 			// Clusterfuck
-		"PlayerIce",
-		"PlayerPyro"
+		'PlayerIce',
+		'PlayerPyro'
 	};
 	
 	static const name bloodBaseTypes[] = {  // for blood actor based blood color detection
-		"Blood",
-		"Brutal_Blood", 		// Brutal Doom and forks
-		"BD_BloodBase", 		// Beautiful Doom
-		"PM_NormalBloodBase",	// Project Malice
-		"Bolognese_Blood",
-		"BloodSquirt",			// Droplets
-		"AM_Blood_Spawner", 	// Abyssal Marine
-		"NewBlood",				// Complex Doom, ClusterFuck
-		"D4TBlood",				// Death Foretold
-		"RLNashGore_Blood",		// DoomRL Arsenal Monster Pack
-		"RLSpectreBlood",		// DoomRL Arsenal Monster Pack
-		"MDBlood",				// Mass Disassembly
-		"NashGoreBloodBase" 	// already extends Blood, but just in case
+		'Blood',
+		'Brutal_Blood', 		// Brutal Doom and forks
+		'BD_BloodBase', 		// Beautiful Doom
+		'PM_NormalBloodBase',	// Project Malice
+		'Bolognese_Blood',
+		'BloodSquirt',			// Droplets
+		'AM_Blood_Spawner', 	// Abyssal Marine
+		'NewBlood',				// Complex Doom, ClusterFuck
+		'D4TBlood',				// Death Foretold
+		'RLNashGore_Blood',		// DoomRL Arsenal Monster Pack
+		'RLSpectreBlood',		// DoomRL Arsenal Monster Pack
+		'MDBlood',				// Mass Disassembly
+		'NashGoreBloodBase' 	// already extends Blood, but just in case
 	};
 	
 	static const name bdBloodSubtypes[] = {
-		"Green_Blood",
-		"Blue_Blood",
-		"Alien Blood"
+		'Green_Blood',
+		'Blue_Blood',
+		'Alien Blood'
 	};
 	
 	static const Color bdBloodSubtypesColors[] = {
@@ -442,16 +445,16 @@ class UV_HudVisorDraw : EventHandler
 	};
 	
 	static const name pmBloodSubtypes[] = {
-		"PM_GreenBloodBase",
-		"PM_DarkGreenBloodBase",
-		"PM_DarkGreenCyberBloodBase",
-		"PM_BlueBloodBase",
-		"PM_PurpleBloodBase",
-		"PM_BlackBloodBase",
-		"PM_PestilenceBloodBase",
-		"PM_LavaBloodBase",
-		"PM_DeathBloodBase",
-		"PM_SlothBloodBase"
+		'PM_GreenBloodBase',
+		'PM_DarkGreenBloodBase',
+		'PM_DarkGreenCyberBloodBase',
+		'PM_BlueBloodBase',
+		'PM_PurpleBloodBase',
+		'PM_BlackBloodBase',
+		'PM_PestilenceBloodBase',
+		'PM_LavaBloodBase',
+		'PM_DeathBloodBase',
+		'PM_SlothBloodBase'
 	};
 	
 	static const Color pmBloodSubtypesColors[] = {
@@ -469,51 +472,53 @@ class UV_HudVisorDraw : EventHandler
 	
 	static const name shakingDamageTypes[] = {
 			// Common
-		"ExplosiveImpact",
-		"GreenFire",
-		"Eat",
-		"RVFT",
-		"Stomp",
-		"Extreme",
+		'ExplosiveImpact',
+		'GreenFire',
+		'Eat',
+		'RVFT',
+		'Stomp',
+		'Extreme',
 			// BD
-		"Railgun",
+		'Railgun',
 			// BP
-		"BFGSplash",
-		"Plasma",
-		"Desintegrate",
-		"SFestExplode",
-		"blast",
-		"EatSFest",
+		'BFGSplash',
+		'Plasma',
+		'Desintegrate',
+		'SFestExplode',
+		'blast',
+		'EatSFest',
 			// PB
-		"BHFT",
+		'BHFT',
 			// DD
-		"Barrel",
-		"Chomp",
-		"SSG",
-		"Dual SSG",
+		'Barrel',
+		'Chomp',
+		'SSG',
+		'Dual SSG',
 			// PM
-		"Explosive",
-		"Nobles",
+		'Explosive',
+		'Nobles',
 			// LiT
-		"Explosives",
-		"HKFT",
-		"BHFT"
+		'Explosives',
+		'HKFT',
+		'BHFT',
 			// EOA
-		"Quake"
+		'Quake',
 			// DoomRL
-		"Explosion"
+		'Explosion'
 	};
 	
 	static const name skippableWeaponsForAmmoData[] = {
-		"LedgeGrab",
-		"LedgeGrabWeapon",
-		"BladeWeapon",
-		"GloryFist"
+		'LedgeGrab',
+		'LedgeGrabWeapon',
+		'BladeWeapon',
+		'GloryFist'
 	};
 	
 	// Armor grid
-	const ARMOR_GRID_DAMAGE_ANIM_TICKS = 12;
-	const ARMOR_GRID_HEAVY_DAMAGE_ANIM_TICKS = 12;
+	const ARMOR_GRID_DAMAGE_ANIM_TICKS = int(0.35 * TICRATE);
+	const ARMOR_GRID_HEAVY_DAMAGE_ANIM_TICKS = int(0.35 * TICRATE);
+	const ARMOR_GRID_DAMAGE_MAX_HOLD_TICKS = int(0.6 * TICRATE);
+	const ARMOR_GRID_DAMAGE_HOLD_TICKS_INCREMENT = int(0.29 * TICRATE);
 	int armorGridDamageAnimTicker;
 	int armorGridHeavyDamageTicker;
 	int armorGridDamageHoldTicks;
@@ -524,8 +529,8 @@ class UV_HudVisorDraw : EventHandler
 	bool armorGridDisableWhenOtherOverlay;
 	bool gridDamageFeedbackEnabled;
 	
-	const GRID_IDLE_CYCLE_TICKS = 245;
-    const GRID_IDLE_FADE_TICKS = 35;
+	const GRID_IDLE_CYCLE_TICKS = 7 * TICRATE;
+    const GRID_IDLE_FADE_TICKS = TICRATE;
 	int gridIdleTimer;
 	int gridIdleNextTriggerTick;
 	double prevGridIdleAlphaImage_1;
@@ -537,7 +542,7 @@ class UV_HudVisorDraw : EventHandler
 	bool gridIdleAnimEnabled;
 	int armorGridDisplayModePlay;
 	bool wasArmorGridShown;
-	const ARMOR_GRID_EQUIP_TICKS = 18;
+	const ARMOR_GRID_EQUIP_TICKS = int(0.52 * TICRATE);
 	const ARMOR_GRID_EQUIP_SIZE_MULT = 2.5;
 	double armorGridEquipTicker;
 	vector2 prevArmorGridSize;
@@ -606,7 +611,8 @@ class UV_HudVisorDraw : EventHandler
 	int cracksHP_Offset;
 	int cracksMaxLevel;
 	bool initalCracksUpdateDone; // to prevent crack's sound at level start when small health/armor
-	const CRACKS_FADE_TICKS = 5;
+	const CRACKS_FADE_TICKS = int(0.15 * TICRATE);
+	const CRACKS_FASTER_FADE_TICKS = int(0.09 * TICRATE);
 	int cracksFadeTicker;
 	double prevF_InCracksAlpha;
 	double f_InCracksAlpha;
@@ -641,13 +647,14 @@ class UV_HudVisorDraw : EventHandler
 	array<UV_BloodColorCacheEntry> bloodBasedBloodColorCache;
 	
 	// Screen wiper
-	const SCREEN_WIPER_TICKS = 40;
+	const SCREEN_WIPER_TICKS = int(1.15 * TICRATE);
 	int screenWiperAnimTicker;
 	double clipRatio;
 	double clipRatioInverted;
 	double prevClipRatioInverted;
 	int screenWiperMode;
 	int timedAutoWiperTics;
+	const TIMED_AUTO_WIPER_ADD_TICKS = int(0.58 * TICRATE);
 	bool timedAutoWiperWasActive;
 	
 	// Sounds
@@ -672,7 +679,7 @@ class UV_HudVisorDraw : EventHandler
 	double screenWiperVolume;
 	
 	// Startup anim
-	const STARTUP_TICKS = 120;
+	const STARTUP_TICKS = int(3.43 * TICRATE);
 	int startupTicker;
 	
 	
@@ -680,7 +687,7 @@ class UV_HudVisorDraw : EventHandler
 	UV_AmmoData ammoData;
 	int mappedCurrentAmmo1;
 	int mappedCurrentAmmo2;
-	const LOW_AMMO_NOTIFY_PAUSE_TICS = 70;
+	const LOW_AMMO_NOTIFY_PAUSE_TICKS = 2 * TICRATE;
 	int lowAmmo1Ticker;
 	bool lowAmmo1Active;
 	int lowAmmo2Ticker;
@@ -2006,7 +2013,7 @@ class UV_HudVisorDraw : EventHandler
 			return;
 		}
 		
-		if ((mainTogglesFlagsPlay & UV_StartupAnimEnabled) && startupVolume > 0 && level.time == STARTUP_BLACK_SOLID_TICKS - 8) {
+		if ((mainTogglesFlagsPlay & UV_StartupAnimEnabled) && startupVolume > 0 && level.time == STARTUP_BLACK_SOLID_TICKS - STARTUP_SOUND_TICKS_BEFORE_FADE_IN) {
 			S_StartSound("uvisor_startup", CHAN_AUTO, volume: startupVolume);
 		}
 		
@@ -2044,7 +2051,7 @@ class UV_HudVisorDraw : EventHandler
 			isGlassDestroyed = false;
 		}
 		
-		if (level.time > STARTUP_BLACK_SOLID_TICKS - 5) { // Some mods start up (fade in) a bit late, so show grid after a delay
+		if (level.time > STARTUP_BLACK_SOLID_TICKS - ARMOR_GRID_STARTUP_DELAY_TICKS) { // Some mods start up (fade in) a bit late, so show grid after a delay
 			SetArmorGridShownVar();
 		}
 		
@@ -2522,7 +2529,7 @@ class UV_HudVisorDraw : EventHandler
 		invisEffectOn = invisEffectOn && transparencyEffectWhenInvis;
 		
 		if (isEnteringOrLeavingMachineGun()) {
-			machineGunEnterLeaveTicker = 8;
+			machineGunEnterLeaveTicker = MACHINEGUN_ENTER_LEAVE_TICKS;
 		}
 		if (machineGunEnterLeaveTicker > 0) {
 			machineGunEnterLeaveTicker--;
@@ -2781,7 +2788,7 @@ class UV_HudVisorDraw : EventHandler
 		pData.cracksLevel = min(pData.cracksLevel, cracksMaxLevel);
 		if (pData.cracksLevel != pData.prevCracksLevel) {
 			if (prevCracksBasis == cracksBasis) { // check prevents fading out 5th level cracks bug if switched cracks basis
-				cracksFadeTicker = pData.cracksLevel > pData.prevCracksLevel ? (CRACKS_FADE_TICKS - 2) : CRACKS_FADE_TICKS;
+				cracksFadeTicker = pData.cracksLevel > pData.prevCracksLevel ? (CRACKS_FASTER_FADE_TICKS) : CRACKS_FADE_TICKS;
 			}
 			if (cracksBasis == 1 && pData.prevCracksLevel == 5) { 
 				hideFadingOutCracks = true; // prevent fading out 5th level is armor-based cracks as well
@@ -2862,11 +2869,11 @@ class UV_HudVisorDraw : EventHandler
 		if (armorGridDamageAnimTicker > 0 && armorGridDamageAnimTicker <= ARMOR_GRID_DAMAGE_ANIM_TICKS) {
 			double half = ARMOR_GRID_DAMAGE_ANIM_TICKS / 2.0;
 			double distanceFromPeak = abs(armorGridDamageAnimTicker - half);
-			// If within 20% of the peak range, add hold time instead of resetting to hold damage grid texture
-			if (distanceFromPeak < half * 0.2) {
-				armorGridDamageHoldTicks += 10;    // Add extra hold ticks (e.g., 10 = ~0.3 sec)
-				if (armorGridDamageHoldTicks > 30) {
-					armorGridDamageHoldTicks = 30; // Clamp not to hold too log
+			// If within 80% of the peak range, add hold time instead of resetting to hold damage grid texture
+			if (distanceFromPeak < half * 0.8) {
+				armorGridDamageHoldTicks += ARMOR_GRID_DAMAGE_HOLD_TICKS_INCREMENT;    // Add extra hold ticks (e.g., 10 = ~0.3 sec)
+				if (armorGridDamageHoldTicks > ARMOR_GRID_DAMAGE_MAX_HOLD_TICKS) {
+					armorGridDamageHoldTicks = ARMOR_GRID_DAMAGE_MAX_HOLD_TICKS; // Clamp not to hold too log
 				}
 				return;
 			}
@@ -3042,11 +3049,11 @@ class UV_HudVisorDraw : EventHandler
 			if (bloodLifeTime <= 0) {
 				timedAutoWiperTics = 1; // kinda instant wipe, 0 would require many changes in logic
 			} else if (bloodVanishes) {
-				timedAutoWiperTics = bloodLifetime * 35 + BLOOD_FADE_IN_TICS + 20;
+				timedAutoWiperTics = bloodLifetime * TICRATE + BLOOD_FADE_IN_TICS + TIMED_AUTO_WIPER_ADD_TICKS;
 													// increase by BLOOD_FADE_IN_TICS as well so that wiper isn't started when there's only one splash which already vanished
-													// and additional 20 ticks for case when few splashes appeared in a very short time
+													// and additional ticks for case when few splashes appeared in a very short time
 			} else {
-				timedAutoWiperTics = bloodLifetime * 35;
+				timedAutoWiperTics = bloodLifetime * TICRATE;
 			}
 			timedAutoWiperWasActive = true;
 		}
@@ -3060,7 +3067,7 @@ class UV_HudVisorDraw : EventHandler
 		UV_BloodSplash bs = new("UV_BloodSplash");
 		bs.fadeInTicker = BLOOD_FADE_IN_TICS - 1; // To have texture's w, h > 0 at the first UI fractic
 		if (bloodLifetime > 0) {
-			bs.fadeOutTicker = bloodLifetime * 35;
+			bs.fadeOutTicker = bloodLifetime * TICRATE;
 		} else {
 			bs.fadeOutTicker = 1;
 		}
@@ -3301,7 +3308,7 @@ class UV_HudVisorDraw : EventHandler
 				}
 				else {
 					lowAmmo1Ticker++;
-					if (lowAmmo1Ticker == LOW_AMMO_NOTIFY_PAUSE_TICS) {
+					if (lowAmmo1Ticker == LOW_AMMO_NOTIFY_PAUSE_TICKS) {
 						lowAmmo1Ticker = 0;
 						lowAmmo1Active = false;
 						warningAmmo1Active = true;
@@ -3314,7 +3321,7 @@ class UV_HudVisorDraw : EventHandler
 				}
 				else {
 					lowAmmo2Ticker++;
-					if (lowAmmo2Ticker == LOW_AMMO_NOTIFY_PAUSE_TICS) {
+					if (lowAmmo2Ticker == LOW_AMMO_NOTIFY_PAUSE_TICKS) {
 						lowAmmo2Ticker = 0;
 						lowAmmo2Active = false;
 						warningAmmo2Active = true;

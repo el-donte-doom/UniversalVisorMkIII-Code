@@ -1,4 +1,5 @@
-// Used to show different text in the menu based on sway source
+// Used to show different text in the menu based on sway source 
+// (zdoom wiki is incorrect about built-in StaticTextSwitchable, it doesn't use cvar, according to source code)
 class OptionMenuItemUV_DynamicText : OptionMenuItemStaticText 
 {
 	CVar mCvar;
@@ -16,11 +17,6 @@ class OptionMenuItemUV_DynamicText : OptionMenuItemStaticText
 	override int Draw(OptionMenuDescriptor desc, int y, int indent, bool selected) {
 		bool isAlt = (mCvar != null && mCvar.GetBool());
 		String currentText = isAlt ? mTextAlt : mTextDefault;
-
-		// Hide the line if text is empty
-		if (currentText.Length() == 0)
-			return indent;
-
 		mLabel = currentText;
 		return Super.Draw(desc, y, indent, selected);
 	}

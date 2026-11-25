@@ -1,4 +1,7 @@
 // Common code shared between the TooltipListMenu and TooltipOptionMenu.
+//
+// UV version: small additions/changes in Draw() and AddTooltip() to reflect the current language immediately
+// and all classes renamed according to libtooltipmenu description to avoid conflicts (including conflicts with UZD 5.0 tooltips)
 
 class UV_Tooltip : Object ui {
   double x, y, w, xpad, ypad, scale; // Geometry
@@ -36,8 +39,8 @@ class UV_Tooltip : Object ui {
     // DrawText to scale appropriately when blitting the background and tooltip
     // text to the real screen.
 	
-    // Use language keys stored in "text" field
-    // and localize the tooltips here to reflect the current language immediately
+	// Use language keys stored in "text" 
+	// and localize the tooltips here to reflect the current language immediately
 	string localizedText;
 	Array<String> rawLines;
 	self.text.Split(rawLines, "\n");

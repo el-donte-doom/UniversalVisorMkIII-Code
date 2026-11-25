@@ -6,9 +6,8 @@
 // You can then use the "Tooltip", "TooltipGeometry", and "TooltipAppearance"
 // menu pseudo-items to add and configure tooltips.
 // For details, see the included README.
-
-// UV version: similar to GunBonsai, here "...MenuItemTooltip..." is replaced with "...MenuItemUV_Tooltip..."
-// To use UV_Tooltip in menu instead of just Tooltip and avoid conflict with UZDoom 5.0 tooltips (keeping compatibility with older versions)
+//
+// UV version: all classes renamed according to libtooltipmenu description to avoid conflicts (including conflicts with UZD 5.0 tooltips)
 
 class UV_TooltipOptionMenu : OptionMenu {
   mixin UV_TooltipMenu;
