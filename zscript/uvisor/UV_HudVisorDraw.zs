@@ -722,6 +722,10 @@ class UV_HudVisorDraw : EventHandler
 		if (gamestate != GS_LEVEL) {
             return; // Prevent drawing helmet in main menu with mods overriding Titlemap
 		}
+		
+		if (!initialPlayInitDone) {
+			return; // In case the mod was enabled mid-map
+		}
 	
 		if ((hideHelmetInThirdPerson && isThirdPerson) || isDemonPlayer) {
 			return;
