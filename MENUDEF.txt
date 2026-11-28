@@ -122,6 +122,7 @@ OptionMenu "UV_MENU_PREDEFIND_PRESETS" {
 	SafeCommand "$UVISOR_PRESET_SPACE_MARINE", "uvisor_apply_preset_space_marine"
 	SafeCommand "$UVISOR_PRESET_METROID", "uvisor_apply_preset_metroid"
 	SafeCommand "$UVISOR_PRESET_SIMPLE_HELMET", "uvisor_apply_preset_simple_helmet"
+	SafeCommand "$UVISOR_PRESET_ULTRAKILL_V1", "uvisor_apply_preset_ultrakill_v1"
 	SafeCommand "$UVISOR_PRESET_HOOD", "uvisor_apply_preset_hood"
 }
 
@@ -528,6 +529,7 @@ OptionValue "TopStyles"
 	7, "$UVISOR_SIMPLE_HELMET_NO_TOP_MIDDLE"
 	8, "Metroid"
 	9, "$UVISOR_PLAIN_GLASS"
+	10, "$UVISOR_HOOD"
 }
 
 OptionValue "BottomStyles"

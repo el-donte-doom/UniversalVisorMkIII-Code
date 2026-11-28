@@ -94,7 +94,8 @@ class UV_HudVisorDraw : EventHandler
 		"Simple",				// 6
 		"Simple_No_Top_Middle",	// 7
 		"Metroid",				// 8
-		"Plain_Glass"	     	// 9
+		"Plain_Glass",	     	// 9
+		"Hood"					// 10
     };
 	
 	static const string bottomStyles[] =
