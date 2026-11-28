@@ -54,7 +54,7 @@ class UV_HudVisorDraw : EventHandler
 	bool doingHelmetEquipAnim;
 	int swayFlags;
 	
-	enum UV_MainTogglesFlags
+	enum UV_MainVisualFlags
 	{
 		UV_ShowPieces          = 1 << 0,
 		UV_ShowGlow            = 1 << 1,
@@ -62,10 +62,15 @@ class UV_HudVisorDraw : EventHandler
 		UV_ShowTacticalOverlay = 1 << 3,
 		UV_ShowTacticalMarks   = 1 << 4,
 		UV_ShowArmorGrid       = 1 << 5,
-		UV_ShowGlassCracks     = 1 << 6,
-		UV_ShowBloodSplashes   = 1 << 7,
-		UV_StartupAnimEnabled  = 1 << 8
 	}
+	
+	enum UV_MainGameplayFlags // separate to save only visual in user presets
+	{
+		UV_ShowGlassCracks     = 1 << 0,
+		UV_ShowBloodSplashes   = 1 << 1,
+		UV_StartupAnimEnabled  = 1 << 2
+	}
+	
 
 	enum UV_SwayFlags
 	{
@@ -353,7 +358,8 @@ class UV_HudVisorDraw : EventHandler
 	bool wasMenuOpened;
 	double scaleFactorWidthPlay;
 	double scaleFactorHeightPlay;
-	int mainTogglesFlagsPlay;
+	int mainGameplayFlagsPlay;
+	int mainVisualFlagsPlay;
 	bool isGlassDestroyed;
 	bool hideGlassIfEmptyArmorPlayContext;
 	bool transparencyEffectWhenInvis;
@@ -841,7 +847,7 @@ class UV_HudVisorDraw : EventHandler
 			);
 		}
 
-		if ((mainTogglesFlagsPlay & UV_StartupAnimEnabled) && level.time <= STARTUP_BLACK_TICKS) {
+		if ((mainGameplayFlagsPlay & UV_StartupAnimEnabled) && level.time <= STARTUP_BLACK_TICKS) {
 			DrawStartupFade();
 		}
 	
@@ -927,19 +933,20 @@ class UV_HudVisorDraw : EventHandler
 		// Manual scaling and positioning, because we're not extending BaseStatusBar (to draw along with existing HUDs)
 		scaleFactorHeight = double(Screen.GetHeight()) / BASE_SCREEN_HEIGHT;
 		
-		int mainTogglesFlagsUI = Cvar.GetCvar("uvisor_main_toggles_flags", playerinf).GetInt();
-		showPieces = mainTogglesFlagsUI & UV_ShowPieces;
-		showGlow = mainTogglesFlagsUI & UV_ShowGlow;
+		int mainVisualFlagsUI = Cvar.GetCvar("uvisor_main_visual_flags", playerinf).GetInt();
+		int mainGameplayFlagsUI = Cvar.GetCvar("uvisor_main_gameplay_flags", playerinf).GetInt();
+		showPieces = mainVisualFlagsUI & UV_ShowPieces;
+		showGlow = mainVisualFlagsUI & UV_ShowGlow;
 		baseShowGlow = showGlow; // used to restore glow if it's hidden when no armor
-		showGlass = mainTogglesFlagsUI & UV_ShowGlass;
+		showGlass = mainVisualFlagsUI & UV_ShowGlass;
 		baseShowGlass = showGlass;
-		showTacticalOverlay = mainTogglesFlagsUI & UV_ShowTacticalOverlay;
+		showTacticalOverlay = mainVisualFlagsUI & UV_ShowTacticalOverlay;
 		baseShowTacticalOverlay = showTacticalOverlay;
-		showTacticalMarks = mainTogglesFlagsUI & UV_ShowTacticalMarks;
+		showTacticalMarks = mainVisualFlagsUI & UV_ShowTacticalMarks;
 		baseShowTacticalMarks = showTacticalMarks;
-		showArmorGrid = mainTogglesFlagsUI & UV_ShowArmorGrid;
-		showGlassCracks = mainTogglesFlagsUI & UV_ShowGlassCracks;
-		showBloodSplashes = mainTogglesFlagsUI & UV_ShowBloodSplashes;
+		showArmorGrid = mainVisualFlagsUI & UV_ShowArmorGrid;
+		showGlassCracks = mainGameplayFlagsUI & UV_ShowGlassCracks;
+		showBloodSplashes = mainGameplayFlagsUI & UV_ShowBloodSplashes;
 		
 		styleTop = Cvar.GetCvar("uvisor_style_helmet_top", playerinf).GetInt();
 		styleBottom = Cvar.GetCvar("uvisor_style_helmet_bottom", playerinf).GetInt();
@@ -2013,7 +2020,7 @@ class UV_HudVisorDraw : EventHandler
 			return;
 		}
 		
-		if ((mainTogglesFlagsPlay & UV_StartupAnimEnabled) && startupVolume > 0 && level.time == STARTUP_BLACK_SOLID_TICKS - STARTUP_SOUND_TICKS_BEFORE_FADE_IN) {
+		if ((mainGameplayFlagsPlay & UV_StartupAnimEnabled) && startupVolume > 0 && level.time == STARTUP_BLACK_SOLID_TICKS - STARTUP_SOUND_TICKS_BEFORE_FADE_IN) {
 			S_StartSound("uvisor_startup", CHAN_AUTO, volume: startupVolume);
 		}
 		
@@ -2028,7 +2035,7 @@ class UV_HudVisorDraw : EventHandler
 		}
 		prevBloodDefaultSaturationShiftCvar = bloodDefaultSaturationShiftCvar;
 		
-		if (mainTogglesFlagsPlay & UV_ShowBloodSplashes) {
+		if (mainGameplayFlagsPlay & UV_ShowBloodSplashes) {
 			UpdateBloodSplashesData();
 		}
 		if (screenWiperAnimTicker > 0) {
@@ -2115,7 +2122,7 @@ class UV_HudVisorDraw : EventHandler
 			OldSwayOffY = 0;
 		}
 		
-		if (pData.cracksLevel > pData.prevCracksLevel && (mainTogglesFlagsPlay & UV_ShowGlassCracks)
+		if (pData.cracksLevel > pData.prevCracksLevel && (mainGameplayFlagsPlay & UV_ShowGlassCracks)
 				&& cracksVolume > 0 && initalCracksUpdateDone && (prevCracksBasis == cracksBasis)) {
 			if (pData.cracksLevel == 5) {
 				if (! (cracksBasis == 1 && !hideGlassIfEmptyArmorPlayContext) ) {
@@ -2145,7 +2152,8 @@ class UV_HudVisorDraw : EventHandler
 	}
 	
 	void InitPlayVars() {
-		mainTogglesFlagsPlay = Cvar.GetCvar("uvisor_main_toggles_flags", playerinf).GetInt();
+		mainGameplayFlagsPlay = Cvar.GetCvar("uvisor_main_gameplay_flags", playerinf).GetInt();
+		mainVisualFlagsPlay = Cvar.GetCvar("uvisor_main_visual_flags", playerinf).GetInt();
 		helmetSwayEnabled = Cvar.GetCvar("uvisor_swaying", playerinf).GetBool();
 		swayFlags = Cvar.GetCvar("uvisor_swaying_flags", playerinf).GetInt();
 		MaxSwayX = Clamp(Cvar.GetCVar("uvisor_maxsway_x", playerinf).GetFloat(), 0, 15);
@@ -2258,7 +2266,7 @@ class UV_HudVisorDraw : EventHandler
 					return; // prevent extreme shaking when entering or leaving machine gun due to health change
 				ShakeIntensity = clamp(ShakeIntensity + totalDamage * ShakeSensitivity, 0.0, 24.0);
 			}
-		} else if ((mainTogglesFlagsPlay & UV_ShowBloodSplashes) && bloodDetectionMode == 0 && e.Thing.bIsMonster) {
+		} else if ((mainGameplayFlagsPlay & UV_ShowBloodSplashes) && bloodDetectionMode == 0 && e.Thing.bIsMonster) {
 			if (!IsActorInLineOfSightAndNear(e.thing)) return;
 			if (isGlassDestroyed) return;
 			if (inVehicle) return;
@@ -2271,8 +2279,6 @@ class UV_HudVisorDraw : EventHandler
 				) {
 					return;
 				}
-			} else if (globals.isXimSW_Loaded && e.thing.bNOBLOOD) {
-				return;
 			}
 			name eDamageType = e.DamageType;
 			for (int i = 0; i < damageTypesNoBlood.Size(); i++) {  
@@ -2821,7 +2827,7 @@ class UV_HudVisorDraw : EventHandler
 	}
 	
 	void SetArmorGridShownVar() {
-		isArmorGridShownVar = (mainTogglesFlagsPlay & UV_ShowArmorGrid) && (
+		isArmorGridShownVar = (mainVisualFlagsPlay & UV_ShowArmorGrid) && (
 					armorGridDisplayModePlay == 3 // "Always" mode
 						|| (armorGridDisplayModePlay == 0 && totalArmor > 0) 				// "When Armor > 0"
 						|| (armorGridDisplayModePlay == 1 && radSuitOn) 	 				// "When Radiation Suit Is On"
@@ -2957,7 +2963,7 @@ class UV_HudVisorDraw : EventHandler
 		if (Cvar.GetCvar("uvisor_mod_enabled", playerinf).GetBool() == 0) return;
 		if (isGlassDestroyed) return;
 		if (inVehicle) return;
-		if (!(mainTogglesFlagsPlay & UV_ShowBloodSplashes)) return;
+		if (!(mainGameplayFlagsPlay & UV_ShowBloodSplashes)) return;
 		if (bloodDetectionMode != 1 || !e.thing || e.thing.target == playerinf.mo ) return;
 		
 		bool isBlood = false;

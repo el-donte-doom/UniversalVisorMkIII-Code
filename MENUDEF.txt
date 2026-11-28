@@ -61,17 +61,17 @@ OptionMenu "UV_MENU_MAIN_TOGGLES" {
 	UV_TooltipAppearance "", "", "uv_tt_bg"
 	Title "$UVISOR_MENU_MAIN_TOGGLES_INNER"
 
-	FlagOption "$UVISOR_SHOW_HELMET_PIECES", "uvisor_main_toggles_flags", "OnOff", 0
-	FlagOption "$UVISOR_SHOW_GLOW", "uvisor_main_toggles_flags", "OnOff", 1
-	FlagOption "$UVISOR_SHOW_GLASS", "uvisor_main_toggles_flags", "OnOff", 2
-	FlagOption "$UVISOR_SHOW_TACTICAL_OVERLAY", "uvisor_main_toggles_flags", "OnOff", 3
-	FlagOption "$UVISOR_SHOW_TACTICAL_MARKS", "uvisor_main_toggles_flags", "OnOff", 4
-	FlagOption "$UVISOR_SHOW_ARMOR_GRID", "uvisor_main_toggles_flags", "OnOff", 5
-	FlagOption "$UVISOR_SHOW_VISOR_CRACKS", "uvisor_main_toggles_flags", "OnOff", 6
+	FlagOption "$UVISOR_SHOW_HELMET_PIECES", "uvisor_main_visual_flags", "OnOff", 0
+	FlagOption "$UVISOR_SHOW_GLOW", "uvisor_main_visual_flags", "OnOff", 1
+	FlagOption "$UVISOR_SHOW_GLASS", "uvisor_main_visual_flags", "OnOff", 2
+	FlagOption "$UVISOR_SHOW_TACTICAL_OVERLAY", "uvisor_main_visual_flags", "OnOff", 3
+	FlagOption "$UVISOR_SHOW_TACTICAL_MARKS", "uvisor_main_visual_flags", "OnOff", 4
+	FlagOption "$UVISOR_SHOW_ARMOR_GRID", "uvisor_main_visual_flags", "OnOff", 5
+	FlagOption "$UVISOR_SHOW_VISOR_CRACKS", "uvisor_main_gameplay_flags", "OnOff", 0
 	UV_Tooltip ""
-	FlagOption "$UVISOR_SHOW_SPLASHES", "uvisor_main_toggles_flags", "OnOff", 7
+	FlagOption "$UVISOR_SHOW_SPLASHES", "uvisor_main_gameplay_flags", "OnOff", 1
 	UV_Tooltip "$UVISOR_SHOW_SPLASHES_TIP"
-	FlagOption "$UVISOR_STARTUP_ENABLED", "uvisor_main_toggles_flags", "OnOff", 8
+	FlagOption "$UVISOR_STARTUP_ENABLED", "uvisor_main_gameplay_flags", "OnOff", 2
 	UV_Tooltip "$UVISOR_STARTUP_TIP"
 	StaticText " "
 	StaticText "-------------------------", LightBlue

@@ -7,7 +7,8 @@ nosave int uvisor_tex_res = 0;
 //// Submenus
 
 // Main Toggles
-nosave int uvisor_main_toggles_flags = 511;
+nosave int uvisor_main_visual_flags = 63;
+nosave int uvisor_main_gameplay_flags = 7; // separate to save only visual in user presets
 
 
 // Presets and Backup
