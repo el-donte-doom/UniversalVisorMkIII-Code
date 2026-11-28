@@ -193,7 +193,7 @@ UVISOR_GLASS_GLOW_DESTR_SUBTITLE = "----- Glass and Glow Destruction -----";
 UVISOR_HIDE_GLOW_NO_ARMOR = "Hide Glow When No Armor";
 UVISOR_HIDE_GLASS_NO_ARMOR = "Hide Glass When No Armor";
 UVISOR_ANIMATED_GLASS_DESTR = "Animated Glass Destruction When No Armor \cbℹ\c-";
-UVISOR_ANIMATED_GLASS_DESTR_TIP = "Animation from PB Hit Feedback addon adapted to use UV colors and transparency. Recommended to keep only one if you have it standalone or in another mod with separate toggle (e.g. PBX)";
+UVISOR_ANIMATED_GLASS_DESTR_TIP = "Animation from PB Hit Feedback addon adapted to use UV colors and transparency. Recommended to keep only one if you have it standalone or in another mod with separate toggle. PBX (Project Brutality Extended) detects UV and automatically prevents triggering its built-in addon";
 UVISOR_GLOW_PULSE_SUBTITLE = "----- Glow Pulse -----";
 UVISOR_MODE = "Mode";
 UVISOR_SPEED = "Speed";
@@ -233,6 +233,7 @@ UVISOR_POWERUP_COLORS_MODE_0 = "All Supported Powerups";
 UVISOR_POWERUP_COLORS_MODE_1 = "Only Night Vision, etc.";
 UVISOR_POWERUP_COLORS_MODE_2 = "None";
 UVISOR_POWERUP_COLORS_MODE_TIP = "Night Vision option includes vanilla one goggles, Night Vision Pack and a number of other mods. Usually the NV very slightly affects inner helmet parts and fully affects blood, wiper and armor grid. In general, some powerups from other mods aren't supported, cause some powerup types need to be adapted manually";
+
 
 // Blood On Visor
 UVISOR_MENU_BLOOD_SPLASHES = "Blood On Visor";
@@ -300,7 +301,6 @@ UVISOR_SHAKING_TIP = "Helmet shakes after a high damage or if there's an explosi
 UVISOR_SENSITIVITY = "Sensitivity";
 
 
-
 // Sounds
 UVISOR_SOUNDS = "Sounds";
 UVISOR_SOUNDS_INNER = "\nSounds";
@@ -333,7 +333,9 @@ UVISOR_RESET_ALL_SETTINGS_PROMPT = "Are you sure you want to restore defaults?";
 
 
 //////////////////////////////////////////////////
+
 [ru]
+
 // Common
 UVISOR_HEALTH = "Здоровье";
 UVISOR_ARMOR = "Броня";
@@ -527,8 +529,7 @@ UVISOR_GLASS_GLOW_DESTR_SUBTITLE = "----- Разрушение Стекла и �
 UVISOR_HIDE_GLOW_NO_ARMOR = "Скрывать Подсветку, Когда Нет Брони";
 UVISOR_HIDE_GLASS_NO_ARMOR = "Скрывать Стекло, Когда Нет Брони";
 UVISOR_ANIMATED_GLASS_DESTR = "Анимация Разрушения Стекла, Когда Нет Брони \cbℹ\c-";
-UVISOR_ANIMATED_GLASS_DESTR_TIP = "Анимация из PB Hit Feedback, адаптированная для цветов и прозрачности UV. Рекомендуется оставлять только одну вариацию, если подключается в виде аддона или в другом моде со своим переключателем (например, PBX)";
-UVISOR_ANIMATED_GLASS_DESTR_TIP_2 = "";
+UVISOR_ANIMATED_GLASS_DESTR_TIP = "Анимация из PB Hit Feedback, адаптированная для цветов и прозрачности UV. Рекомендуется оставлять только одну вариацию, если подключается в виде аддона или в другом моде со своим переключателем. PBX (Project Brutality Extended) считывает включённый UV и автоматически выключает свой соответствующий аддон";
 UVISOR_GLOW_PULSE_SUBTITLE = "----- Пульсация Подсветки -----";
 UVISOR_MODE = "Режим";
 UVISOR_SPEED = "Скорость";
