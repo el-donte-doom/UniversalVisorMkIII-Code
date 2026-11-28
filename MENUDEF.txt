@@ -61,6 +61,7 @@ OptionMenu "UV_MENU_MAIN_TOGGLES" {
 	UV_TooltipAppearance "", "", "uv_tt_bg"
 	Title "$UVISOR_MENU_MAIN_TOGGLES_INNER"
 
+	StaticText " "
 	FlagOption "$UVISOR_SHOW_HELMET_PIECES", "uvisor_main_visual_flags", "OnOff", 0
 	FlagOption "$UVISOR_SHOW_GLOW", "uvisor_main_visual_flags", "OnOff", 1
 	FlagOption "$UVISOR_SHOW_GLASS", "uvisor_main_visual_flags", "OnOff", 2
@@ -84,30 +85,44 @@ OptionMenu "UV_MENU_PRESETS" {
 	AnimatedTransition
 	Position -37
 	Title "$UVISOR_MENU_PRESETS_INNER"
-
+	
+	StaticText " "
 	StaticText "$UVISOR_PREDEFINED_PRESETS_SUBTITLE", LightBlue
-	SafeCommand "$UVISOR_PRESET_DOOMGUY_1", "uvisor_apply_preset_doomguy_1"
-	SafeCommand "$UVISOR_PRESET_DOOMGUY_2", "uvisor_apply_preset_doomguy_2"
-	SafeCommand "Doom 2016", "uvisor_apply_preset_doom_2016"
-	SafeCommand "Dark Ages", "uvisor_apply_preset_dark_ages"
-	SafeCommand "Doom 64", "uvisor_apply_preset_doom_64"
-	SafeCommand "$UVISOR_PRESET_MASTER_CHIEF", "uvisor_apply_preset_master_chief"
-	SafeCommand "$UVISOR_PRESET_NOBLE_SIX", "uvisor_apply_preset_noble_six"
-	SafeCommand "$UVISOR_PRESET_EMILE", "uvisor_apply_preset_emile"
-	SafeCommand "Diamond Dragon", "uvisor_apply_preset_diamond_dragon"
-	SafeCommand "Republic Commando", "uvisor_apply_preset_republic_commando"
-	SafeCommand "$UVISOR_SPACE_MARINE", "uvisor_apply_preset_space_marine"
-	SafeCommand "Metroid", "uvisor_apply_preset_metroid"
-	SafeCommand "$UVISOR_SIMPLE_HELMET", "uvisor_apply_preset_simple_helmet"
-	SafeCommand "$UVISOR_PRESET_HOOD", "uvisor_apply_preset_hood"
+	Submenu "$UVISOR_MENU_PREDEFINED_PRESETS", "UV_MENU_PREDEFIND_PRESETS"
+
 	StaticText " "
 	StaticText "$UVISOR_SAVE_USER_PRESET_SUBTITLE", LightBlue
 	TextField "$UVISOR_NEW_PRESET_NAME", "__uvisor_save_preset_name"
 	StaticText "$UVISOR_PRESET_NAME_TIP", DarkGray
 	UV_SaveUserPreset
+	
 	StaticText " "
 	StaticText "$UVISOR_USER_PRESET_ACTIONS_SUBTITLE", LightBlue
 	Class "UV_UserPresetsMenu"
+}
+
+// Predefined Visual Presets sub-submenu
+OptionMenu "UV_MENU_PREDEFIND_PRESETS" {
+	Animated
+	AnimatedTransition
+	Position -37
+	Title "$UVISOR_MENU_PREDEFINED_PRESETS_INNER"
+	
+	StaticText " "
+	SafeCommand "$UVISOR_PRESET_DOOMGUY_1", "uvisor_apply_preset_doomguy_1"
+	SafeCommand "$UVISOR_PRESET_DOOMGUY_2", "uvisor_apply_preset_doomguy_2"
+	SafeCommand "$UVISOR_PRESET_DOOM_2016", "uvisor_apply_preset_doom_2016"
+	SafeCommand "$UVISOR_PRESET_DARK_AGES", "uvisor_apply_preset_dark_ages"
+	SafeCommand "$UVISOR_PRESET_DOOM_64", "uvisor_apply_preset_doom_64"
+	SafeCommand "$UVISOR_PRESET_MASTER_CHIEF", "uvisor_apply_preset_master_chief"
+	SafeCommand "$UVISOR_PRESET_NOBLE_SIX", "uvisor_apply_preset_noble_six"
+	SafeCommand "$UVISOR_PRESET_EMILE", "uvisor_apply_preset_emile"
+	SafeCommand "$UVISOR_PRESET_DD", "uvisor_apply_preset_diamond_dragon"
+	SafeCommand "$UVISOR_PRESET_REPUBLIC", "uvisor_apply_preset_republic_commando"
+	SafeCommand "$UVISOR_PRESET_SPACE_MARINE", "uvisor_apply_preset_space_marine"
+	SafeCommand "$UVISOR_PRESET_METROID", "uvisor_apply_preset_metroid"
+	SafeCommand "$UVISOR_PRESET_SIMPLE_HELMET", "uvisor_apply_preset_simple_helmet"
+	SafeCommand "$UVISOR_PRESET_HOOD", "uvisor_apply_preset_hood"
 }
 
 // Style Options
@@ -119,7 +134,8 @@ OptionMenu "UV_MENU_STYLE" {
 	UV_TooltipGeometry 0.028, 0.38, 0.18, 1.2, 0.6
 	UV_TooltipAppearance "", "", "uv_tt_bg"
 	Title "$UVISOR_MENU_STYLE_INNER"
-
+	
+	StaticText " "
 	Option "$UVISOR_STYLE_HELMET_TOP", "uvisor_style_helmet_top", "TopStyles"
 	StaticText " "
 	Option "$UVISOR_STYLE_HELMET_BOTTOM", "uvisor_style_helmet_bottom", "BottomStyles"
@@ -211,6 +227,8 @@ OptionMenu "UV_MENU_OFFSETS_SIZES" {
 	UV_TooltipGeometry 0.028, 0.38, 0.18, 1.2, 0.6
 	UV_TooltipAppearance "", "", "uv_tt_bg"
 	Title "$UVISOR_MENU_OFFSETS_SIZES_INNER"
+	
+	StaticText " "
 	StaticText "$UVISOR_OFFSET_SUBTITLE", LightBlue
 	Slider "$UVISOR_OFFSET_TOP", "uvisor_offset_top", 0, 160, 1, 0
 	Slider "$UVISOR_OFFSET_BOTTOM", "uvisor_offset_bottom", 0, 164, 1, 0

@@ -724,7 +724,7 @@ class UV_HudVisorDraw : EventHandler
 		}
 		
 		if (!initialPlayInitDone) {
-			return; // In case the mod was enabled mid-map
+			return; // In case a map was started with disabled mod and then it was turned on
 		}
 	
 		if ((hideHelmetInThirdPerson && isThirdPerson) || isDemonPlayer) {
