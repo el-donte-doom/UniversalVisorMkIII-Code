@@ -1360,7 +1360,6 @@ class UV_HudVisorDraw : EventHandler
 	
 	ui void DrawPieces() {
 		Color texColorTop = BlendColorWithEnvironmentAndPowerups(colorPartTop, UV_HudVisorDraw.PART_TOP);
-// 		console.printf("  texColorTop: " .. texColorTop);
 		if (showTacticalMarks) {
 			int w, h;
 			[w, h] = TexMan.getSize(texPartTacticalMarkLeft);
@@ -2335,7 +2334,6 @@ class UV_HudVisorDraw : EventHandler
 		name actorClassName = enemyActor.GetClassName();
 		for (int i = 0; i < enemyBasedBloodColorCache.Size(); i++) {
 			if (enemyBasedBloodColorCache[i].actorClassName == actorClassName) {
-// 				console.printf("Got color from cache for " .. actorClassName);
 				return enemyBasedBloodColorCache[i].col, enemyBasedBloodColorCache[i].valid;
 			}
 		}
@@ -2368,7 +2366,6 @@ class UV_HudVisorDraw : EventHandler
 		cacheEntry.col = newBloodColor;
 		cacheEntry.valid = true;
 		enemyBasedBloodColorCache.Push(cacheEntry);
-// 		console.printf("Set color " .. newBloodColor .. " to cache for " .. actorClassName);
 		return newBloodColor, true;
 	}
 	
@@ -2406,7 +2403,6 @@ class UV_HudVisorDraw : EventHandler
 			green = (green > 0) ? (green + shiftMapped) : 0;
 			blue = (blue > 0) ? (blue + shiftMapped) : 0;
 		}
-// 		console.printf("Adjusted default blood color: " .. Color(255, red, green, blue));
 		return Color(255, red, green, blue);
 	}
 	
@@ -2561,12 +2557,6 @@ class UV_HudVisorDraw : EventHandler
 		}
 		
 		SetDynamicLightContribution(point, playerViewYaw, playerViewPitch);
-// 		console.printf("^ playerinf.mo.cursector.lightlevel: %f", playerinf.mo.cursector.lightlevel);
-// 		console.printf("  dLightsBrightnessWeighted: %.1f", dLightsBrightnessWeighted);
-// 		console.printf("  dLightsFullColorWeighted: (%.1f, %.1f, %.1f)",
-// 			dLightsFullColorWeighted.x,
-// 			dLightsFullColorWeighted.y,
-// 			dLightsFullColorWeighted.z);
 
 		// Brightness-only path for glow, armor grid, wiper
 		combinedBrightnessScale = UV_SmallUtils.BlendBrightness(sectorBrightnessScale, dLightsBrightnessWeighted);
@@ -2671,7 +2661,6 @@ class UV_HudVisorDraw : EventHandler
 			combinedR += playerinf.BlendR * playerinf.BlendA;
 			combinedG += playerinf.BlendG * playerinf.BlendA;
 			combinedB += playerinf.BlendB * playerinf.BlendA;
-// 			Console.Printf("playerinf.Blend: R=%f, G=%f, B=%f, A=%f", playerinf.BlendR, playerinf.BlendG, playerinf.BlendB, playerinf.BlendA);
 		}
 		for (int i = 0; i < powerupBlendColors.Size(); i++) {
 			Color pColor = powerupBlendColors[i];
@@ -2681,8 +2670,6 @@ class UV_HudVisorDraw : EventHandler
 			combinedR += (pColor.r / 255.0) * blendColorAlpha;
 			combinedG += (pColor.g / 255.0) * blendColorAlpha;
 			combinedB += (pColor.b / 255.0) * blendColorAlpha;
-// 			Console.Printf("powerupBlendColors[%d]: R=%f, G=%f, B=%f, A=%f",
-// 						   i, pColor.r/255.0, pColor.g/255.0, pColor.b/255.0, blendColorAlpha);
 		}
 		if (combinedA > 0.0) {
 			double normR = clamp(combinedR / combinedA, 0.0, 1.0);
