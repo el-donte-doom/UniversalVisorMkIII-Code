@@ -2272,7 +2272,10 @@ class UV_HudVisorDraw : EventHandler
 			if (inVehicle) return;
 			string enemyClassName = e.thing.GetClassName();
 			name enemyClassNameN = enemyClassName;
-			if (e.thing.bloodColor == UNSET_COLOR && (e.thing.bNOBLOOD || e.thing.bNOBLOODDECALS)) {
+			if (e.Inflictor && e.Inflictor.bBLOODLESSIMPACT) {
+				return;
+			}
+			if (e.thing.bNOBLOOD || (e.thing.bNOBLOODDECALS && e.thing.bloodColor == UNSET_COLOR)) {
 				if (!(globals.isDD_Loaded && enemyClassName.IndexOf("CYBORG") != -1) // Don't return if BD64 (except Lost Souls) or some enemies in DD
 					&& !(globals.isDD_Loaded && enemyClassNameN == 'HunterKiller')
 					&& !(globals.isBD64_Loaded && !(e.thing is 'LostSoul'))

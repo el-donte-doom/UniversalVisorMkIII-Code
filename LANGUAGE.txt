@@ -33,7 +33,7 @@ UVISOR_SHOW_TACTICAL_MARKS = "Tactical Marks";
 UVISOR_SHOW_ARMOR_GRID = "Armor Grid";
 UVISOR_SHOW_VISOR_CRACKS = "Visor Cracks";
 UVISOR_SHOW_SPLASHES = "Enemy Blood Splashes On Visor \cbℹ\c-";
-UVISOR_SHOW_SPLASHES_TIP = "Some mods have their own screen blood, often it can be toggled";
+UVISOR_SHOW_SPLASHES_TIP = "Other mods may have their own screen blood, often it can be toggled too";
 UVISOR_STARTUP_ENABLED = "Startup Fade-In From Black \cbℹ\c-";
 UVISOR_STARTUP_TIP = "Overriden by Project Brutality helmet equip animation (if it's enabled)";
 
@@ -345,7 +345,7 @@ UVISOR_SHOW_TACTICAL_MARKS = "Тактические Метки";
 UVISOR_SHOW_ARMOR_GRID = "Сетка Брони";
 UVISOR_SHOW_VISOR_CRACKS = "Трещины Визора";
 UVISOR_SHOW_SPLASHES = "Вражеские Пятна Крови на Визоре \cbℹ\c-";
-UVISOR_SHOW_SPLASHES_TIP = "У некоторых модов есть свои пятна, обычно у них есть переключатель";
+UVISOR_SHOW_SPLASHES_TIP = "У других модов могут быть аналогичные эффекты, зачастую их тоже можно переключать";
 UVISOR_STARTUP_ENABLED = "Переход из Чёрного Экрана на Старте \cbℹ\c-";
 UVISOR_STARTUP_TIP = "Отключается, если в Project Brutality включена анимация надевания шлема";
 

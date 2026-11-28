@@ -10,7 +10,6 @@ class UV_HudVisorStaticGlobals: StaticEventHandler {
 	bool isLitDOOM_Loaded;
 	bool isBeautifulDoomLoaded;
 	bool isBD64_Loaded;
-	bool isXimSW_Loaded;
 	bool isHellriderLoaded;
 	bool isHellriderVengefulLoaded;
 	bool isNightVisionPackLoaded;
@@ -66,7 +65,6 @@ class UV_HudVisorStaticGlobals: StaticEventHandler {
 // 		console.printf("isLitDOOM_Loaded: " .. isLitDOOM_Loaded);
 // 		console.printf("isBD64_Loaded: " .. isBD64_Loaded);
 // 		console.printf("isBeautifulDoomLoaded: " .. isBeautifulDoomLoaded);
-// 		console.printf("isXimSW_Loaded: " .. isXimSW_Loaded);
 // 		console.printf("isHellriderLoaded: " .. isHellriderLoaded);
 // 		console.printf("isHellriderVengefulLoaded: " .. isHellriderVengefulLoaded);
 	}
@@ -97,9 +95,6 @@ class UV_HudVisorStaticGlobals: StaticEventHandler {
 			name BeautD_ActorName = 'BDoomWeapon';
 			Class<Actor> BeautD_ActorClass = BeautD_ActorName;
 			
-			name XimSW_ActorName = 'StarWarsBattleDroid';
-			Class<Actor> XimSW_ActorClass = XimSW_ActorName;
-			
 			name HellriderActorName = 'HR_InvulnerabilitySphere';
 			Class<Actor> HellriderActorClass = HellriderActorName;
 			
@@ -118,8 +113,6 @@ class UV_HudVisorStaticGlobals: StaticEventHandler {
 				isBD64_Loaded = true;
 			} else if (BeautD_ActorClass) {
 				isBeautifulDoomLoaded = true;
-			} else if (XimSW_ActorClass) {
-				isXimSW_Loaded = true;
 			} else if (HellriderActorClass) {
 				isHellriderLoaded = true;
 			} else if (HellriderVengefulActorClass) {
